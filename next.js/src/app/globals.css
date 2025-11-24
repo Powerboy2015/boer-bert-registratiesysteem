@@ -27,6 +27,14 @@ body {
 
 body,
 html {
-  height: 100vh;
+  height: 95vh;
   width: 100vw;
+}
+
+@media (min-width: 600px) {
+  body,
+  html {
+    height: 100vh;
+    width: 100vw;
+  }
 }
