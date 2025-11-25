@@ -1,3 +1,5 @@
+'use client'
+
 import account from "./icons/person.svg";
 import logout from "./icons/box-arrow-left.svg";
 import calender from "./icons/calendar-date.svg";
@@ -5,22 +7,25 @@ import settings from "./icons/gear.svg";
 import clock from "./icons/clock.svg";
 import view from "./icons/view-stacked.svg";
 import SideBarTab from "./SideBarTab";
+import { useState } from "react";
+import Image from "next/image";
+import list from "./icons/list.svg"
 
 export default function SideBar() {
   let name = "Bert Bertson";
+  const [statusValue, setStatusValue] = useState(true)
+  const status = statusValue ? "hidden" : "block"
+
   return (
     <>
       {/* Different sidebar sizes for different screen sizes*/}
-      <div className="bg-gray-800 h-full w-full min-w-fit sm:w-1/1 md:w-1/4 xl:w-1/5 2xl:w-1/10">
-        <div className="h-3/6 text-center pt-5">
+      <button onClick={() => setStatusValue(!statusValue)} className="md:hidden absolute"><Image src={list} alt="error" className="invert w-10" /></button>
+      <div className={`bg-gray-800 h-full w-full min-w-fit ${status} sm:w-1/1 md:w-1/4 md:block xl:w-1/5 2xl:w-1/10`}>
+        <div className={"h-3/6 min-h-fit text-center pt-5"} >
           {/*Name of the logged on user */}
           <div className="text-4xl pb-5">{name}</div>
           <div className="flex justify-center">
             <div className="w-fit">
-              {/* only show Dashboard if device width > 768px */}
-              <div className="md:hidden">
-                <SideBarTab icon={view} name="Dashboard" />
-              </div>
               {/* Sidebar tabs*/}
               <SideBarTab icon={calender} name="Overzicht" />
               <SideBarTab icon={clock} name="Reserveringen" />
