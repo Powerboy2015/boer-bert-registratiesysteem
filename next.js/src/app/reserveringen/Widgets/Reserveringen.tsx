@@ -1,5 +1,8 @@
+import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
+import { useState } from "react";
+
 export default function Reserveringen() {
-  const reserveringen = [
+  const [reserveringen, setReserveringen] = useState([
     {
       UserData_ID: 101,
       Achternaam: "Jansen",
@@ -45,9 +48,35 @@ export default function Reserveringen() {
       ReserveringsDatum: "2025-10-01",
       ReservatieBewerkDatum: "2025-10-11",
     },
-  ];
+  ])
 
-  return (
+  const [overlay, setOverlay] = useState(false)
+
+  function toggleOverlay() {
+    setOverlay(!overlay)
+  }
+
+  function addReservering({ ID, Naam, plaats, start, eind, reservering, reserveringBewerk }: { ID: number, Naam: string, plaats: number, start: string, eind: string, reservering: string, reserveringBewerk: string }) {
+    const nieuw = {
+      UserData_ID: ID,
+      Achternaam: Naam,
+      PlaatsNummer: plaats,
+      DatumAankomst: start,
+      DatumVertrek: eind,
+      ReserveringsDatum: reservering,
+      ReservatieBewerkDatum: reserveringBewerk,
+    }
+    setReserveringen([...reserveringen, nieuw])
+
+
+
+
+  }
+
+
+
+
+  return (<>      {overlay ? <ReserveringOverlay toggle={toggleOverlay} add={addReservering} /> : null}
     <div className="bg-[#2E3038] h-full mx-5">
       <div className="h-1/15 flex w-full">
         <div className="w-1/2 text-4xl m-3">Reserveringslijst</div>
@@ -57,7 +86,7 @@ export default function Reserveringen() {
             placeholder="Zoek reservering "
             type="text"
           />
-          <button className=" bg-[#55835A] h-15 w-15 m-3">+</button>
+          <button onClick={() => toggleOverlay()} className=" bg-[#55835A] h-15 w-15 m-3">+</button>
         </div>
       </div>
       <div className="w-full h-full m-5">
@@ -83,7 +112,19 @@ export default function Reserveringen() {
             ))}
           </tbody>
         </table>
+        <button onClick={() => addReservering({
+          ID: 105,
+          Naam: "Visser",
+          plaats: 19,
+          start: "2025-12-10",
+          eind: "2025-12-20",
+          reservering: "2025-10-01",
+          reserveringBewerk: "2025-10-11"
+        })}>add</button>
       </div>
     </div>
+  </>
+
+
   );
 }

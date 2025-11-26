@@ -1,12 +1,16 @@
+'use client'
+
 import SideBar from "../sidebar/sidebar";
 import NieuweReserveringen from "./Widgets/NieuweReserveringen";
 import OpenstaandeReserveringen from "./Widgets/OpenstaandeReserveringen";
 import Capaciteit from "./Widgets/Capaciteit";
 import Reserveringen from "./Widgets/Reserveringen";
-import ReserveringOverlay from "./NieuweReservering/ReserveringOverlay";
+
 
 export default function reserveringen() {
-  const overlay = true
+
+
+
   return (
     <div className="flex h-full w-full">
       <SideBar />
@@ -17,10 +21,6 @@ export default function reserveringen() {
           <Capaciteit />
         </div>
         <Reserveringen />
-
-        {overlay ? <ReserveringOverlay /> : null}
-
-
       </div>
     </div>
   );
