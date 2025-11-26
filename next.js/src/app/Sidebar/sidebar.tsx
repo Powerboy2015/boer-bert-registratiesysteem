@@ -19,12 +19,16 @@ export default function SideBar() {
             <div className="w-fit">
               {/* only show Dashboard if device width > 768px */}
               <div className="md:hidden">
-                <SideBarTab icon={view} name="dashboard" />
+                <SideBarTab icon={view} name="dashboard" route="dashboard" />
               </div>
               {/* Sidebar tabs*/}
-              <SideBarTab icon={calender} name="overzicht" />
-              <SideBarTab icon={clock} name="reserveringen" />
-              <SideBarTab icon={account} name="accounts" />
+              <SideBarTab icon={calender} name="overzicht" route="" />
+              <SideBarTab
+                icon={clock}
+                name="reserveringen"
+                route="reserveringen"
+              />
+              <SideBarTab icon={account} name="accounts" route="accounts" />
             </div>
           </div>
         </div>
@@ -33,8 +37,12 @@ export default function SideBar() {
           <div className="flex justify-center content-end">
             <div className="w-fit">
               {/* Bottom sidebar tabs */}
-              <SideBarTab icon={settings} name="instellingen" />
-              <SideBarTab icon={logout} name="logout" />
+              <SideBarTab
+                icon={settings}
+                name="instellingen"
+                route="instellingen"
+              />
+              <SideBarTab icon={logout} name="logout" route="logout" />
             </div>
           </div>
         </div>

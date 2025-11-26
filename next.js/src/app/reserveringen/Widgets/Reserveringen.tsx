@@ -53,14 +53,14 @@ export default function Reserveringen() {
         <div className="w-1/2 text-4xl m-3">Reserveringslijst</div>
         <div className="flex justify-end w-full">
           <input
-            className="bg-[#556483] my-3 w-1/3 mx-10 text-4xl"
+            className="bg-[#556483] my-3 w-1/3 mx-10 text-4xl p-7"
             placeholder="Zoek reservering "
             type="text"
           />
-          <button className=" bg-[#55835A] mr-10 my-3 w-1/30">+</button>
+          <button className=" bg-[#55835A] h-15 w-15 m-3">+</button>
         </div>
       </div>
-      <div className="w-full h-full">
+      <div className="w-full h-full m-5">
         <table className="w-full">
           <thead>
             <tr>

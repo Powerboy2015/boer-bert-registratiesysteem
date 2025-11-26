@@ -1,7 +1,7 @@
 export default function OpenstaandeReserveringen() {
   return (
     <div className="bg-[#556483] w-98/100 h-full text-white ">
-      <div className="text-4xl relative">
+      <div className="text-4xl m-5">
         Openstaande reserveringen in &lt;30 dagen
       </div>
 
