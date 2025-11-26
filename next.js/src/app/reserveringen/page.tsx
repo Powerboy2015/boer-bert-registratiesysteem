@@ -9,7 +9,7 @@ export default function reserveringen() {
     <div className="flex h-full w-full">
       <SideBar />
       <div className="h-full w-full flex flex-col">
-        <div className="grid grid-cols-3 h-1/4 w-99/100 m-5">
+        <div className="grid grid-cols-3 h-1/4 w-99/100 m-5 min-h-fit">
           <NieuweReserveringen />
           <OpenstaandeReserveringen />
           <Capaciteit />
