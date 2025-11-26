@@ -11,7 +11,7 @@ export default function SideBar() {
   return (
     <>
       {/* Different sidebar sizes for different screen sizes*/}
-      <div className="bg-gray-800 h-full w-full min-w-fit sm:w-1/1 md:w-1/4 xl:w-1/5 2xl:w-1/10">
+      <div className="bg-[#2E3038] h-full w-full min-w-fit sm:w-1/1 md:w-1/4 xl:w-1/5 2xl:w-1/10">
         <div className="h-3/6 text-center pt-5">
           {/*Name of the logged on user */}
           <div className="text-4xl pb-5">{name}</div>
@@ -19,12 +19,12 @@ export default function SideBar() {
             <div className="w-fit">
               {/* only show Dashboard if device width > 768px */}
               <div className="md:hidden">
-                <SideBarTab icon={view} name="Dashboard" />
+                <SideBarTab icon={view} name="dashboard" />
               </div>
               {/* Sidebar tabs*/}
-              <SideBarTab icon={calender} name="Overzicht" />
-              <SideBarTab icon={clock} name="Reserveringen" />
-              <SideBarTab icon={account} name="Accounts" />
+              <SideBarTab icon={calender} name="overzicht" />
+              <SideBarTab icon={clock} name="reserveringen" />
+              <SideBarTab icon={account} name="accounts" />
             </div>
           </div>
         </div>
@@ -33,8 +33,8 @@ export default function SideBar() {
           <div className="flex justify-center content-end">
             <div className="w-fit">
               {/* Bottom sidebar tabs */}
-              <SideBarTab icon={settings} name="Instellingen" />
-              <SideBarTab icon={logout} name="Logout" />
+              <SideBarTab icon={settings} name="instellingen" />
+              <SideBarTab icon={logout} name="logout" />
             </div>
           </div>
         </div>
