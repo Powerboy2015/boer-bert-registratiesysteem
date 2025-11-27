@@ -1,11 +1,12 @@
 import Image from "next/image";
+import React from 'react';
 import SideBar from "./Sidebar/sidebar";
-import CampingOverzicht from "./Widgets/CampingOverzicht";
+import Searchbar from "./Searchbar/searchbar";
 export default function Home() {
   return (
       <>
           <SideBar/>
-          <CampingOverzicht/>
+          <Searchbar/>
       </>
     );
 }
