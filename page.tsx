@@ -8,6 +8,8 @@ import Input1 from "./components/input1";
 import Input2 from "./components/input2";
 import Toggle1 from "./components/toggle1";
 import Toggle2 from "./components/toggle2";
+import Optionfield1 from "./components/optionfield1"
+import Optionfield2 from "./components/optionfield2"
 export default function Home() {
   return (
     <>
@@ -17,11 +19,11 @@ export default function Home() {
       <Button2/>
       <Toggle1/>
       <Toggle2/>
+      <Optionfield1/>
+      <Optionfield2/>
+      <Widgetbar1/>
       <Input1/> <br></br>
       <Input2/> <br></br>
-      knoppen die nog niet werken: <br></br>
-      'random option field knoppen'
-      <Widgetbar1/>
     </>
   );
 }

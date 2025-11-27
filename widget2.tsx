@@ -1,10 +1,10 @@
 import React from "react";  
 import Link from "next/link";
-export default function Widget2({count= 0 }: {count?: number}) {    /*moet nog db aanroepen om count te krijgen*/
+export default function Widget2({count= 0 }: {count?: number}) { /*moet nog db aanroepen om count te krijgen*/
     return  (<>
-            <Link href="/Testlink">                                 {/*link naar een andere pagina. b.v. 'reserveringen'*/}
-                <button                                             /*styling kan nog veranderd worden aan de hand van de grootte in het ontwerp*/
-                    className="widget2"                             /*donkerkleurige knop*/
+            <Link href="/Testlink"> {/*link naar een andere pagina. b.v. 'reserveringen'*/}
+                <button /*styling kan nog veranderd worden aan de hand van de grootte in het ontwerp*/
+                    className="widget2"/*donkerkleurige knop*/
                         style={{
                         backgroundColor: "#5E6C87",
                         color: "#cececeff",
@@ -20,9 +20,13 @@ export default function Widget2({count= 0 }: {count?: number}) {    /*moet nog d
                         textAlign: "left",
                         paddingLeft: "15px"
                     }} 
-                > 
-                    <span style={{ fontSize: "16px", margin: 0 }}>Nieuwe reserveringen</span> {/*aparte styling voor de text in de knop*/}
-                    <span style={{ fontSize: "32px", margin: 0 }}>{count}</span>              {/*count in de knop, haalt info uit db*/}
+                > {/*styling knop*/}
+                    <span
+                        style={{ fontSize: "16px", margin: 0 }}>Nieuwe reserveringen
+                    </span> {/*aparte styling voor de text in de knop*/}
+                    <span
+                        style={{ fontSize: "32px", margin: 0 }}>{count}
+                    </span>{/*count in de knop, haalt info uit db*/}
                 </button >
             </Link>
             </>)
