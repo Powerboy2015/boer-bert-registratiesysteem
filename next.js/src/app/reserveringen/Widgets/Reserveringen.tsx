@@ -4,13 +4,17 @@ import { useState } from "react";
 export default function Reserveringen() {
   const [reserveringen, setReserveringen] = useState([
     {
-      UserData_ID: 101,
-      Achternaam: "Jansen",
-      PlaatsNummer: 14,
-      DatumAankomst: "2025-04-12",
-      DatumVertrek: "2025-04-18",
-      ReserveringsDatum: "2025-02-20",
-      ReservatieBewerkDatum: "2025-03-01",
+      UserData_ID: 1,
+      Voornaam: "voornaam",
+      Achternaam: "achternaam",
+      telNr: "telNr",
+      adres: "adres",
+      email: "email",
+      PlaatsNummer: 8,
+      DatumAankomst: "start",
+      DatumVertrek: "eind",
+      reserveringDatum: "reserveringDatum",
+      reserveringBewerkDatum: "reserveringBewerkDatum",
     },
   ])
 
@@ -26,15 +30,20 @@ export default function Reserveringen() {
     setReserveringen(newReserveringen)
   }
 
-  function addReservering({ ID, Naam, plaats, start, eind, reservering, reserveringBewerk }: { ID: number, Naam: string, plaats: number, start: string, eind: string, reservering: string, reserveringBewerk: string }) {
+  const d = new Date(Date.now())
+  function addReservering({ voornaam, achternaam, telNr, adres, email, plaats, DatumAankomst, DatumVertrek, reserveringBewerkDatum }: { voornaam: string, achternaam: string, telNr: string, adres: string, email: string, plaats: number, DatumAankomst: string, DatumVertrek: string, reserveringBewerkDatum: string }) {
     const nieuw = {
-      UserData_ID: ID,
-      Achternaam: Naam,
+      UserData_ID: 1,
+      Voornaam: voornaam,
+      Achternaam: achternaam,
+      telNr: telNr,
+      adres: adres,
+      email: email,
       PlaatsNummer: plaats,
-      DatumAankomst: start,
-      DatumVertrek: eind,
-      ReserveringsDatum: reservering,
-      ReservatieBewerkDatum: reserveringBewerk,
+      DatumAankomst: DatumAankomst,
+      DatumVertrek: DatumVertrek,
+      reserveringDatum: d.toDateString(),
+      reserveringBewerkDatum: reserveringBewerkDatum,
     }
     setReserveringen([...reserveringen, nieuw])
   }
@@ -54,7 +63,7 @@ export default function Reserveringen() {
         </div>
       </div>
       <div className="w-full h-full m-5">
-        <table className="w-full">
+        <table className="w-full mt-10">
           <thead>
             <tr>
               <th className="text-left text-3xl">Naam</th>
@@ -67,12 +76,12 @@ export default function Reserveringen() {
           </thead>
           <tbody>
             {reserveringen.map((item, index) => (
-              <tr className="border-y-5 border-[#1F1F21] text-2xl bg " key={index}>
+              <tr className="border-y-5 border-[#1F1F21] text-2xl " key={index}>
                 <td>{item.Achternaam}</td>
                 <td>{item.DatumVertrek}</td>
                 <td>{item.DatumAankomst}</td>
                 <td>{item.PlaatsNummer}</td>
-                <td>{item.ReserveringsDatum}</td>
+                <td>{item.reserveringDatum}</td>
                 <td> <button onClick={() => handleDeleteReservering(index)}>X</button></td>
               </tr>
             ))}

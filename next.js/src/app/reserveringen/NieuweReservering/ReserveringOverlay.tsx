@@ -2,62 +2,93 @@ import { useState } from "react"
 
 export default function ReserveringOverlay({ toggle, add }: {
     toggle: () => void, add: (reservering: {
-        ID: number;
-        Naam: string;
+        voornaam: string;
+        achternaam: string;
+        telNr: string;
+        adres: string;
+        email: string;
         plaats: number;
-        start: string;
-        eind: string;
-        reservering: string;
-        reserveringBewerk: string;
+        DatumAankomst: string;
+        DatumVertrek: string;
+        reserveringDatum: string;
+        reserveringBewerkDatum: string;
     }) => void
 }) {
-    const [naam, setNaam] = useState("")
-    const [eindDatum, setEindDatum] = useState("")
-    const [startDatum, setStartDatum] = useState("")
+    const [voornaam, setVoornaam] = useState("")
+    const [achternaam, setAchternaam] = useState("")
+    const [telNr, setTelnr] = useState("")
+    const [adres, setAdres] = useState("")
+    const [email, setEmail] = useState("")
+
+    const [DatumVertrek, setDatumVertrek] = useState("")
+    const [DatumAankomst, setDatumAankomst] = useState("")
     const [plaats, setPlaats] = useState(Number)
     const [gereserveerdDatum, setGereserveerdDatum] = useState("")
 
 
     function handleClick() {
         add({
-            ID: 105,
-            Naam: naam,
+            voornaam: voornaam,
+            achternaam: achternaam,
+            telNr: telNr,
+            adres: adres,
+            email: email,
             plaats: plaats,
-            start: startDatum,
-            eind: eindDatum,
-            reservering: gereserveerdDatum,
-            reserveringBewerk: "2025-10-11"
+            DatumAankomst: DatumAankomst,
+            DatumVertrek: DatumVertrek,
+            reserveringDatum: gereserveerdDatum,
+            reserveringBewerkDatum: "2025-10-11"
         })
         toggle()
+        setGereserveerdDatum(Date.now().toString())
     }
 
 
     return (
         <>
             <div className="fixed flex h-full w-full left-0 justify-center items-center bg-gray-500/90">
-                <div className="bg-[#2E3038] h-1/2 w-1/2 flex justify-center items-center flex-col text-5xl p-20 relative min-w-fit min-h-fit">
+                <div className="bg-[#2E3038] h-1/2 w-1/2 grid relative min-w-fit min-h-fit p-10">
                     <button className="absolute top-4 right-4" onClick={() => toggle()}>X</button>
-                    <div className="grid grid-cols-2 w-full">
-                        <label htmlFor="Naam">Naam:</label>
-                        <input onChange={(e) => setNaam(e.target.value)} type="text" className="bg-white text-black" />
+                    <div className="grid justify-center grid-cols-2 text-white">
+                        <div className="flex flex-col m-2 ">
+                            <label className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]" htmlFor="Start datum">Aankomst datum</label>
+                            <input onChange={(e) => setDatumAankomst(e.target.value)} type="date" className="bg-[#556483] " />
+                        </div>
+                        <div className="flex flex-col m-2 ">
+                            <label className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]" htmlFor="Plaats">Plaats</label>
+                            <input onChange={(e) => setPlaats(Number(e.target.value))} type="number" className="bg-[#556483]" />
+                        </div>
+                        <div className="flex flex-col m-2 ">
+                            <label className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]" htmlFor="Eind datum">Vertrek datum</label>
+                            <input onChange={(e) => setDatumVertrek(e.target.value)} type="date" className="bg-[#556483]" />
+                        </div>
                     </div>
-                    <div className="grid grid-cols-2 w-full">
-                        <label htmlFor="Eind datum">Eind datum:</label>
-                        <input onChange={(e) => setEindDatum(e.target.value)} type="date" className="bg-white text-black" />
+                    <div className="grid justify-center grid-cols-2 text-white">
+
+                        <div className="flex flex-col m-2 ">
+                            <label className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]" htmlFor="Naam">Voornaam:</label>
+                            <input onChange={(e) => setVoornaam(e.target.value)} type="text" className="bg-[#556483]" />
+                        </div>
+                        <div className="flex flex-col m-2 ">
+                            <label className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]" htmlFor="Naam">Achternaam:</label>
+                            <input onChange={(e) => setAchternaam(e.target.value)} type="text" className="bg-[#556483]" />
+                        </div>
+
+                        <div className="flex flex-col m-2 ">
+                            <label className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]" htmlFor="Naam">TelNr:</label>
+                            <input onChange={(e) => setTelnr(e.target.value)} type="text" className="bg-[#556483]" />
+                        </div>
+                        <div className="flex flex-col m-2 ">
+                            <label className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]" htmlFor="Naam">Adres:</label>
+                            <input onChange={(e) => setAdres(e.target.value)} type="text" className="bg-[#556483]" />
+                        </div>
+                        <div className="flex flex-col m-2 ">
+                            <label className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]" htmlFor="Naam">email:</label>
+                            <input onChange={(e) => setEmail(e.target.value)} type="text" className="bg-[#556483]" />
+
+                        </div>
+                        <button onClick={() => handleClick()} className="bg-[#55835A] p-2 absolute bottom-3 left-2/5">Opslaan</button>
                     </div>
-                    <div className="grid grid-cols-2 w-full">
-                        <label htmlFor="Start datum">Start datum:</label>
-                        <input onChange={(e) => setStartDatum(e.target.value)} type="date" className="bg-white text-black" />
-                    </div>
-                    <div className="grid grid-cols-2 w-full">
-                        <label htmlFor="Plaats">Plaats:</label>
-                        <input onChange={(e) => setPlaats(Number(e.target.value))} type="number" className="bg-white text-black" />
-                    </div>
-                    <div className="grid grid-cols-2 w-full">
-                        <label htmlFor="Gereserveerd op">Gereserveerd op:</label>
-                        <input onChange={(e) => setGereserveerdDatum(e.target.value)} type="date" className="bg-white text-black w-full" />
-                    </div>
-                    <button onClick={() => handleClick()} className="absolute bottom-10">send</button>
                 </div>
             </div>
         </>
