@@ -1,18 +1,15 @@
 import { useState } from "react"
 
-type ReserveringInput = {
-    ID: number;
-    Naam: string;
-    plaats: number;
-    start: string;
-    eind: string;
-    reservering: string;
-    reserveringBewerk: string;
-};
-
-
 export default function ReserveringOverlay({ toggle, add }: {
-    toggle: () => void, add: (reservering: ReserveringInput) => void
+    toggle: () => void, add: (reservering: {
+        ID: number;
+        Naam: string;
+        plaats: number;
+        start: string;
+        eind: string;
+        reservering: string;
+        reserveringBewerk: string;
+    }) => void
 }) {
     const [naam, setNaam] = useState("")
     const [eindDatum, setEindDatum] = useState("")

@@ -12,48 +12,18 @@ export default function Reserveringen() {
       ReserveringsDatum: "2025-02-20",
       ReservatieBewerkDatum: "2025-03-01",
     },
-    {
-      UserData_ID: 102,
-      Achternaam: "De Vries",
-      PlaatsNummer: 7,
-      DatumAankomst: "2025-06-05",
-      DatumVertrek: "2025-06-10",
-      ReserveringsDatum: "2025-04-15",
-      ReservatieBewerkDatum: "2025-05-01",
-    },
-    {
-      UserData_ID: 103,
-      Achternaam: "Bakker",
-      PlaatsNummer: 22,
-      DatumAankomst: "2025-07-20",
-      DatumVertrek: "2025-07-25",
-      ReserveringsDatum: "2025-05-30",
-      ReservatieBewerkDatum: "2025-06-12",
-    },
-    {
-      UserData_ID: 104,
-      Achternaam: "Mulder",
-      PlaatsNummer: 3,
-      DatumAankomst: "2025-08-01",
-      DatumVertrek: "2025-08-15",
-      ReserveringsDatum: "2025-03-22",
-      ReservatieBewerkDatum: "2025-03-25",
-    },
-    {
-      UserData_ID: 105,
-      Achternaam: "Visser",
-      PlaatsNummer: 19,
-      DatumAankomst: "2025-12-10",
-      DatumVertrek: "2025-12-20",
-      ReserveringsDatum: "2025-10-01",
-      ReservatieBewerkDatum: "2025-10-11",
-    },
   ])
 
   const [overlay, setOverlay] = useState(false)
 
   function toggleOverlay() {
     setOverlay(!overlay)
+  }
+
+  function handleDeleteReservering(RemoveIndex: number) {
+    console.log(RemoveIndex)
+    const newReserveringen = reserveringen.filter((item, index) => index !== RemoveIndex)
+    setReserveringen(newReserveringen)
   }
 
   function addReservering({ ID, Naam, plaats, start, eind, reservering, reserveringBewerk }: { ID: number, Naam: string, plaats: number, start: string, eind: string, reservering: string, reserveringBewerk: string }) {
@@ -67,16 +37,10 @@ export default function Reserveringen() {
       ReservatieBewerkDatum: reserveringBewerk,
     }
     setReserveringen([...reserveringen, nieuw])
-
-
-
-
   }
 
-
-
-
-  return (<>      {overlay ? <ReserveringOverlay toggle={toggleOverlay} add={addReservering} /> : null}
+  return (<>
+    {overlay ? <ReserveringOverlay toggle={toggleOverlay} add={addReservering} /> : null}
     <div className="bg-[#2E3038] h-full mx-5">
       <div className="h-1/15 flex w-full">
         <div className="w-1/2 text-4xl m-3">Reserveringslijst</div>
@@ -98,31 +62,24 @@ export default function Reserveringen() {
               <th className="text-left text-3xl">Start datum</th>
               <th className="text-left text-3xl">Plaats</th>
               <th className="text-left text-3xl">Gereserveerd op </th>
+              <th className="text-left text-3xl">Opties </th>
             </tr>
           </thead>
           <tbody>
             {reserveringen.map((item, index) => (
-              <tr className="border-y-5 border-[#1F1F21] text-2xl " key={index}>
+              <tr className="border-y-5 border-[#1F1F21] text-2xl bg " key={index}>
                 <td>{item.Achternaam}</td>
                 <td>{item.DatumVertrek}</td>
                 <td>{item.DatumAankomst}</td>
                 <td>{item.PlaatsNummer}</td>
                 <td>{item.ReserveringsDatum}</td>
+                <td> <button onClick={() => handleDeleteReservering(index)}>X</button></td>
               </tr>
             ))}
           </tbody>
         </table>
-        <button onClick={() => addReservering({
-          ID: 105,
-          Naam: "Visser",
-          plaats: 19,
-          start: "2025-12-10",
-          eind: "2025-12-20",
-          reservering: "2025-10-01",
-          reserveringBewerk: "2025-10-11"
-        })}>add</button>
       </div>
-    </div>
+    </div >
   </>
 
 
