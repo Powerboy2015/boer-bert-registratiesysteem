@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+const test = null;
 // prettier-ignore
 export default function SideBarTab({ icon, name }: { icon: string, name: string }) {
   return (
