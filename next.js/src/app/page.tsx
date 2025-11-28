@@ -5,8 +5,8 @@ import Searchbar from "./Searchbar/searchbar";
 export default function Home() {
   return (
       <>
-          <SideBar/>
           <Searchbar/>
+          <SideBar/>
       </>
     );
 }
