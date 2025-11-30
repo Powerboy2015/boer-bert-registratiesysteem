@@ -1,5 +1,9 @@
+"use client";
+import { useContext } from "react";
+
 import EditFieldComponent from "./EditFieldComponent";
 import EditReservationButton from "./EditReservationButton";
+import { modalEnabledContext } from "../context/modalEnabled";
 
 interface EditReservationModalProps {
     reservation: string;
@@ -7,6 +11,11 @@ interface EditReservationModalProps {
 export default function EditReservationModal({
     reservation,
 }: EditReservationModalProps) {
+    const { setModalState } = useContext(modalEnabledContext);
+
+    const closeModal = () => {
+        setModalState(false);
+    };
     return (
         <>
             <div className="w-[50%] h-[50%] bg-(--color-accent-2) flex flex-col">
@@ -47,8 +56,15 @@ export default function EditReservationModal({
                         lableFontSize={16}
                         spanSize={2}
                     />
-                    <EditReservationButton colSpan={1} text={"Terug"} />
                     <EditReservationButton
+                        colSpan={1}
+                        text={"Terug"}
+                        btnCallback={closeModal}
+                    />
+
+                    {/* TODO add code that helps save the data. Only then close modal */}
+                    <EditReservationButton
+                        btnCallback={closeModal}
                         colSpan={1}
                         text={"Opslaan"}
                         color="#55835A"

@@ -2,11 +2,13 @@ interface EditReservationButtonProps {
     text?: string;
     color?: string;
     colSpan?: number;
+    btnCallback?: Function;
 }
 export default function EditReservationButton({
     text = "Reservering Aanpassen",
     color = "#556483",
     colSpan = 3,
+    btnCallback,
 }: EditReservationButtonProps) {
     return (
         <>
@@ -15,6 +17,11 @@ export default function EditReservationButton({
                 style={{
                     backgroundColor: color,
                     gridColumn: `span ${colSpan} / span ${colSpan}`,
+                }}
+                onClick={() => {
+                    if (btnCallback) {
+                        btnCallback();
+                    }
                 }}
             >
                 <div className="flex p-[10px] text-[24px] text-(--color-text)">

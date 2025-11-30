@@ -1,4 +1,5 @@
 import EditReservationModal from "@/app/ui/EditReservationModal";
+import ModalOverlayComponent from "@/app/ui/ModalOverlayComponent";
 
 interface reservationLayoutProps {
     children: React.ReactNode;
@@ -24,9 +25,9 @@ export default function reservationLayout({
                         {/* TODO add PR'd sidebar */}
                     </div>
                     <div className="w-full h-full relative">
-                        <span className="absolute flex justify-center items-center w-full h-full bg-[rgba(0,0,0,0.55)] z-100">
+                        <ModalOverlayComponent>
                             <EditReservationModal reservation={"2025-0001"} />
-                        </span>
+                        </ModalOverlayComponent>
                         <main className="w-full h-full">{children}</main>
                     </div>
                 </div>
