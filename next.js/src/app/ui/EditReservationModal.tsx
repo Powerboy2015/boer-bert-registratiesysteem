@@ -18,7 +18,7 @@ export default function EditReservationModal({
     };
     return (
         <>
-            <div className="w-[50%] h-[50%] bg-(--color-accent-2) flex flex-col">
+            <div className="w-[50%] h-[50%] bg-(--color-accent-2) flex flex-col hidden">
                 <div id="title" className="w-full h-1/3 bg-[#405D98]">
                     <h2>Reservering aanpassen: {reservation}</h2>
                 </div>
