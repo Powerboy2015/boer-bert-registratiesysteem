@@ -13,9 +13,12 @@ export default function reservationLayout({
                 ></div>
                 <div
                     id="content"
-                    className="p-[32px] flex w-full h-auto relative gap-[16px]"
+                    className="p-[32px] flex w-full max-w-[1440px] relative gap-[16px] m-auto"
                 >
-                    <div id="sidebar" className="h-full w-[256px] bg-[#272930]">
+                    <div
+                        id="sidebar"
+                        className="min-h-[600px] h-[85vh] sticky top-[32px] w-[256px] bg-[#272930]"
+                    >
                         {/* TODO add PR'd sidebar */}
                     </div>
                     <main className="w-full h-full">{children}</main>

@@ -1,4 +1,5 @@
 import Database from "@/app/connections/Database";
+import EditReservationButton from "@/app/ui/EditReservationButton";
 import MapTargetComponent from "@/app/ui/MapTargetComponent";
 import { Roboto } from "next/font/google";
 
@@ -22,7 +23,7 @@ export default async function Page({ params }: ViewReservationProps) {
     const reservationData = db.getReservation(slug);
 
     return (
-        <div className="w-full h-full flex flex-col gap-[32px] relative">
+        <div className="w-full flex flex-col gap-[32px] relative">
             <MapTargetComponent place={"1"} />
             <div className="w-full flex flex-col">
                 <div
@@ -42,12 +43,28 @@ export default async function Page({ params }: ViewReservationProps) {
                 </div>
                 <div
                     id="view-reservation-data"
-                    className="w-full h-[1080px] px-[8px]"
+                    className="w-full min-h-[1355px] px-[8px]"
                 >
                     <div
                         id="inner"
-                        className="w-full h-full bg-(--color-accent-2)"
-                    ></div>
+                        className="w-full h-full bg-(--color-accent-2) px-[32px] py-[48px] grid grid-cols-6 grid-rows-15 gap-[16px]"
+                    >
+                        <EditReservationButton />
+                        <EditReservationButton
+                            color="#FC4545"
+                            text="Verwijder Reservering"
+                        />
+                        <h2 className="col-span-3">Reserveringsinfo</h2>
+                        <div className="col-span-6 row-span-4 bg-(--color-background)">
+                            <div className="w-full h-full grid grid-cols-2 grid-rows-3 p-[32px] gap-x-[128px] gap-y-[16px]"></div>
+                        </div>
+
+                        <div className="col-span-6"></div>
+                        <h2 className="col-span-3">Reserveringsinfo</h2>
+                        <div className="col-span-6 row-span-7 bg-(--color-background)">
+                            <div className="w-full h-full grid grid-cols-2 grid-rows-6 p-[32px] gap-x-[128px] gap-y-[16px]"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

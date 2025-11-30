@@ -6,7 +6,7 @@ interface MapTargetComponentProps {
 // TODO create dynamic map bsed on which spot is selected
 export default function MapTargetComponent({ place }: MapTargetComponentProps) {
     return (
-        <div className="w-full h-[25%]">
+        <div className="w-full h-[35vh]">
             <Image
                 src={"https://placecats.com/1920/1080"}
                 width={1920}
