@@ -1,3 +1,5 @@
+import EditReservationModal from "@/app/ui/EditReservationModal";
+
 interface reservationLayoutProps {
     children: React.ReactNode;
 }
@@ -13,7 +15,7 @@ export default function reservationLayout({
                 ></div>
                 <div
                     id="content"
-                    className="p-[32px] flex w-full max-w-[1440px] relative gap-[16px] m-auto"
+                    className="p-[32px] flex h-full max-w-[1440px] relative gap-[16px] m-auto"
                 >
                     <div
                         id="sidebar"
@@ -21,7 +23,12 @@ export default function reservationLayout({
                     >
                         {/* TODO add PR'd sidebar */}
                     </div>
-                    <main className="w-full h-full">{children}</main>
+                    <div className="w-full h-full relative">
+                        <span className="absolute flex justify-center items-center w-full h-full bg-[rgba(0,0,0,0.55)] z-100">
+                            <EditReservationModal reservation={"2025-0001"} />
+                        </span>
+                        <main className="w-full h-full">{children}</main>
+                    </div>
                 </div>
             </div>
         </>
