@@ -61,23 +61,23 @@ export default async function Page({ params }: ViewReservationProps) {
                             <div className="w-full h-full grid grid-cols-2 grid-rows-3 p-[32px] gap-x-[128px] gap-y-[16px] inset-shadow-(--inset-shadow-box)">
                                 <DisplayFieldComponent
                                     fieldname="ReserveringsNummer"
-                                    data={"2025-0001"}
+                                    data={reservationData.reservationID}
                                 />
                                 <DisplayFieldComponent
                                     fieldname="ReserveringsDatum"
-                                    data={"11 mrt 2025"}
+                                    data={reservationData.reservationDate.toDateString()}
                                 />
                                 <DisplayFieldComponent
                                     fieldname="AankomstDatum"
-                                    data={"23 nov 2025"}
+                                    data={reservationData.startDate.toDateString()}
                                 />
                                 <DisplayFieldComponent
                                     fieldname="VertrekDatum"
-                                    data={"26 dec 2025"}
+                                    data={reservationData.endDate.toDateString()}
                                 />
                                 <DisplayFieldComponent
                                     fieldname="Plaats"
-                                    data={"10: Groot"}
+                                    data={reservationData.spot}
                                 />
                             </div>
                         </div>
