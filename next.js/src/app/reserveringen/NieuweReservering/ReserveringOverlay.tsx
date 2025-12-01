@@ -8,6 +8,7 @@ export default function ReserveringOverlay({
   toggle: () => void;
   add: (reservering: Reservering) => void;
 }) {
+  /* useStates voor de verschillende input velden */
   const [voornaam, setVoornaam] = useState("");
   const [achternaam, setAchternaam] = useState("");
   const [telNr, setTelnr] = useState("");
@@ -19,6 +20,7 @@ export default function ReserveringOverlay({
   const [plaats, setPlaats] = useState(Number);
   const [gereserveerdDatum, setGereserveerdDatum] = useState("");
 
+  /*Functie voor het versturen van de data */
   function handleClick() {
     add({
       UserData_ID: 1,
