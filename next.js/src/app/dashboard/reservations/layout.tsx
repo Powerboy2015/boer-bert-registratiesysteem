@@ -1,3 +1,4 @@
+import SideBar from "@/app/Sidebar/sidebar";
 import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 import EditReservationModal from "@/app/ui/EditReservationModal";
 import ModalOverlayComponent from "@/app/ui/ModalOverlayComponent";
@@ -19,12 +20,7 @@ export default function reservationLayout({
                     id="content"
                     className="p-[32px] flex h-full max-w-[1440px] relative gap-[16px] m-auto"
                 >
-                    <div
-                        id="sidebar"
-                        className="min-h-[600px] h-[85vh] sticky top-[32px] w-[256px] bg-[#272930]"
-                    >
-                        {/* TODO add PR'd sidebar */}
-                    </div>
+                    <SideBar />
                     <div className="w-full h-full relative">
                         <ModalOverlayComponent>
                             <EditReservationModal reservation={"2025-0001"} />

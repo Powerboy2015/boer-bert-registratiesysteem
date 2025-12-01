@@ -14,7 +14,7 @@ export default function ModalOverlayComponent({
         <>
             <modalEnabledContext.Provider value={{ modalState, setModalState }}>
                 <span
-                    className="absolute flex justify-center items-center w-full h-full bg-[rgba(0,0,0,0.55)] z-100"
+                    className="fixed top-[0px] left-[0px] flex justify-center items-center w-full h-full bg-[rgba(0,0,0,0.55)] z-100"
                     style={{
                         display: modalState ? "flex" : "none",
                     }}
