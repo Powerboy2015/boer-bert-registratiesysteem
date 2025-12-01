@@ -144,27 +144,35 @@ export default function Searchbar() {
     }
 
 
+    const buttonClicked = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        dispatch({type: "setQuery", query: debounceValue.toLowerCase()})
+    };
+
+
     return (
-        <div className="bg-gray-800 text-white w-full min-w-fit sm:w-1/1 md:w-1/4 xl:w-1/5 2xl:w-1/10 flex">
-            <div className="start-0 flex items-center ps-5 relative">
-                <svg className="w-4 h-12 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" strokeLinecap="round" strokeWidth="2"
-                          d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
-                </svg>
-                <input onChange={handleChange} onKeyDown={handleKeypress} value={debounceValue} type="search"
-                       className="block w-full ml-5 ps-5 pt-3 pb-3 bg-neutral-secondary-medium text-heading text-sm rounded-base shadow-xs placeholder:text-body form-control"
+        <div className="w-full flex flex-col md:flex-row gap-4">
+            <div className="bg-gray-800 text-white w-full min-w-fit sm:w-1/1 md:w-1/4 xl:w-1/5 2xl:w-1/10 flex">
+                <div className="start-0 flex items-center ps-5 relative">
+                    <input onChange={handleChange} onKeyDown={handleKeypress} value={debounceValue} type="search"
+                       className="block w-full ps-5 pt-3 pb-3 bg-neutral-secondary-medium text-heading text-sm rounded-base shadow-xs placeholder:text-body form-control"
                        placeholder="Type hier om te zoeken..."/>
+                    <button type="button" onClick={buttonClicked}
+                        className="flex text-white bg-brand hover:bg-brand-strong focus:ring-2 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded text-xs px-3 py-3.5 focus:outline-none">
+                        <svg className="w-4 h-12 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" strokeLinecap="round" strokeWidth="2"
+                          d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
-            <button type="button"
-                    className="flex text-white bg-brand hover:bg-brand-strong focus:ring-2 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded text-xs px-3 py-3.5 focus:outline-none">Zoeken
-            </button>
-            <div className="mt-2 space-y-1">
-                {state.results.map(item => (
-                    <div key={item.reservationID} className="m-3 p-2 bg-gray-700 rounded">
-                        {item.name} — ID: {item.reservationID}
-                    </div>
-                ))}
-            </div>
+                <div className="mt-2 space-y-1 w-full min-w-fit sm:w-1/1 md:w-1/4 xl:w-1/5 2xl:w-1/10">
+                    {state.results.map(item => (
+                        <div key={item.reservationID} className="m-3 p-2 bg-gray-700 rounded">
+                            ID: {item.reservationID} — Naam: {item.name}, Plaats: {item.spot}, Personen: {item.amount}
+                        </div>
+                    ))}
+                </div>
         </div>
     );
 }
