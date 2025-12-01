@@ -22,6 +22,7 @@ export default function SideBar() {
       <button
         onClick={() => setStatusValue(!statusValue)}
         className="md:hidden absolute bottom-0 bg-[#556483] rounded-4xl p-2"
+        type="button"
       >
         <Image src={settings} alt="error" className="w-10" />
       </button>
