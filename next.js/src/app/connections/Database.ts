@@ -44,7 +44,7 @@ export default class Database {
      * updates an reservation through the use of a reservationID and the args of which field is to be altered
      * @param reservationID the reservationId of the reservation
      * @param args the editable fields
-     * @returns a success or fail message
+     * @returns a boolean indicating success or fail
      */
     public UpdateReservation(
         reservationID: string,

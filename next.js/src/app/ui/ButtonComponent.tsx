@@ -1,11 +1,11 @@
-interface EditReservationButtonProps {
+interface ButtonComponentProps {
     text?: string;
     color?: string;
 }
-export default function EditReservationButton({
-    text = "Reservering Aanpassen",
+export default function ButtonComponent({
+    text = "reservering aanpassen",
     color = "#556483",
-}: EditReservationButtonProps) {
+}: ButtonComponentProps) {
     return (
         <>
             <button

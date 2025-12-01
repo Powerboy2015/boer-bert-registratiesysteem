@@ -1,6 +1,6 @@
 import Database from "@/app/connections/Database";
 import DisplayFieldComponent from "@/app/ui/DisplayFieldComponent";
-import EditReservationButton from "@/app/ui/EditReservationButton";
+import ButtonComponent from "@/app/ui/ButtonComponent";
 import MapTargetComponent from "@/app/ui/MapTargetComponent";
 import { Roboto } from "next/font/google";
 
@@ -47,8 +47,8 @@ export default async function Page({ params }: ViewReservationProps) {
                         id="inner"
                         className="w-full h-full bg-(--color-accent-2) px-[32px] py-[48px] grid grid-cols-6 grid-rows-15 gap-[16px] shadow-(--box-shadow-view)"
                     >
-                        <EditReservationButton />
-                        <EditReservationButton
+                        <ButtonComponent />
+                        <ButtonComponent
                             color="#FC4545"
                             text="Verwijder Reservering"
                         />
@@ -57,7 +57,7 @@ export default async function Page({ params }: ViewReservationProps) {
                         >
                             Reserveringsinfo
                         </h2>
-                        <div className="col-span-6 row-span-4 bg-(--color-background)">
+                        <section className="col-span-6 row-span-4 bg-(--color-background)">
                             <div className="w-full h-full grid grid-cols-2 grid-rows-3 p-[32px] gap-x-[128px] gap-y-[16px] inset-shadow-(--inset-shadow-box)">
                                 <DisplayFieldComponent
                                     fieldname="ReserveringsNummer"
@@ -80,7 +80,7 @@ export default async function Page({ params }: ViewReservationProps) {
                                     data={reservationData.spot}
                                 />
                             </div>
-                        </div>
+                        </section>
 
                         <div className="col-span-6"></div>
                         <h2
@@ -88,7 +88,7 @@ export default async function Page({ params }: ViewReservationProps) {
                         >
                             Reserveringsinfo
                         </h2>
-                        <div className="col-span-6 row-span-7 bg-(--color-background) inset-shadow-(--inset-shadow-box)">
+                        <section className="col-span-6 row-span-7 bg-(--color-background) inset-shadow-(--inset-shadow-box)">
                             <div className="w-full h-full grid grid-cols-2 grid-rows-5 p-[32px] gap-x-[128px] gap-y-[16px]">
                                 <DisplayFieldComponent
                                     fieldname="Voornaam"
@@ -121,7 +121,7 @@ export default async function Page({ params }: ViewReservationProps) {
                                     spanSize={2}
                                 />
                             </div>
-                        </div>
+                        </section>
                     </div>
                 </div>
             </div>
