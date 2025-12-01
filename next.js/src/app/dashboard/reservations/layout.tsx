@@ -1,3 +1,4 @@
+import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 import EditReservationModal from "@/app/ui/EditReservationModal";
 import ModalOverlayComponent from "@/app/ui/ModalOverlayComponent";
 
@@ -27,6 +28,9 @@ export default function reservationLayout({
                     <div className="w-full h-full relative">
                         <ModalOverlayComponent>
                             <EditReservationModal reservation={"2025-0001"} />
+                        </ModalOverlayComponent>
+                        <ModalOverlayComponent>
+                            <DeleteReservationModal />
                         </ModalOverlayComponent>
                         <main className="w-full h-full">{children}</main>
                     </div>
