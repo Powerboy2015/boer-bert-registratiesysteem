@@ -4,7 +4,7 @@ export default function NieuweReserveringen() {
             <div className="h-full relative text-4xl p-8">
                 <div className="h-2/4">Nieuwe reserveringen</div>
                 <div>
-                    <div className="text-9xl ">1</div>
+                    <div className="text-7xl ">1</div>
                 </div>
             </div>
         </div>
