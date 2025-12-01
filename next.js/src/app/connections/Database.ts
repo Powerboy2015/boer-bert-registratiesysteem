@@ -41,25 +41,37 @@ export default class DbPool {
         return this.pool.query(query, callback);
     }
 
-    public async GetReservation(val?: string): Promise<reservationData> {
+    /**
+     * Looks for reservations, which can be specified through reservationData.
+     * @param val any reservation value
+     * @returns a reservationdata obect
+     */
+    public async GetReservation(
+        val?: string
+    ): Promise<reservationData | reservationData[]> {
         const query = val
             ? `SELECT * FROM Reserveringen WHERE ReserveringsID = ?`
             : `SELECT * FROM Reserveringen`;
 
+        // creates a new async that finished when the db query is finished and mapped properly.
         return new Promise((resolve, reject) => {
             this.pool.query(query, val ? [val] : [], (err, results) => {
-                console.log(results);
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
                 const rows = results as mysql.RowDataPacket[];
-                const data: reservationData = {
-                    reservationID: rows[0].ReserveringsID,
-                    startDate: rows[0].DatumAankomst,
-                    endDate: rows[0].DatumVertrek,
-                    reservationDate: rows[0].ReserveringsDatum,
+                const data: reservationData[] = rows.map((row) => ({
+                    reservationID: row.ReserveringsID,
+                    startDate: row.DatumAankomst,
+                    endDate: row.DatumVertrek,
+                    reservationDate: row.ReserveringsDatum,
                     spot: "10: Groot",
                     amount: 10,
-                };
-                if (err) reject(err);
-                else resolve(data);
+                }));
+
+                resolve(val ? data[0] : data);
             });
         });
     }

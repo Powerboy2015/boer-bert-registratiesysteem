@@ -21,31 +21,32 @@ interface ViewReservationProps {
 export default async function Page({ params }: ViewReservationProps) {
     const { slug } = await params;
     const db: DbPool = new DbPool();
-    const reservationData = await db.GetReservation(slug);
+    const response = await db.GetReservation(slug);
+    const reservationData = Array.isArray(response) ? response[1] : response;
 
     return (
-        <div className="w-full flex flex-col gap-[32px] relative">
+        <div className="w-full flex flex-col gap-8 relative">
             <MapTargetComponent place={"1"} />
             <div className="w-full flex flex-col">
                 <div
                     id="header-part"
-                    className="sticky top-[0px] p-[16px] flex flex-col gap-[16px] bg-(--color-accent) text-(--color-text) z-10"
+                    className="sticky top-0 p-4 flex flex-col gap-4 bg-(--color-accent) text-(--color-text) z-10"
                 >
                     <h1
-                        className={`w-full text-[64px] font-semibold ${robotoBold.className} m-[0px]`}
+                        className={`w-full text-[64px] font-semibold ${robotoBold.className} m-0`}
                     >
                         Overzicht reservering
                     </h1>
                     <p
-                        className={`text-[64px] font-[400] ${roboto.className} m-[0px]`}
+                        className={`text-[64px] font-normal ${roboto.className} m-0`}
                     >
                         {reservationData.reservationID}
                     </p>
                 </div>
-                <div id="view-reservation-data" className="w-full px-[8px]">
+                <div id="view-reservation-data" className="w-full px-2">
                     <div
                         id="inner"
-                        className="w-full h-full bg-(--color-accent-2) px-[32px] py-[48px] grid grid-cols-6 grid-rows-15 gap-[16px] shadow-(--box-shadow-view)"
+                        className="w-full h-full bg-(--color-accent-2) px-8 py-12 grid grid-cols-6 grid-rows-15 gap-4 shadow-(--box-shadow-view)"
                     >
                         <ButtonComponent />
                         <ButtonComponent
@@ -53,12 +54,12 @@ export default async function Page({ params }: ViewReservationProps) {
                             text="Verwijder Reservering"
                         />
                         <h2
-                            className={`col-span-3 mt-auto mb-[0px] ${roboto.className} text-[40px] text-(--color-text)`}
+                            className={`col-span-3 mt-auto mb-0 ${roboto.className} text-[40px] text-(--color-text)`}
                         >
                             Reserveringsinfo
                         </h2>
                         <section className="col-span-6 row-span-4 bg-(--color-background)">
-                            <div className="w-full h-full grid grid-cols-2 grid-rows-3 p-[32px] gap-x-[128px] gap-y-[16px] inset-shadow-(--inset-shadow-box)">
+                            <div className="w-full h-full grid grid-cols-2 grid-rows-3 p-8 gap-x-32 gap-y-4 inset-shadow-(--inset-shadow-box)">
                                 <DisplayFieldComponent
                                     fieldname="ReserveringsNummer"
                                     data={reservationData.reservationID}
@@ -84,12 +85,12 @@ export default async function Page({ params }: ViewReservationProps) {
 
                         <div className="col-span-6"></div>
                         <h2
-                            className={`col-span-3 mt-auto mb-[0px] ${roboto.className} text-[40px] text-(--color-text)`}
+                            className={`col-span-3 mt-auto mb-0 ${roboto.className} text-[40px] text-(--color-text)`}
                         >
                             Reserveringsinfo
                         </h2>
                         <section className="col-span-6 row-span-7 bg-(--color-background) inset-shadow-(--inset-shadow-box)">
-                            <div className="w-full h-full grid grid-cols-2 grid-rows-5 p-[32px] gap-x-[128px] gap-y-[16px]">
+                            <div className="w-full h-full grid grid-cols-2 grid-rows-5 p-8 gap-x-32 gap-y-4">
                                 <DisplayFieldComponent
                                     fieldname="Voornaam"
                                     data={"Jan-Jantjes"}
