@@ -13,10 +13,8 @@ import list from "./icons/list.svg";
 
 export default function SideBar() {
   let name = "Bert Bertson";
-  const [statusValue, setStatusValue] = useState(true);
+  const [statusValue, setStatusValue] = useState<boolean>(true);
   const status = statusValue ? "hidden" : "block";
-
-  const test = null;
 
   return (
     <>
