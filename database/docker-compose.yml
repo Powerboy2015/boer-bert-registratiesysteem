@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: boer-bert-mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_change_me
+      MYSQL_DATABASE: boer_bert_db
+      MYSQL_USER: boer_bert_user
+      MYSQL_PASSWORD: secure_password_change_me
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - boer-bert-network
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  boer-bert-network:
+    driver: bridge

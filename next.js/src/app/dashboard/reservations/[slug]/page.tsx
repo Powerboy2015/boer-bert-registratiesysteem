@@ -1,4 +1,4 @@
-import Database from "@/app/connections/Database";
+import DbPool from "@/app/connections/Database";
 import DisplayFieldComponent from "@/app/ui/DisplayFieldComponent";
 import ButtonComponent from "@/app/ui/ButtonComponent";
 import MapTargetComponent from "@/app/ui/MapTargetComponent";
@@ -20,8 +20,8 @@ interface ViewReservationProps {
 
 export default async function Page({ params }: ViewReservationProps) {
     const { slug } = await params;
-    const db: Database = new Database();
-    const reservationData = db.getReservation(slug);
+    const db: DbPool = new DbPool();
+    const reservationData = await db.GetReservation(slug);
 
     return (
         <div className="w-full flex flex-col gap-[32px] relative">

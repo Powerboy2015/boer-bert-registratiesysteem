@@ -1,3 +1,4 @@
+import mysql, { Query } from "mysql2";
 interface reservationData {
     reservationID: string;
     startDate: Date;
@@ -14,44 +15,52 @@ interface editableReservationFields {
     amount?: number;
 }
 
-export default class Database {
-    private connection: string;
+export default class DbPool {
+    private pool: mysql.Pool;
 
     constructor() {
-        this.connection = "hello";
+        this.pool = mysql.createPool({
+            host: "localhost",
+            user: "boer_bert_user",
+            password: "secure_password_change_me",
+            database: "boer_bert_db",
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0,
+        });
     }
 
-    /** gets resrevation data based on the given reservationID
-     *  @param reservationID the attached reservationID
-     *  @returns reservationData -  An object that holds all reservationData
-     */
-    public getReservation(reservationID: string): reservationData {
-        // TODO write database functionality in order to get reservation data from database
-        // TODO add handling for when reservationID doesn't exist
-
-        const reservation: reservationData = {
-            reservationID: "2025-0001",
-            startDate: new Date(),
-            endDate: new Date(),
-            amount: 8,
-            spot: "10: Groot",
-            reservationDate: new Date(),
-        };
-        return reservation;
+    private DoQuery(
+        query: string,
+        callback: (
+            err: mysql.QueryError | null,
+            results: mysql.QueryResult,
+            fields: mysql.FieldPacket[]
+        ) => object
+    ): Query {
+        return this.pool.query(query, callback);
     }
 
-    /**
-     * updates an reservation through the use of a reservationID and the args of which field is to be altered
-     * @param reservationID the reservationId of the reservation
-     * @param args the editable fields
-     * @returns a boolean indicating success or fail
-     */
-    public UpdateReservation(
-        reservationID: string,
-        args: editableReservationFields
-    ): boolean {
-        // TODO write handling to the database
-        // TODO check which args are given and update those fields.
-        return true;
+    public async GetReservation(val?: string): Promise<reservationData> {
+        const query = val
+            ? `SELECT * FROM Reserveringen WHERE ReserveringsID = ?`
+            : `SELECT * FROM Reserveringen`;
+
+        return new Promise((resolve, reject) => {
+            this.pool.query(query, val ? [val] : [], (err, results) => {
+                console.log(results);
+                const rows = results as mysql.RowDataPacket[];
+                const data: reservationData = {
+                    reservationID: rows[0].ReserveringsID,
+                    startDate: rows[0].DatumAankomst,
+                    endDate: rows[0].DatumVertrek,
+                    reservationDate: rows[0].ReserveringsDatum,
+                    spot: "10: Groot",
+                    amount: 10,
+                };
+                if (err) reject(err);
+                else resolve(data);
+            });
+        });
     }
 }
