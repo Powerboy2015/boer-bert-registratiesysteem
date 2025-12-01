@@ -35,9 +35,13 @@ export default function SideBar() {
           <div className="flex justify-center">
             <div className="w-fit">
               {/* Sidebar tabs*/}
-              <SideBarTab icon={calender} name="Overzicht" />
-              <SideBarTab icon={clock} name="Reserveringen" />
-              <SideBarTab icon={account} name="Accounts" />
+              <SideBarTab icon={calender} name="Overzicht" link="" />
+              <SideBarTab
+                icon={clock}
+                name="Reserveringen"
+                link="reserveringen"
+              />
+              <SideBarTab icon={account} name="Accounts" link="accounts" />
             </div>
           </div>
         </div>
@@ -46,8 +50,12 @@ export default function SideBar() {
           <div className="flex justify-center content-end">
             <div className="w-fit">
               {/* Bottom sidebar tabs */}
-              <SideBarTab icon={settings} name="Instellingen" />
-              <SideBarTab icon={logout} name="Logout" />
+              <SideBarTab
+                icon={settings}
+                name="Instellingen"
+                link="instellingen"
+              />
+              <SideBarTab icon={logout} name="Logout" link="logout" />
             </div>
           </div>
         </div>
