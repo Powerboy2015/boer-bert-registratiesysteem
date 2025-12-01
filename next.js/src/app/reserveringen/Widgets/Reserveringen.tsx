@@ -1,29 +1,32 @@
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import { useState } from "react";
 
+/* Interface voor alle types van de variabelen */
+export interface Reservering {
+  UserData_ID: number;
+  Voornaam: string;
+  Achternaam: string;
+  telNr: string;
+  adres: string;
+  email: string;
+  PlaatsNummer: number;
+  DatumAankomst: string;
+  DatumVertrek: string;
+  reserveringDatum: string;
+  reserveringBewerkDatum: string;
+}
+
 export default function Reserveringen() {
-  const [reserveringen, setReserveringen] = useState([
-    {
-      UserData_ID: 1,
-      Voornaam: "voornaam",
-      Achternaam: "achternaam",
-      telNr: "telNr",
-      adres: "adres",
-      email: "email",
-      PlaatsNummer: 8,
-      DatumAankomst: "start",
-      DatumVertrek: "eind",
-      reserveringDatum: "reserveringDatum",
-      reserveringBewerkDatum: "reserveringBewerkDatum",
-    },
-  ]);
+  /* UseState voor de array van alle reserveringen */
+  const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
+  /*UseState voor de overlay, true = overlay showed false = hidden */
+  const [overlay, setOverlay] = useState<boolean>(false);
 
-  const [overlay, setOverlay] = useState(false);
-
+  /* Toggle overlay */
   function toggleOverlay() {
     setOverlay(!overlay);
   }
-
+  /* functie voor het verwijderen van reservering, verwijderd de reservering met index nr */
   function handleDeleteReservering(RemoveIndex: number) {
     console.log(RemoveIndex);
     const newReserveringen = reserveringen.filter(
@@ -31,42 +34,36 @@ export default function Reserveringen() {
     );
     setReserveringen(newReserveringen);
   }
-
+  /*Pak de date van vandaag */
   const d = new Date(Date.now());
+
+  /*Functie om een reservering toe te voegen */
   function addReservering({
-    voornaam,
-    achternaam,
+    UserData_ID,
+    Voornaam,
+    Achternaam,
     telNr,
     adres,
     email,
-    plaats,
+    PlaatsNummer,
     DatumAankomst,
     DatumVertrek,
     reserveringBewerkDatum,
-  }: {
-    voornaam: string;
-    achternaam: string;
-    telNr: string;
-    adres: string;
-    email: string;
-    plaats: number;
-    DatumAankomst: string;
-    DatumVertrek: string;
-    reserveringBewerkDatum: string;
-  }) {
+  }: Reservering) {
     const nieuw = {
-      UserData_ID: 1,
-      Voornaam: voornaam,
-      Achternaam: achternaam,
+      UserData_ID: UserData_ID,
+      Voornaam: Voornaam,
+      Achternaam: Achternaam,
       telNr: telNr,
       adres: adres,
       email: email,
-      PlaatsNummer: plaats,
+      PlaatsNummer: PlaatsNummer,
       DatumAankomst: DatumAankomst,
       DatumVertrek: DatumVertrek,
       reserveringDatum: d.toDateString(),
-      reserveringBewerkDatum: reserveringBewerkDatum,
+      reserveringBewerkDatum: d.toDateString(),
     };
+    /*Set reserveringen op wat er nu staat in reserveringen + de nieuwe reserverign */
     setReserveringen([...reserveringen, nieuw]);
   }
 
