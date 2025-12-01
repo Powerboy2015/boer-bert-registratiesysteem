@@ -23,12 +23,12 @@ export default function SideBar() {
       {/* Different sidebar sizes for different screen sizes*/}
       <button
         onClick={() => setStatusValue(!statusValue)}
-        className="md:hidden absolute bottom-0 bg-[#556483] rounded-4xl p-2"
+        className="md:hidden fixed z-50 bottom-0 bg-[#556483] rounded-4xl p-2"
       >
         <Image src={settings} alt="error" className="w-10" />
       </button>
       <div
-        className={`bg-[#2E3038] h-full w-full min-w-fit ${status} sm:w-1/1 md:w-1/4 md:block xl:w-1/5 2xl:w-1/10`}
+        className={`bg-[#2E3038] min-h-screen w-full min-w-fit ${status} sm:w-1/1 md:w-1/4 md:block xl:w-1/5 2xl:w-1/10`}
       >
         <div className={"h-3/6 min-h-fit text-center pt-5"}>
           {/*Name of the logged on user */}
@@ -37,7 +37,7 @@ export default function SideBar() {
             <div className="w-fit">
               {/* Sidebar tabs*/}
               <SideBarTab icon={calender} name="Overzicht" />
-              <SideBarTab icon={clock} name="Reserveringen" />
+              <SideBarTab icon={clock} name="reserveringen" />
               <SideBarTab icon={account} name="Accounts" />
             </div>
           </div>

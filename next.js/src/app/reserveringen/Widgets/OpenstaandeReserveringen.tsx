@@ -1,6 +1,6 @@
 export default function OpenstaandeReserveringen() {
   return (
-    <div className="bg-[#556483] text-black w-98/100">
+    <div className="bg-[#556483] text-black w-98/100 h-fit mb-5 md:mb-0">
       <div className="h-full relative text-4xl p-10">
         <div className="h-2/4">
           <div>Openstaande reserveringen in &lt;30 dagen</div>
@@ -9,7 +9,6 @@ export default function OpenstaandeReserveringen() {
           <div className="text-9xl ">13</div>
         </div>
       </div>
-    </div>)
+    </div>
+  );
 }
-
-
