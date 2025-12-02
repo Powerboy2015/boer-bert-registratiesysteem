@@ -3,9 +3,9 @@
 import React, {Dispatch, SetStateAction, useEffect, useReducer, useState} from "react";
 import {mockReservations} from "@/app/Searchbar/mockDatabase";
 
-{/*I followed a dev tutorial for this component: https://dev.to/ma7moud3bas/build-a-live-search-bar-in-react-a-step-by-step-guide-2ibh*/
-}
-//types
+{/*I followed a dev tutorial for this component: https://dev.to/ma7moud3bas/build-a-live-search-bar-in-react-a-step-by-step-guide-2ibh*/}
+
+//types, gaat over wat er in de reserveringstabel staat. Dit moet dus nog worden afgestemd met backend database.
 type SearchResult = {
     reservationID: string,
     spot: string,
@@ -15,6 +15,7 @@ type SearchResult = {
 
 type SortKey = keyof SearchResult;
 
+    //states, gaat over in wat voor staat bepaalde functies zich bevinden.
 type State = {
     results: SearchResult[];
     isLoading: boolean;
@@ -24,6 +25,7 @@ type State = {
     sortDirection: "ascending" | "descending" | undefined;
 };
 
+//set aan acties.
 type Action =
     | { type: 'request', }
     | { type: 'success', results: SearchResult[] }
@@ -31,6 +33,7 @@ type Action =
     | { type: 'setQuery', query: string }
     | { type: "sort"; key: SortKey };
 
+//Resultaat als je zou sorteren. In dit geval dus alleen op oplopende of aflopende volgorde van de lijst die op dat moment zichtbaar is.
 function sortResults(
     array: SearchResult[],
     key?: SortKey,
@@ -52,7 +55,7 @@ function sortResults(
     });
 }
 
-//Reducer
+//Reducer, zorgt ervoor welke acties er plaats moeten vinden bij welke staat van functies.
 function Reducer(state: State, action: Action): State {
     switch (action.type) {
         case 'request': {
@@ -88,6 +91,7 @@ function Reducer(state: State, action: Action): State {
     }
 }
 
+//De staat van de lijst wanneer we de webpagina voor het eerst openen.
 const initialState: State = {isLoading: false, results: mockReservations, query: "", sortKey: undefined, sortDirection: undefined,};
 
 {/* for later use when database is actually working and we need to search results in the database*/}
@@ -105,6 +109,7 @@ const initialState: State = {isLoading: false, results: mockReservations, query:
         })
 }*/}
 
+//functie voor het verkrijgen van de data uit de mock database.
 const mockGetCharacters = async (query: string): Promise<SearchResult[]> => {
     return new Promise(async (resolve) => {
         const results = mockReservations.filter(r =>
@@ -140,6 +145,7 @@ const mockGetCharacters = async (query: string): Promise<SearchResult[]> => {
     }, [query, dispatch])
 }*/}
 
+//mock zoek functie die de data van de mock retrieve "mockGetCharacters" haalt.
 const useLiveSearch = (dispatch: Dispatch<Action>, query: string) => {
     useEffect(() => {
         dispatch({ type: "request" });
@@ -155,7 +161,7 @@ const useLiveSearch = (dispatch: Dispatch<Action>, query: string) => {
     }, [query, dispatch]);
 };
 
-
+//Zoekbalk component.
 export default function Searchbar() {
     const [state, dispatch] = useReducer(Reducer, initialState);
     const { query, sortKey, sortDirection } = state;
@@ -164,12 +170,12 @@ export default function Searchbar() {
 
     useLiveSearch(dispatch, query)
 
-    // handle input change
+    //het handelen van de verandering in het input field.
     function handleChange(event: { target: { value: SetStateAction<string>; }; }) {
         setDebounceValue(event.target.value)
     }
 
-
+    //het handelen van wanneer iemand op enter drukt, nadat hij/zij een zoekwoord heeft ingevuld
     const handleKeypress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -177,13 +183,13 @@ export default function Searchbar() {
         }
     }
 
-
+    //wanneer iemand op het zoekglas icoontje klikt wordt er ook gezocht, net zoals wanneer er op enter gedrukt wordt zoals hierboven.
     const buttonClicked = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         dispatch({type: "setQuery", query: debounceValue.toLowerCase()})
     };
 
-
+    //Het tonen van een pijltje wanneer je filtert.
     const sortArrow = (key: SortKey) =>
         sortKey === key ? (sortDirection === "ascending" ? "↑" : "↓") : "";
 
