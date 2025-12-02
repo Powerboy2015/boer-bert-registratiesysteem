@@ -22,7 +22,7 @@ export default function EditReservationModal({
                 <div id="title" className="w-full h-1/3 bg-[#405D98]">
                     <h2>Reservering aanpassen: {reservation}</h2>
                 </div>
-                <div className="w-full h-2/3 bg-(--color-accent-2) grid px-[32px] py-[16px] grid-cols-2 grid-rows-4 gap-[16px]">
+                <div className="w-full h-2/3 bg-(--color-accent-2) grid px-8 py-4 grid-cols-2 grid-rows-4 gap-4">
                     <EditFieldComponent
                         fieldname="ReserveringsNummer"
                         data={reservation}

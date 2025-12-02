@@ -17,17 +17,17 @@ export default function ModalOverlayComponent({
 
     useEffect(() => {
         if (active == name) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setModalState(true);
             setActive("none");
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [active]);
 
     return (
         <>
             <modalEnabledContext.Provider value={{ modalState, setModalState }}>
                 <span
-                    className="fixed top-[0px] left-[0px] flex justify-center items-center w-full h-full bg-[rgba(0,0,0,0.55)] z-100"
+                    className="fixed top-0 left-0 flex justify-center items-center w-full h-full bg-[rgba(0,0,0,0.55)] z-100"
                     style={{
                         display: modalState ? "flex" : "none",
                     }}

@@ -31,11 +31,11 @@ export default function EditReservationButton({
                 }}
             >
                 <div
-                    className={`${roboto.className} flex p-[10px] text-[24px] text-(--color-text)`}
+                    className={`${roboto.className} flex p-2.5 text-[24px] text-(--color-text)`}
                 >
-                    <div className="flex p-[10px] text-[24px] text-(--color-text)">
-                        <p className="w-full h-full m-[0px]">{text}</p>
-                        <p className="m-[0px]">X</p>
+                    <div className="flex p-2.5 text-[24px] text-(--color-text)">
+                        <p className="w-full h-full m-0">{text}</p>
+                        <p className="m-0">X</p>
                     </div>
                 </div>
             </button>

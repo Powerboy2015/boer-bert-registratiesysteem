@@ -19,7 +19,7 @@ export default function reservationLayout({
                 ></div>
                 <div
                     id="content"
-                    className="p-[32px] flex h-full max-w-[1440px] relative gap-[16px] m-auto"
+                    className="p-8 flex h-full max-w-[1440px] relative gap-4 m-auto"
                 >
                     <SideBar />
                     <div className="w-full h-full relative">

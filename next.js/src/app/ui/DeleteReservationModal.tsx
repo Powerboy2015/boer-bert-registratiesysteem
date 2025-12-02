@@ -24,30 +24,30 @@ export default function DeleteReservationModal() {
             <div className="w-full h-full p-[254px]">
                 <div
                     id="inner"
-                    className="w-full h-full bg-(--color-accent-2) flex flex-col px-[32px] py-[64px] gap-[48px]"
+                    className="w-full h-full bg-(--color-accent-2) flex flex-col px-8 py-16 gap-12"
                 >
                     <h2
-                        className={`m-[0px] ${roboto.className} text-(--color-text) text-[24px]`}
+                        className={`m-0 ${roboto.className} text-(--color-text) text-[24px]`}
                     >
                         Weet U zeker dat U deze reservering wilt verwijderen?
                     </h2>
                     <div
-                        className={`flex flex-col gap-[8px] ${roboto_mono.className} text-(--color-text) text-[24px]`}
+                        className={`flex flex-col gap-2 ${roboto_mono.className} text-(--color-text) text-[24px]`}
                     >
                         <div className="flex">
                             <strong>Naam: </strong>
-                            <p className="m-[0px]">JanJantjes</p>
+                            <p className="m-0">JanJantjes</p>
                         </div>
                         <div className="flex">
                             <strong>Datum: </strong>
-                            <p className="m-[0px]">23 nov 2025</p>
+                            <p className="m-0">23 nov 2025</p>
                         </div>
                         <div className="flex">
                             <strong>Plaats: </strong>
-                            <p className="m-[0px]">10 (Groot)</p>
+                            <p className="m-0">10 (Groot)</p>
                         </div>
                     </div>
-                    <div className="flex flex-row gap-[64px]">
+                    <div className="flex flex-row gap-16">
                         <EditReservationButton
                             text="Terug"
                             btnCallback={closeModal}
