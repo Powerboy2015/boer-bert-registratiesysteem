@@ -13,10 +13,11 @@ export default function ModalOverlayComponent({
     children,
 }: ModalOverlayComponentProps) {
     const [modalState, setModalState] = useState<boolean>(false);
-    const { active, setActive } = useContext(enableModalContext);
+    const { active, setActive, reservationID } = useContext(enableModalContext);
 
     useEffect(() => {
         if (active == name) {
+            console.log(reservationID);
             setModalState(true);
             setActive("none");
         }

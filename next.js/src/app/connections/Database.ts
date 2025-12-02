@@ -15,20 +15,31 @@ export interface editableReservationFields {
     amount?: number;
 }
 
-export default class DbPool {
-    private pool: mysql.Pool;
+class DbPool {
+    private static instance: DbPool;
+    private pool: any; // your mysql2 pool
 
-    constructor() {
+    private constructor() {
+        // Initialize your pool here
         this.pool = mysql.createPool({
             host: "localhost",
             user: "boer_bert_user",
             password: "secure_password_change_me",
             database: "boer_bert_db",
             waitForConnections: true,
-            connectionLimit: 10,
+            connectionLimit: 10, // Limit connections
             queueLimit: 0,
         });
     }
+
+    public static getInstance(): DbPool {
+        if (!DbPool.instance) {
+            DbPool.instance = new DbPool();
+        }
+        return DbPool.instance;
+    }
+
+    // ...existing code...
 
     private DoQuery(
         query: string,
@@ -75,4 +86,68 @@ export default class DbPool {
             });
         });
     }
+
+    public async DeleteReservation(reservationID: string): Promise<boolean> {
+        const query = `DELETE FROM Reserveringen WHERE ReserveringsID = ?`;
+
+        return new Promise((resolve, reject) => {
+            this.pool.query(query, [reservationID], (err, results) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                const result = results as mysql.ResultSetHeader;
+                resolve(result.affectedRows > 0);
+            });
+        });
+    }
+
+    public async UpdateReservation(
+        reservationID: string,
+        args: editableReservationFields
+    ): Promise<boolean> {
+        const updates: string[] = [];
+        const values: any[] = [];
+
+        if (args.startDate !== undefined) {
+            updates.push("DatumAankomst = ?");
+            values.push(args.startDate);
+        }
+        if (args.endDate !== undefined) {
+            updates.push("DatumVertrek = ?");
+            values.push(args.endDate);
+        }
+        // if (args.spot !== undefined) {
+        //     updates.push("Spot = ?");
+        //     values.push(args.spot);
+        // }
+        // if (args.amount !== undefined) {
+        //     updates.push("Amount = ?");
+        //     values.push(args.amount);
+        // }
+
+        if (updates.length === 0) {
+            return false;
+        }
+
+        values.push(reservationID);
+        const query = `UPDATE Reserveringen SET ${updates.join(
+            ", "
+        )} WHERE ReserveringsID = ?`;
+
+        return new Promise((resolve, reject) => {
+            this.pool.query(query, values, (err, results) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                const result = results as mysql.ResultSetHeader;
+                resolve(result.affectedRows > 0);
+            });
+        });
+    }
 }
+
+export default DbPool.getInstance();

@@ -10,9 +10,12 @@ export default function ModalEnablerComponent({
     children,
 }: ModalOverlEnablernentProps) {
     const [active, setActive] = useState<string>("null");
+    const [reservationID, setReservationID] = useState<string>("bull");
     return (
         <>
-            <enableModalContext.Provider value={{ active, setActive }}>
+            <enableModalContext.Provider
+                value={{ active, setActive, reservationID, setReservationID }}
+            >
                 {children}
             </enableModalContext.Provider>
         </>

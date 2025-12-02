@@ -3,6 +3,8 @@ import { useContext } from "react";
 import EditReservationButton from "./EditReservationButton";
 import { modalEnabledContext } from "../context/modalEnabled";
 import { Roboto, Roboto_Mono } from "next/font/google";
+import { DeleteReservation } from "../connections/dk";
+import { enableModalContext } from "../context/enableModal";
 
 const roboto = Roboto({
     weight: "500",
@@ -15,10 +17,18 @@ const roboto_mono = Roboto_Mono({
 
 export default function DeleteReservationModal() {
     const { setModalState } = useContext(modalEnabledContext);
+    const { reservationID } = useContext(enableModalContext);
 
     const closeModal = () => {
         setModalState(false);
     };
+
+    const deleteFunction = () => {
+        closeModal();
+        DeleteReservation(reservationID);
+        window.location.href = "/dashboard/reservations";
+    };
+
     return (
         <>
             <div className="w-full h-full p-[254px]">
@@ -55,7 +65,7 @@ export default function DeleteReservationModal() {
                         <EditReservationButton
                             text="Verwijder"
                             color="#FC4545"
-                            btnCallback={closeModal}
+                            btnCallback={deleteFunction}
                         />
                     </div>
                 </div>

@@ -24,16 +24,17 @@ interface ViewReservationProps {
 
 export default function Page({ params }: ViewReservationProps) {
     const slug = use(params).slug; // Use React's `use` hook for promises
-    const [reservationData, setReservationData] = useState<reservationData>({});
+    const [reservationData, setReservationData] =
+        useState<reservationData | null>();
+    const { setActive, setReservationID } = useContext(enableModalContext);
 
     useEffect(() => {
         GetReservations(slug).then((Reservation) => {
             console.log(Reservation);
             setReservationData(Reservation[0]);
+            setReservationID(Reservation[0].reservationID);
         });
-    }, []);
-
-    const { setActive } = useContext(enableModalContext);
+    }, [setReservationID, slug]);
 
     return (
         <div className="w-full flex flex-col gap-8 relative">
@@ -51,7 +52,7 @@ export default function Page({ params }: ViewReservationProps) {
                     <p
                         className={`text-[64px] font-normal ${roboto.className} m-0`}
                     >
-                        {reservationData.reservationID ?? "loading"}
+                        {reservationData?.reservationID ?? "loading"}
                     </p>
                 </div>
                 <div id="view-reservation-data" className="w-full px-2">
@@ -83,34 +84,34 @@ export default function Page({ params }: ViewReservationProps) {
                                 <DisplayFieldComponent
                                     fieldname="ReserveringsNummer"
                                     data={
-                                        reservationData.reservationID ??
+                                        reservationData?.reservationID ??
                                         "loading"
                                     }
                                 />
                                 <DisplayFieldComponent
                                     fieldname="ReserveringsDatum"
                                     data={
-                                        reservationData.reservationDate?.toDateString() ??
+                                        reservationData?.reservationDate?.toDateString() ??
                                         "loading"
                                     }
                                 />
                                 <DisplayFieldComponent
                                     fieldname="AankomstDatum"
                                     data={
-                                        reservationData.startDate?.toDateString() ??
+                                        reservationData?.startDate?.toDateString() ??
                                         "loading"
                                     }
                                 />
                                 <DisplayFieldComponent
                                     fieldname="VertrekDatum"
                                     data={
-                                        reservationData.endDate?.toDateString() ??
+                                        reservationData?.endDate?.toDateString() ??
                                         "loading"
                                     }
                                 />
                                 <DisplayFieldComponent
                                     fieldname="Plaats"
-                                    data={reservationData.spot ?? "loading"}
+                                    data={reservationData?.spot ?? "loading"}
                                 />
                             </div>
                         </section>
