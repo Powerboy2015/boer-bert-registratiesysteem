@@ -1,8 +1,12 @@
-import DbPool from "@/app/connections/Database";
+"use client";
+import DbPool, { reservationData } from "@/app/connections/Database";
 import DisplayFieldComponent from "@/app/ui/DisplayFieldComponent";
 import ButtonComponent from "@/app/ui/ButtonComponent";
 import MapTargetComponent from "@/app/ui/MapTargetComponent";
 import { Roboto } from "next/font/google";
+import { enableModalContext } from "@/app/context/enableModal";
+import { use, useContext, useEffect, useState } from "react";
+import { GetReservations } from "@/app/connections/dk";
 
 const robotoBold = Roboto({
     weight: "600",
@@ -18,11 +22,18 @@ interface ViewReservationProps {
     params: Promise<{ slug: string }>;
 }
 
-export default async function Page({ params }: ViewReservationProps) {
-    const { slug } = await params;
-    const db: DbPool = new DbPool();
-    const response = await db.GetReservation(slug);
-    const reservationData = Array.isArray(response) ? response[1] : response;
+export default function Page({ params }: ViewReservationProps) {
+    const slug = use(params).slug; // Use React's `use` hook for promises
+    const [reservationData, setReservationData] = useState<reservationData>({});
+
+    useEffect(() => {
+        GetReservations(slug).then((Reservation) => {
+            console.log(Reservation);
+            setReservationData(Reservation[0]);
+        });
+    }, []);
+
+    const { setActive } = useContext(enableModalContext);
 
     return (
         <div className="w-full flex flex-col gap-8 relative">
@@ -40,7 +51,7 @@ export default async function Page({ params }: ViewReservationProps) {
                     <p
                         className={`text-[64px] font-normal ${roboto.className} m-0`}
                     >
-                        {reservationData.reservationID}
+                        {reservationData.reservationID ?? "loading"}
                     </p>
                 </div>
                 <div id="view-reservation-data" className="w-full px-2">
@@ -48,10 +59,19 @@ export default async function Page({ params }: ViewReservationProps) {
                         id="inner"
                         className="w-full h-full bg-(--color-accent-2) px-8 py-12 grid grid-cols-6 grid-rows-15 gap-4 shadow-(--box-shadow-view)"
                     >
-                        <ButtonComponent />
+                        <ButtonComponent
+                            onClick={() => {
+                                console.log("clicked");
+                                setActive("EditReservation");
+                            }}
+                        />
                         <ButtonComponent
                             color="#FC4545"
                             text="Verwijder Reservering"
+                            onClick={() => {
+                                console.log("clicked");
+                                setActive("DeleteReservation");
+                            }}
                         />
                         <h2
                             className={`col-span-3 mt-auto mb-0 ${roboto.className} text-[40px] text-(--color-text)`}
@@ -62,23 +82,35 @@ export default async function Page({ params }: ViewReservationProps) {
                             <div className="w-full h-full grid grid-cols-2 grid-rows-3 p-8 gap-x-32 gap-y-4 inset-shadow-(--inset-shadow-box)">
                                 <DisplayFieldComponent
                                     fieldname="ReserveringsNummer"
-                                    data={reservationData.reservationID}
+                                    data={
+                                        reservationData.reservationID ??
+                                        "loading"
+                                    }
                                 />
                                 <DisplayFieldComponent
                                     fieldname="ReserveringsDatum"
-                                    data={reservationData.reservationDate.toDateString()}
+                                    data={
+                                        reservationData.reservationDate?.toDateString() ??
+                                        "loading"
+                                    }
                                 />
                                 <DisplayFieldComponent
                                     fieldname="AankomstDatum"
-                                    data={reservationData.startDate.toDateString()}
+                                    data={
+                                        reservationData.startDate?.toDateString() ??
+                                        "loading"
+                                    }
                                 />
                                 <DisplayFieldComponent
                                     fieldname="VertrekDatum"
-                                    data={reservationData.endDate.toDateString()}
+                                    data={
+                                        reservationData.endDate?.toDateString() ??
+                                        "loading"
+                                    }
                                 />
                                 <DisplayFieldComponent
                                     fieldname="Plaats"
-                                    data={reservationData.spot}
+                                    data={reservationData.spot ?? "loading"}
                                 />
                             </div>
                         </section>

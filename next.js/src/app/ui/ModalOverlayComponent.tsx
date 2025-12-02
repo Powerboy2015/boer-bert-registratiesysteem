@@ -1,15 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { modalEnabledContext } from "../context/modalEnabled";
+import { enableModalContext } from "../context/enableModal";
 
 interface ModalOverlayComponentProps {
     children: React.ReactNode;
+    name: string;
 }
 export default function ModalOverlayComponent({
+    name,
     children,
 }: ModalOverlayComponentProps) {
-    const [modalState, setModalState] = useState<boolean>(true);
+    const [modalState, setModalState] = useState<boolean>(false);
+    const { active, setActive } = useContext(enableModalContext);
+
+    useEffect(() => {
+        if (active == name) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setModalState(true);
+            setActive("none");
+        }
+    }, [active]);
+
     return (
         <>
             <modalEnabledContext.Provider value={{ modalState, setModalState }}>

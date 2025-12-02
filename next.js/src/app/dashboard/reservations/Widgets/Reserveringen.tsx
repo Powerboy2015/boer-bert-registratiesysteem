@@ -1,5 +1,7 @@
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import DbPool, { reservationData } from "@/app/connections/Database";
+import { GetReservations } from "@/app/connections/dk";
 
 /* Interface voor alle types van de variabelen */
 export interface Reservering {
@@ -18,9 +20,15 @@ export interface Reservering {
 
 export default function Reserveringen() {
     /* UseState voor de array van alle reserveringen */
-    const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
+    const [reserveringen, setReserveringen] = useState<reservationData[]>([]);
     /*UseState voor de overlay, true = overlay showed false = hidden */
     const [overlay, setOverlay] = useState<boolean>(false);
+
+    useEffect(() => {
+        GetReservations().then((data) => {
+            setReserveringen(data.slice(0, 20));
+        });
+    }, []);
 
     /* Toggle overlay */
     function toggleOverlay() {
@@ -110,15 +118,16 @@ export default function Reserveringen() {
                                     className="border-y-5 border-[#1F1F21] text-2xl "
                                     key={index}
                                     onClick={() => {
-                                        window.location.href =
-                                            "/dashboard/reservations/2025-0001";
+                                        window.location.href = `/dashboard/reservations/${item.reservationID}`;
                                     }}
                                 >
                                     <td>{item.Achternaam}</td>
-                                    <td>{item.DatumVertrek}</td>
-                                    <td>{item.DatumAankomst}</td>
-                                    <td>{item.PlaatsNummer}</td>
-                                    <td>{item.reserveringDatum}</td>
+                                    <td>{item.endDate.toDateString()}</td>
+                                    <td>{item.startDate.toDateString()}</td>
+                                    <td>{item.spot}</td>
+                                    <td>
+                                        {item.reservationDate.toDateString()}
+                                    </td>
                                     <td>
                                         {" "}
                                         <button

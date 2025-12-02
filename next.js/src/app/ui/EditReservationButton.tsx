@@ -8,7 +8,7 @@ interface EditReservationButtonProps {
     text?: string;
     color?: string;
     colSpan?: number;
-    btnCallback?: Function;
+    btnCallback?: () => void;
 }
 export default function EditReservationButton({
     text = "Reservering Aanpassen",

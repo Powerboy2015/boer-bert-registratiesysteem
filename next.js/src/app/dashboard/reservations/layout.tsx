@@ -1,6 +1,7 @@
 import SideBar from "@/app/Sidebar/sidebar";
 import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 import EditReservationModal from "@/app/ui/EditReservationModal";
+import ModalEnablerComponent from "@/app/ui/ModalEnablerComponent";
 import ModalOverlayComponent from "@/app/ui/ModalOverlayComponent";
 
 interface reservationLayoutProps {
@@ -22,13 +23,17 @@ export default function reservationLayout({
                 >
                     <SideBar />
                     <div className="w-full h-full relative">
-                        <ModalOverlayComponent>
-                            <EditReservationModal reservation={"2025-0001"} />
-                        </ModalOverlayComponent>
-                        <ModalOverlayComponent>
-                            <DeleteReservationModal />
-                        </ModalOverlayComponent>
-                        <main className="w-full h-full">{children}</main>
+                        <ModalEnablerComponent>
+                            <ModalOverlayComponent name="EditReservation">
+                                <EditReservationModal
+                                    reservation={"2025-0001"}
+                                />
+                            </ModalOverlayComponent>
+                            <ModalOverlayComponent name="DeleteReservation">
+                                <DeleteReservationModal />
+                            </ModalOverlayComponent>
+                            <main className="w-full h-full">{children}</main>
+                        </ModalEnablerComponent>
                     </div>
                 </div>
             </div>

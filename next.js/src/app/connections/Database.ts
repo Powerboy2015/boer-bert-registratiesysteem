@@ -1,5 +1,5 @@
 import mysql, { Query } from "mysql2";
-interface reservationData {
+export interface reservationData {
     reservationID: string;
     startDate: Date;
     endDate: Date;
@@ -8,7 +8,7 @@ interface reservationData {
     reservationDate: Date;
 }
 
-interface editableReservationFields {
+export interface editableReservationFields {
     startDate?: Date;
     endDate?: Date;
     spot?: string;
