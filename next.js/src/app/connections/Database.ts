@@ -148,6 +148,34 @@ class DbPool {
             });
         });
     }
+
+    public async CreateReservation(
+        startDate: Date,
+        endDate: Date,
+        spot: string,
+        amount: number
+    ): Promise<string> {
+        const query = `INSERT INTO Reserveringen (ReserveringsID,UserDataID, DatumAankomst, DatumVertrek, ReserveringsDatum) VALUES (2030-0781,1,?, ?, NOW())`;
+
+        return new Promise((resolve, reject) => {
+            this.pool.query(
+                query,
+                [
+                    endDate.toISOString().split("T")[0],
+                    endDate.toISOString().split("T")[0],
+                ],
+                (err, results) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+
+                    const result = results as mysql.ResultSetHeader;
+                    resolve(result.insertId.toString());
+                }
+            );
+        });
+    }
 }
 
 export default DbPool.getInstance();

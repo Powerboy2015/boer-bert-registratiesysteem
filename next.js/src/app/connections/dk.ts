@@ -43,3 +43,23 @@ export async function UpdateReservation(args: {
     );
     return response;
 }
+
+export async function CreateReservation(args: {
+    aankomstDatum: string;
+    vertrekDatum: string;
+    plaats: string;
+    aantal: number;
+}): Promise<string> {
+    const db = DbPool;
+
+    const startDate = new Date(args.aankomstDatum);
+    const endDate = new Date(args.vertrekDatum);
+
+    const response = await db.CreateReservation(
+        startDate,
+        endDate,
+        args.plaats,
+        args.aantal
+    );
+    return response;
+}
