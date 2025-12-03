@@ -20,31 +20,6 @@
 -- Table structure for table `Account`
 --
 
-<<<<<<<< HEAD:database/dump-boerbert-202512031744.sql
-========
-use mydatabase;
-
-DROP TABLE IF EXISTS `UserData`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `UserData` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Created_at` datetime DEFAULT NULL,
-  `Updated_at` datetime DEFAULT NULL,
-  `Woonplaats` varchar(100) DEFAULT NULL,
-  `Voornaam` varchar(100) DEFAULT NULL,
-  `Achternaam` varchar(100) DEFAULT NULL,
-  `Telefoonnummer` varchar(100) DEFAULT NULL,
-  `Email` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `UserData`
---
-
->>>>>>>> d93e338d59512a79cf642d19924ad26d696ccbaf:database/dump-boerbert.sql
 DROP TABLE IF EXISTS `Account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
@@ -117,6 +92,25 @@ UNLOCK TABLES;
 -- Table structure for table `UserData`
 --
 
+DROP TABLE IF EXISTS `UserData`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `UserData` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Created_at` datetime DEFAULT NULL,
+  `Updated_at` datetime DEFAULT NULL,
+  `Woonplaats` varchar(100) DEFAULT NULL,
+  `Voornaam` varchar(100) DEFAULT NULL,
+  `Achternaam` varchar(100) DEFAULT NULL,
+  `Telefoonnummer` varchar(100) DEFAULT NULL,
+  `Email` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `UserData`
+--
 
 LOCK TABLES `UserData` WRITE;
 /*!40000 ALTER TABLE `UserData` DISABLE KEYS */;
