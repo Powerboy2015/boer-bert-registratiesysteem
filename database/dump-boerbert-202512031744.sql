@@ -20,8 +20,6 @@
 -- Table structure for table `Account`
 --
 
-use mydatabase;
-
 DROP TABLE IF EXISTS `Account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
@@ -35,7 +33,7 @@ CREATE TABLE `Account` (
   PRIMARY KEY (`ID`),
   KEY `Account_UserData_FK` (`UserData_ID`),
   CONSTRAINT `Account_UserData_FK` FOREIGN KEY (`UserData_ID`) REFERENCES `UserData` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,6 +42,12 @@ CREATE TABLE `Account` (
 
 LOCK TABLES `Account` WRITE;
 /*!40000 ALTER TABLE `Account` DISABLE KEYS */;
+INSERT INTO `Account` VALUES
+(1,'password123','2025-11-01 10:00:00','2025-11-01 10:00:00',1,1),
+(2,'qwerty456','2025-11-05 12:30:00','2025-11-05 12:30:00',1,2),
+(3,'abc!@#789','2025-11-10 09:45:00','2025-11-10 09:45:00',0,3),
+(4,'securePass1','2025-11-12 15:20:00','2025-11-12 15:20:00',1,4),
+(5,'testPass99','2025-11-20 11:10:00','2025-11-20 11:10:00',0,5);
 /*!40000 ALTER TABLE `Account` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,10 +66,11 @@ CREATE TABLE `Reservaties` (
   `UserData_ID` bigint(20) DEFAULT NULL,
   `ReservatieBewerkDatum` datetime DEFAULT NULL,
   `PlekNummer` int(60) DEFAULT NULL,
+  `AantalMensen` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `Reservaties_UserData_FK` (`UserData_ID`),
   CONSTRAINT `Reservaties_UserData_FK` FOREIGN KEY (`UserData_ID`) REFERENCES `UserData` (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,6 +79,12 @@ CREATE TABLE `Reservaties` (
 
 LOCK TABLES `Reservaties` WRITE;
 /*!40000 ALTER TABLE `Reservaties` DISABLE KEYS */;
+INSERT INTO `Reservaties` VALUES
+(1,'2025-12-10','2025-12-15','2025-11-01 10:30:00',1,'2025-11-01 10:30:00',12,0),
+(2,'2025-12-20','2025-12-25','2025-11-05 14:20:00',2,'2025-11-05 14:20:00',25,0),
+(3,'2026-01-05','2026-01-10','2025-11-10 09:15:00',3,'2025-11-10 09:15:00',8,0),
+(4,'2026-01-15','2026-01-20','2025-11-12 16:45:00',4,'2025-11-12 16:45:00',33,0),
+(5,'2026-02-01','2026-02-05','2025-11-20 11:00:00',5,'2025-11-20 11:00:00',50,0);
 /*!40000 ALTER TABLE `Reservaties` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1123,4 +1134,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-12-03 11:25:09
+-- Dump completed on 2025-12-03 17:44:11
