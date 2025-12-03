@@ -7,9 +7,9 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-
-RUN npm run build
+  
+ENV WATCHPACK_POLLING=true
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npx", "next", "dev"]
