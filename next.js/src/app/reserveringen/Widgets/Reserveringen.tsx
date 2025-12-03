@@ -1,5 +1,5 @@
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /* Interface voor alle types van de variabelen */
 export interface Reservering {
@@ -22,6 +22,29 @@ export default function Reserveringen() {
   /*UseState voor de overlay, true = overlay showed false = hidden */
   const [overlay, setOverlay] = useState<boolean>(false);
 
+
+
+
+
+  useEffect(() => {
+    async function getAPI() {
+      const url = "http://localhost:3000/api/reserveringen"
+
+      const response = fetch(url)
+
+      const data = await response
+
+      const res = await data.json()
+
+      setReserveringen(res)
+
+
+    }
+
+    getAPI()
+
+  }, [])
+
   /* Toggle overlay */
   function toggleOverlay() {
     setOverlay(!overlay);
@@ -38,39 +61,12 @@ export default function Reserveringen() {
   const d = new Date(Date.now());
 
   /*Functie om een reservering toe te voegen */
-  function addReservering({
-    UserData_ID,
-    Voornaam,
-    Achternaam,
-    telNr,
-    adres,
-    email,
-    PlaatsNummer,
-    DatumAankomst,
-    DatumVertrek,
-    reserveringBewerkDatum,
-  }: Reservering) {
-    const nieuw = {
-      UserData_ID: UserData_ID,
-      Voornaam: Voornaam,
-      Achternaam: Achternaam,
-      telNr: telNr,
-      adres: adres,
-      email: email,
-      PlaatsNummer: PlaatsNummer,
-      DatumAankomst: DatumAankomst,
-      DatumVertrek: DatumVertrek,
-      reserveringDatum: d.toDateString(),
-      reserveringBewerkDatum: d.toDateString(),
-    };
-    /*Set reserveringen op wat er nu staat in reserveringen + de nieuwe reserverign */
-    setReserveringen([...reserveringen, nieuw]);
-  }
+
 
   return (
     <>
       {overlay ? (
-        <ReserveringOverlay toggle={toggleOverlay} add={addReservering} />
+        <ReserveringOverlay toggle={toggleOverlay} />
       ) : null}
       <div className="bg-[#2E3038] h-full mx-5">
         <div className="h-1/15 flex w-full">

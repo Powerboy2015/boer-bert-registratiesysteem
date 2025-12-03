@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Reservering } from "../Widgets/Reserveringen";
+
 
 export default function ReserveringOverlay({
-  toggle,
-  add,
+  toggle
+
 }: {
   toggle: () => void;
-  add: (reservering: Reservering) => void;
+
 }) {
   /* useStates voor de verschillende input velden */
   const [voornaam, setVoornaam] = useState("");
@@ -20,24 +20,7 @@ export default function ReserveringOverlay({
   const [plaats, setPlaats] = useState(Number);
   const [gereserveerdDatum, setGereserveerdDatum] = useState("");
 
-  /*Functie voor het versturen van de data */
-  function handleClick() {
-    add({
-      UserData_ID: 1,
-      Voornaam: voornaam,
-      Achternaam: achternaam,
-      telNr: telNr,
-      adres: adres,
-      email: email,
-      PlaatsNummer: plaats,
-      DatumAankomst: DatumAankomst,
-      DatumVertrek: DatumVertrek,
-      reserveringDatum: gereserveerdDatum,
-      reserveringBewerkDatum: "2025-10-11",
-    });
-    toggle();
-    setGereserveerdDatum(Date.now().toString());
-  }
+
 
   return (
     <>
@@ -155,7 +138,7 @@ export default function ReserveringOverlay({
               />
             </div>
             <button
-              onClick={() => handleClick()}
+
               className="bg-[#55835A] p-2 absolute bottom-3 left-2/5"
             >
               Opslaan

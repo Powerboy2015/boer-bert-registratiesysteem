@@ -19,12 +19,10 @@ export async function GET(): Promise<Response> {
     let conn;
     try {
         conn = await pool.getConnection();
-        const data = await conn.query("SELECT * from Reserveringen");
+        const data = await conn.query("SELECT * from reserveringen");
         return Response.json(serializeBigInt(data))
     } catch (err) {
         throw err;
-    } finally {
-        if (conn) conn.end();
     }
 }
 
