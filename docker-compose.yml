@@ -1,0 +1,33 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: mydatabase
+    ports:
+      - "3306:3306"
+    networks:
+      - mariadb_network
+    volumes:
+      - "./database:/docker-entrypoint-initdb.d"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - mariadb_network
+
+  node:
+    restart: always
+    build: ./next.js
+    ports:
+      - 3000:3000
+    networks: 
+      - mariadb_network
+
+networks:
+  mariadb_network:
+    driver: bridge
