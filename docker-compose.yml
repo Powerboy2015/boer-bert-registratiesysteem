@@ -24,7 +24,7 @@ services:
     restart: always
     build: ./next.js
     ports:
-      - 3000:3000
+      - 80:3000
     networks: 
       - mariadb_network
 
