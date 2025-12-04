@@ -1,9 +1,3 @@
-"use client";
-import { Roboto } from "next/font/google";
-
-const roboto = Roboto({
-    weight: "400",
-});
 interface EditReservationButtonProps {
     text?: string;
     color?: string;
@@ -30,9 +24,6 @@ export default function EditReservationButton({
                     }
                 }}
             >
-                <div
-                    className={`${roboto.className} flex p-[10px] text-[24px] text-(--color-text)`}
-                >
                 <div className="flex p-[10px] text-[24px] text-(--color-text)">
                     <p className="w-full h-full m-[0px]">{text}</p>
                     <p className="m-[0px]">X</p>
