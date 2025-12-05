@@ -2,7 +2,7 @@ import getDB from "@/app/api/lib/db"
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
-const allowedColumns = ["ID", "Voornaam", "Achternaam", "Email", "Woonplaats", "Telefoonnummer"];
+const allowedColumns = ["Voornaam", "Achternaam", "Email", "Woonplaats", "Telefoonnummer"];
 
 // interface POSTreq {
 //     column: string;
@@ -34,7 +34,8 @@ export async function GET(req: NextRequest) {
     const db = await getDB();
 
     let whereSQLquery = "";
-    let likeInput: any[] = [];
+    // eslint-disable-next-line prefer-const
+    let likeInput: string[] = [];
     if (searchColumn && searchValue) {
         whereSQLquery = `WHERE ${searchColumn} LIKE ?`;
         likeInput.push(`%${searchValue}%`);

@@ -26,8 +26,8 @@ DROP TABLE IF EXISTS `Account`;
 CREATE TABLE `Account` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `Password` varchar(100) DEFAULT NULL,
-  `Created_at` datetime DEFAULT NULL,
-  `Updated_at` datetime DEFAULT NULL,
+  `Created_at` datetime NOT NULL DEFAULT NOW(6),  
+  `Updated_at` datetime NOT NULL DEFAULT NOW(6), 
   `Status` tinyint(1) DEFAULT NULL,
   `UserData_ID` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`ID`),
@@ -60,6 +60,7 @@ DROP TABLE IF EXISTS `Reservaties`;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Reservaties` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `ReseveringsNr` varchar(100) NOT NULL,  
   `DatumAankomst` date DEFAULT NULL,
   `DatumVertrek` date DEFAULT NULL,
   `ReserveringsDatum` datetime DEFAULT NULL,
@@ -67,6 +68,8 @@ CREATE TABLE `Reservaties` (
   `ReservatieBewerkDatum` datetime DEFAULT NULL,
   `PlekNummer` int(60) DEFAULT NULL,
   `AantalMensen` int(11) NOT NULL,
+  `Created_at` datetime NOT NULL DEFAULT NOW(6),  
+  `Updated_at` datetime NOT NULL DEFAULT NOW(6),  
   PRIMARY KEY (`ID`),
   KEY `Reservaties_UserData_FK` (`UserData_ID`),
   CONSTRAINT `Reservaties_UserData_FK` FOREIGN KEY (`UserData_ID`) REFERENCES `UserData` (`ID`)
@@ -80,11 +83,11 @@ CREATE TABLE `Reservaties` (
 LOCK TABLES `Reservaties` WRITE;
 /*!40000 ALTER TABLE `Reservaties` DISABLE KEYS */;
 INSERT INTO `Reservaties` VALUES
-(1,'2025-12-10','2025-12-15','2025-11-01 10:30:00',1,'2025-11-01 10:30:00',12,0),
-(2,'2025-12-20','2025-12-25','2025-11-05 14:20:00',2,'2025-11-05 14:20:00',25,0),
-(3,'2026-01-05','2026-01-10','2025-11-10 09:15:00',3,'2025-11-10 09:15:00',8,0),
-(4,'2026-01-15','2026-01-20','2025-11-12 16:45:00',4,'2025-11-12 16:45:00',33,0),
-(5,'2026-02-01','2026-02-05','2025-11-20 11:00:00',5,'2025-11-20 11:00:00',50,0);
+(1,'2025-1','2025-12-10','2025-12-15','2025-11-01 10:30:00',1,'2025-11-01 10:30:00',12,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
+(2,'2025-2','2025-12-20','2025-12-25','2025-11-05 14:20:00',2,'2025-11-05 14:20:00',25,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
+(3,'2025-3','2026-01-05','2026-01-10','2025-11-10 09:15:00',3,'2025-11-10 09:15:00',8,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
+(4,'2025-4','2026-01-15','2026-01-20','2025-11-12 16:45:00',4,'2025-11-12 16:45:00',33,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
+(5,'2025-5','2026-02-01','2026-02-05','2025-11-20 11:00:00',5,'2025-11-20 11:00:00',50,0,'2025-11-01 10:00:00','2025-11-01 10:00:00');
 /*!40000 ALTER TABLE `Reservaties` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -97,13 +100,13 @@ DROP TABLE IF EXISTS `UserData`;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `UserData` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Created_at` datetime DEFAULT NULL,
-  `Updated_at` datetime DEFAULT NULL,
+  `Created_at` datetime NOT NULL DEFAULT NOW(6),  
+  `Updated_at` datetime NOT NULL DEFAULT NOW(6), 
   `Woonplaats` varchar(100) DEFAULT NULL,
   `Voornaam` varchar(100) DEFAULT NULL,
   `Achternaam` varchar(100) DEFAULT NULL,
   `Telefoonnummer` varchar(100) DEFAULT NULL,
-  `Email` varchar(100) DEFAULT NULL,
+  `Email` varchar(100) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
