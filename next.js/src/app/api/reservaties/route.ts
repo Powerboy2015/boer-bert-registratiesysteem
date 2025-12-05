@@ -45,3 +45,38 @@ export async function GET(req: NextRequest) {
 
 }
 
+export async function DELETE(req: NextRequest) {
+    try {
+        //kijk naar json body. search params zijn niet de standard
+        const id = req.nextUrl.searchParams.get("id");
+
+        if (!id || isNaN(Number(id))) {
+            return NextResponse.json(
+                { error: "Geen geldige ID opgegeven" },
+                { status: 400 }
+            );
+        }
+
+        const db = await getDB();
+
+        //proper types
+        const [result]: any = await db.execute(
+            "DELETE FROM Reservaties WHERE ID = ?",
+            [Number(id)]
+        );
+
+        if (result.affectedRows === 0) {
+            return NextResponse.json(
+                { error: "Reservatie niet gevonden" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({ success: true, message: "Reservatie verwijderd" });
+    } catch (err) {
+        return NextResponse.json(
+            { error: "Interne serverfout", details: `${err}` },
+            { status: 500 }
+        );
+    }
+}
