@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
     try {
-        //kijk naar json body. search params zijn niet de standard
+         //kijk naar json body. search params zijn niet de standard
         const id = req.nextUrl.searchParams.get("id");
 
         if (!id || isNaN(Number(id))) {
@@ -70,9 +70,8 @@ export async function DELETE(req: NextRequest) {
         }
 
         const db = await getDB();
-
-        //proper types
-        const [result]: any = await db.execute(
+         //proper types
+        const [result] = await db.execute<ResultSetHeader>(
             "DELETE FROM Reservaties WHERE ID = ?",
             [Number(id)]
         );
