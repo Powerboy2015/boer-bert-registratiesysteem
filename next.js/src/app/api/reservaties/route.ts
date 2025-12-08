@@ -6,9 +6,15 @@ const allowedColumnsUserData = ["Woonplaats", "Voornaam", "Achternaam", "Telefoo
 const allowedColumnsReservaties = ["ReseveringsNr","DatumAankomst", "DatumVertrek", "ReserveringsDatum", "PlekNummer", "AantalMensen"];
 const allowedColumnsUserandRes = [...allowedColumnsUserData, ...allowedColumnsReservaties];
 
-// interface POSTreq {
-//     column: string;
-// }
+interface ReservatieBody {
+    UserData_ID: number;
+    ReseveringsNr?: string;
+    DatumAankomst?: string;
+    DatumVertrek?: string;
+    ReserveringsDatum?: string;
+    PlekNummer?: number;
+    AantalMensen?: number;
+}
 
 export async function GET(req: NextRequest) {
     // const data: POSTreq = await req.json();
@@ -43,7 +49,7 @@ export async function GET(req: NextRequest) {
         whereSQLquery = `WHERE ${searchColumn} LIKE ?`;
         likeInput.push(`%${searchValue}%`);
     }
-
+    
     //ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen
     const [rows] = await db.execute(`select * from Reservaties INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`, [...likeInput, limit, pagestart]);
     const reservaties = (rows.map((row) => ({
@@ -59,6 +65,54 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ Reservation : reservaties });
     // return NextResponse.json({data: rows});
+}
+
+export async function POST(req: NextRequest) {
+    try {
+        const body: ReservatieBody = await req.json();
+
+        if (!body.UserData_ID || isNaN(Number(body.UserData_ID))) {
+            return NextResponse.json(
+                { error: "UserData_ID moet gegeven worden" },
+                { status: 400 }
+            );
+        }
+
+        const invalidColumns = Object.keys(body).filter(
+            key => !allowedColumnsReservaties.includes(key) && key !== "UserData_ID"
+        );
+
+        if (invalidColumns.length) {
+            return NextResponse.json(
+                { error: "Ongeldige kolomm(en): " + invalidColumns.join(", ") },
+                { status: 400 }
+            );
+        }
+
+        const db = await getDB();
+
+        const keys = Object.keys(body);
+        const values = Object.values(body);
+
+        const sql = `
+            INSERT INTO Reservaties (${keys.join(", ")})
+            VALUES (${keys.map(() => "?").join(", ")})      
+        `;
+
+        const [result] = await db.execute<ResultSetHeader>(sql, values);
+
+        return NextResponse.json({
+            success: true,
+            message: "Reservatie aangemaakt",
+            reservatieId: result.insertId,
+        });
+
+    } catch (err) {
+        return NextResponse.json(
+            { error: "Interne serverfout", details: String(err) },
+            { status: 500 }
+        );
+    }
 }
 
 export async function DELETE(req: NextRequest) {

@@ -56,16 +56,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ Gebruikers : UserData });
 }
 
-
-// export async function POST() {
-//     const pool = await getDB();
-//     const result = await pool.execute("select * from UserData");
-
-//     console.log(result);
-
-//     return Response.json(result[0]);
-// }
-
 export async function PUT(req: NextRequest) {
     try {
         const searchParams = req.nextUrl.searchParams;
