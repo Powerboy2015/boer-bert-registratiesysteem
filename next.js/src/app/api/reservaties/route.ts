@@ -1,7 +1,10 @@
 import getDB from "@/app/api/lib/db"
 import { NextRequest, NextResponse } from "next/server";
+import { ResultSetHeader } from "mysql2/promise";
 
-const allowedColumns = ["ReseveringsNr","Voornaam", "Achternaam", "Email", "DatumAankomst", "DatumVertrek","PlekNummer","ReserveringsDatum","AantalMensen"];
+const allowedColumnsUserData = ["Woonplaats", "Voornaam", "Achternaam", "Telefoonnummer", "Email"];
+const allowedColumnsReservaties = ["ReseveringsNr","DatumAankomst", "DatumVertrek", "ReserveringsDatum", "PlekNummer", "AantalMensen"];
+const allowedColumnsUserandRes = [...allowedColumnsUserData, ...allowedColumnsReservaties];
 
 // interface POSTreq {
 //     column: string;
@@ -17,18 +20,18 @@ export async function GET(req: NextRequest) {
 
     //search options
     const searchColumn = searchParam.get("searchColumn"); 
-    const searchValue = req.nextUrl.searchParams.get("searchValue");
+    const searchValue = searchParam.get("searchValue");
 
     //sort and order options
     const sort = searchParam.get("sort") || "ReseveringsNr";
     const order = searchParam.get("order") === "desc" ? "DESC" : "ASC";
 
     //safety stuff to avoid sql injections?????????????????????????
-    if (!allowedColumns.includes(sort)) {
-        return NextResponse.json({error: "Foute kolkom"}, {status: 400});
+    if (!allowedColumnsUserandRes.includes(sort)) {
+        return NextResponse.json({error: `Foute kolkom: ${sort}`}, {status: 400});
     }
-    if (searchColumn && !allowedColumns.includes(searchColumn)) {
-        return NextResponse.json({ error: "Foute kolkom" }, { status: 400 });
+    if (searchColumn && !allowedColumnsUserandRes.includes(searchColumn)) {
+        return NextResponse.json({error: `Foute kolkom: ${searchColumn}`}, { status: 400 });
     }
 
     const db = await getDB();
@@ -41,7 +44,8 @@ export async function GET(req: NextRequest) {
         likeInput.push(`%${searchValue}%`);
     }
 
-    const [rows] = await db.execute(`select ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen from Reservaties INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`, [...likeInput, limit, pagestart]);
+    //ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen
+    const [rows] = await db.execute(`select * from Reservaties INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`, [...likeInput, limit, pagestart]);
     const reservaties = (rows.map((row) => ({
         ReseveringsNr: row.ReseveringsNr,
         Voornaam: row.Voornaam,
@@ -71,7 +75,7 @@ export async function DELETE(req: NextRequest) {
 
         const db = await getDB();
          //proper types
-        const [result] = await db.execute<ResultSetHeader>(
+        const [result] = await db.execute<ResultSetHeader>( //luca je add dit, maar je moest nog ResultSetHeader importen lol
             "DELETE FROM Reservaties WHERE ID = ?",
             [Number(id)]
         );
@@ -84,6 +88,62 @@ export async function DELETE(req: NextRequest) {
         }
 
         return NextResponse.json({ success: true, message: "Reservatie verwijderd" });
+    } catch (err) {
+        return NextResponse.json(
+            { error: "Interne serverfout", details: `${err}` },
+            { status: 500 }
+        );
+    }
+}
+
+
+
+export async function PUT(req: NextRequest) {
+    try {
+        const searchParams = req.nextUrl.searchParams;
+        const id = searchParams.get("id");
+
+        if (!id || isNaN(Number(id))) {
+            return NextResponse.json(
+                { error: "Geen geldige ID opgegeven" },
+                { status: 400 }
+            );
+        }
+
+        const body = await req.json();
+
+        const invalidColumns = Object.keys(body).filter(
+            key => !allowedColumnsReservaties.includes(key)
+        );
+
+        if (invalidColumns.length) {
+            return NextResponse.json(
+                { error: "Ongeldige kolomm(en): " + invalidColumns.join(", ") },
+                { status: 400 }
+            );
+        }
+
+        const db = await getDB();
+
+        const keys = Object.keys(body);
+        const values = Object.values(body);
+
+        const setInput = keys.map(key => `${key} = ?`).join(", ")
+
+        const [result] = await db.execute<ResultSetHeader>(
+            `UPDATE Reservaties SET ${setInput} WHERE ID = ?`,
+            [...values, id]
+        );
+
+        if (result.affectedRows === 0) {
+            return NextResponse.json(
+                { error: "Reservatie niet gevonden" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({success: true, message: "Reservatie geüpdatet",});
+
     } catch (err) {
         return NextResponse.json(
             { error: "Interne serverfout", details: `${err}` },
