@@ -129,7 +129,7 @@ export async function DELETE(req: NextRequest) {
 
         const db = await getDB();
          //proper types
-        const [result] = await db.execute<ResultSetHeader>( //luca je add dit, maar je moest nog ResultSetHeader importen lol
+        const [result] = await db.execute<ResultSetHeader>(
             "DELETE FROM Reservaties WHERE ID = ?",
             [Number(id)]
         );
