@@ -1,12 +1,11 @@
 import { Roboto, Roboto_Mono } from "next/font/google";
 
-interface EditFieldComponentProps {
+interface EditFieldComponentProps extends React.ComponentProps<"input"> {
     fieldname: string;
     data: string | number;
     spanSize?: number;
     fontSize?: number;
     lableFontSize?: number;
-    readOnly?: boolean;
 }
 
 const roboto_value = Roboto_Mono({
@@ -27,8 +26,11 @@ export default function EditFieldComponent({
     spanSize,
     fontSize = 32,
     lableFontSize = 20,
-    readOnly = false,
+    ...props
 }: EditFieldComponentProps) {
+    const readOnlyStyle = props.readOnly
+        ? "text-(--color-text-disabled)"
+        : "text-(--color-text)";
     return (
         <span
             className={`relative`}
@@ -44,7 +46,7 @@ export default function EditFieldComponent({
                 {fieldname}
             </label>
             <input
-                className={`w-full h-auto mt-5 p-1 bg-(--color-accent) text-(--color-text) ${roboto_value.className} shadow-(--box-shadow-button)`}
+                className={`w-full h-auto mt-5 p-1 bg-(--color-accent) ${readOnlyStyle} ${roboto_value.className} shadow-(--box-shadow-button)`}
                 style={{
                     WebkitAppearance: "none",
                     outline: "none",
@@ -54,7 +56,7 @@ export default function EditFieldComponent({
                 type="text"
                 name={fieldname}
                 defaultValue={data}
-                readOnly={readOnly}
+                {...props}
             />
         </span>
     );
