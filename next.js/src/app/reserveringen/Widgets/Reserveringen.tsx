@@ -61,12 +61,10 @@ export default function Reserveringen() {
     year: "numeric",
   };
 
-  /*Functie om een reservering toe te voegen */
-
   return (
     <>
       {overlay ? <ReserveringOverlay toggle={toggleOverlay} /> : null}
-      <div className="bg-[#2E3038] h-full mx-5 overflow-y-auto ">
+      <div className="bg-[#2E3038] h-full mx-5 overflow-y-auto overflow-x-hidden ">
         <div className="h-1/15 flex w-full">
           <div className="w-1/2 text-4xl m-3">Reserveringslijst</div>
           <div className="flex justify-end w-full">
@@ -87,12 +85,12 @@ export default function Reserveringen() {
           <table className="w-full mt-10">
             <thead>
               <tr className="txt-left text-[10px] md:text-3xl">
-                <th>Naam</th>
-                <th>Eind datum</th>
-                <th>Start datum</th>
-                <th>Plaats</th>
-                <th>Gereserveerd op </th>
-                <th>Opties </th>
+                <th className="text-left">Naam</th>
+                <th className="text-left">Eind datum</th>
+                <th className="text-left">Start datum</th>
+                <th className="text-left">Plaats</th>
+                <th className="text-left">Gereserveerd op </th>
+                <th className="text-left">Opties </th>
               </tr>
             </thead>
             <tbody>
