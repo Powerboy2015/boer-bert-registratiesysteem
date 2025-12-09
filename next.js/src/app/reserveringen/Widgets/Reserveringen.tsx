@@ -22,28 +22,25 @@ export default function Reserveringen() {
   /*UseState voor de overlay, true = overlay showed false = hidden */
   const [overlay, setOverlay] = useState<boolean>(false);
 
-
-
-
-
   useEffect(() => {
     async function getAPI() {
-      const url = "http://localhost:3000/api/reserveringen"
+      try {
+        const url = "http://localhost:3000/api/reserveringen";
 
-      const response = fetch(url)
+        const response = fetch(url);
 
-      const data = await response
+        const data = await response;
 
-      const res = await data.json()
+        const res = await data.json();
 
-      setReserveringen(res)
-
-
+        setReserveringen(res);
+      } catch (err) {
+        console.log("error fetching data:", err);
+      }
     }
 
-    getAPI()
-
-  }, [])
+    getAPI();
+  }, []);
 
   /* Toggle overlay */
   function toggleOverlay() {
@@ -57,18 +54,19 @@ export default function Reserveringen() {
     );
     setReserveringen(newReserveringen);
   }
-  /*Pak de date van vandaag */
-  const d = new Date(Date.now());
+
+  const dateSettings: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  };
 
   /*Functie om een reservering toe te voegen */
 
-
   return (
     <>
-      {overlay ? (
-        <ReserveringOverlay toggle={toggleOverlay} />
-      ) : null}
-      <div className="bg-[#2E3038] h-full mx-5">
+      {overlay ? <ReserveringOverlay toggle={toggleOverlay} /> : null}
+      <div className="bg-[#2E3038] h-full mx-5 overflow-y-auto ">
         <div className="h-1/15 flex w-full">
           <div className="w-1/2 text-4xl m-3">Reserveringslijst</div>
           <div className="flex justify-end w-full">
@@ -104,10 +102,25 @@ export default function Reserveringen() {
                   key={index}
                 >
                   <td>{item.Achternaam}</td>
-                  <td>{item.DatumVertrek}</td>
-                  <td>{item.DatumAankomst}</td>
+                  <td>
+                    {new Date(item.DatumVertrek).toLocaleDateString(
+                      "nl-NL",
+                      dateSettings
+                    )}
+                  </td>
+                  <td>
+                    {new Date(item.DatumAankomst).toLocaleDateString(
+                      "nl-NL",
+                      dateSettings
+                    )}
+                  </td>
                   <td>{item.PlaatsNummer}</td>
-                  <td>{item.reserveringDatum}</td>
+                  <td>
+                    {new Date(item.reserveringDatum).toLocaleDateString(
+                      "nl-NL",
+                      dateSettings
+                    )}
+                  </td>
                   <td>
                     {" "}
                     <button onClick={() => handleDeleteReservering(index)}>
