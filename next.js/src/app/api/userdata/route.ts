@@ -11,8 +11,8 @@ export async function GET(req: NextRequest) {
     // const data: POSTreq = await req.json();
 
     const searchParam = req.nextUrl.searchParams
-    const page = Number(searchParam.get("page") || 1); //the page uhh that you're seeing 
-    const limit = Number(searchParam.get("limit") || 20); // max users that get loaded at once (20 is default)
+    const page: number = Number(searchParam.get("page") || 1); //the page uhh that you're seeing 
+    const limit: number = Number(searchParam.get("limit") || 20); // max users that get loaded at once (20 is default)
     const pagestart = (page - 1) * limit; // calculates what user it should start from
 
     //search options
