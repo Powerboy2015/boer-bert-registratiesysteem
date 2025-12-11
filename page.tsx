@@ -52,7 +52,7 @@ export default function Home() {
               style={{ backgroundImage: "url('/campinggestolen.jpg')" }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 h-250 items-center">
               <div className="rounded-full overflow-hidden w-80 h-80 mx-auto">
-                {/*image*/}
+                {/*lege ruimte......... */}
               </div>
               <div className="bg-[#007248] h-150 rounded-[20] w-180 opacity-90 place-content-center place-items-stretch items-center">
                 <h1 className="text-center font-bold text-4xl opacity-100 p-5 text-[#fdf5d8]">Boerencamping boer Bert</h1>
@@ -77,8 +77,8 @@ export default function Home() {
       <div className="bg-[#FDF5D8]">
         <div className="rounded-bl-[500px] rounded-bl-lg-[500px] overflow-hidden">
           <section className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 h-250 items-center bg-[#007248] text-[#FDF5D8]">
-            <div className="rounded-full overflow-hidden w-80 h-80 mx-auto">
-              {/*image*/}
+            <div className="overflow-hidden w-200 h-200 mx-auto">
+              {/*img ofzo */}
             </div>
             <div className="flex-top content-center w-160">
               <h2 className="font-bold mb-4 text-4xl items-center text-center">Wie zijn wij?</h2>
@@ -155,7 +155,7 @@ export default function Home() {
       </footer>
     </div>
 
-    </> /*renders alle componenten op de homepage*/
+    </>
   );
 }
 
