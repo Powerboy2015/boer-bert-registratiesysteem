@@ -10,17 +10,38 @@ import Toggle1 from "./components/toggle1";
 import Toggle2 from "./components/toggle2";
 import Optionfield1 from "./components/optionfield1"
 import Optionfield2 from "./components/optionfield2"
-import Huh from "./components/huh"
+import React from 'react';
+import Scrollcontact from "./components/contact";
 export default function Home() {
+
   return (
     <>
     <div className="min-h-screen w-full text-[#2c2c2c] font-sans">
-      <header className="w-full flex items-center h-30 justify-between p-4 bg-[#93DAB8]">
+      <header className="w-full flex items-center h-auto justify-between p-5 bg-[#93DAB8]">
         <div className="flex items-center gap-3">
-          <h1 className="absolute left-1/2 -translate-x-1/2 text-3xl font-semibold">Camping Boer Bert</h1>
+          {/*smt can go here idk maybe feet? :p */}
         </div>
         <div className="flex items-center gap-4">
-          <button className="px-4 py-2 bg-[#1a8f7a] text-white rounded-md">Contact</button>
+
+          <div title="scroll naar beneden voor contact gegevens">
+          <Scrollcontact/> 
+          </div> {/*fkn coole knop, je gaat naar beneden O.O T_T */}
+
+          <button>
+            <Image alt="Dutch language" src="/nl.jpg" width={50} height={50} 
+            className="rounded-[10] px-auto"/>
+          </button>
+
+          <button>
+          <Image alt="German language" src="/de.jpg" width={50} height={50} 
+          className="rounded-[10] px-auto"/>
+          </button>
+
+          <button>
+          <Image alt="English language" src="/eng.jpg" width={50} height={50} 
+          className="rounded-[10] px-auto"/>
+          </button>
+
         </div>
       </header>
 
@@ -101,11 +122,36 @@ export default function Home() {
         </div>  
       </div>
 
-      <footer className="p-6 bg-[#93DAB8] text-sm h-30">
-        <p>📞 +31 123456789</p>
-        <p>📧 info@campingboerbert.nl</p>
-        <p>📍 Heidelberglann 15, 3584 CS</p>
-        <p>Fax: 214-785-2447</p>
+      <footer className="p-4 px-10 bg-[#93DAB8] text-[25px] justify-between flex flex-row items-center"
+        style={{fontFamily:'Roboto mono'}}>
+
+          <a title="link naar telefoon nummer camping boer bert"
+            className="hover:text-[#55876a]"
+            href="tel:+31642741016" 
+            >📞 +31 123456789</a> {/*knop voor telefoon nmmer */}
+
+          <a title="link naar email info@campingboerbert.nl"
+            className="hover:text-[#55876a]"
+            href="mailto:info@campingboerbert.nl"
+            >📧 info@campingboerbert.nl</a> {/*knop voor email */}
+
+          <a title="link naar google maps locatie camping boer bert"
+            className="hover:text-[#55876a]"
+            href="https://www.google.com/maps/place/UMC+Utrecht/@52.0858554,5.1795793,17z/data=!3m1!4b1!4m6!3m5!1s0x47c66885c1ad3c53:0x5778bacf22762084!8m2!3d52.0858554!4d5.1795793!16s%2Fm%2F02qkwv4?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D"
+            target="_blank"
+            rel="noopener noreferer"
+            >📍 Heidelberglann 15, 3584 CS</a> {/*knop voor google maps locatie */}
+
+          <p title="fax nummer camping boer bert"
+            className="px-auto hover:text-[#55876a]">Fax: 214-785-2447</p> {/*hoe de fuck ga ik een knop voor fax maken?? */}
+
+          <a title="link naar w3c website"
+            className="hover:text-[#55876a]"
+            href="https://www.w3.org/"
+            target="_blank"
+            rel="noopener noreferer"
+            > <Image alt="wcec website link" src="/w3c.jpg" width={180} height={160} className="rounded-[10] px-auto"/> </a>
+
       </footer>
     </div>
 
