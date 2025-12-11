@@ -48,7 +48,7 @@ export default function Home() {
       
       <div className="bg-[#007248]">
         <div className="rounded-bl-[500px] overflow-hidden bg-[#007248]">
-          <section className=" gap-6 p-6 items-center w-full h-250 bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply" /*yuhh de background staat stil hehe */
+          <section className=" gap-6 p-6 items-center w-full h-215 bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply" /*yuhh de background staat stil hehe */
               style={{ backgroundImage: "url('/campinggestolen.jpg')" }}>
             <div className=" gap-6 p-6 h-250 items-center">
               
@@ -110,7 +110,7 @@ export default function Home() {
 
       <div className="bg-[#FDF5D8]">
         <div className="rounded-tr-[500px] overflow-hidden">
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 h-200 gap-6 p-6 items-center bg-cover bg-center bg-fixed bg-black/60 bg-blend-multiply"
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 h-195 gap-6 p-6 items-center bg-cover bg-center bg-fixed bg-black/60 bg-blend-multiply"
                   style={{ backgroundImage: "url('/campinggestolen.jpg')" }}>
             
             <div className="w-80 h-80 flex gap-6 mx-auto w-160">
