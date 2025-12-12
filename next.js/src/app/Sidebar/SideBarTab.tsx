@@ -19,4 +19,3 @@ export default function SideBarTab({ icon, name, link }: SideBarTabProps) {
     </button>
   );
 }
-("f");
