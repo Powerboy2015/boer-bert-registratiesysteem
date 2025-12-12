@@ -24,17 +24,21 @@ export default function Reserveringen() {
 
   useEffect(() => {
     async function getAPI() {
-      const url = "http://localhost/api/reservatiesenuserdata";
+      try {
+        const url = "http://localhost/api/reservatiesenuserdata";
 
-      const response = fetch(url);
+        const response = fetch(url);
 
-      const data = await response;
+        const data = await response;
 
-      const res = await data.json();
+        const res = await data.json();
 
-      setReserveringen(res.Reservation);
+        setReserveringen(res.Reservation);
 
-      console.log(res.Reservation);
+        console.log(res.Reservation);
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     getAPI();
