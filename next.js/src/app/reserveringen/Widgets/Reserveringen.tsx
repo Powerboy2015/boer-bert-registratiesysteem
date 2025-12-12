@@ -9,10 +9,10 @@ export interface Reservering {
   telNr: string;
   adres: string;
   email: string;
-  PlaatsNummer: number;
+  PlekNummer: number;
   DatumAankomst: string;
   DatumVertrek: string;
-  reserveringDatum: string;
+  ReserveringsDatum: string;
   reserveringBewerkDatum: string;
 }
 
@@ -24,19 +24,17 @@ export default function Reserveringen() {
 
   useEffect(() => {
     async function getAPI() {
-      try {
-        const url = "http://localhost:3000/api/reserveringen";
+      const url = "http://localhost/api/reservatiesenuserdata";
 
-        const response = fetch(url);
+      const response = fetch(url);
 
-        const data = await response;
+      const data = await response;
 
-        const res = await data.json();
+      const res = await data.json();
 
-        setReserveringen(res);
-      } catch (err) {
-        console.log("error fetching data:", err);
-      }
+      setReserveringen(res.Reservation);
+
+      console.log(res.Reservation);
     }
 
     getAPI();
@@ -112,9 +110,9 @@ export default function Reserveringen() {
                       dateSettings
                     )}
                   </td>
-                  <td>{item.PlaatsNummer}</td>
+                  <td>{item.PlekNummer}</td>
                   <td>
-                    {new Date(item.reserveringDatum).toLocaleDateString(
+                    {new Date(item.ReserveringsDatum).toLocaleDateString(
                       "nl-NL",
                       dateSettings
                     )}
