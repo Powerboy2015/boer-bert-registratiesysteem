@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-  
+
 ENV WATCHPACK_POLLING=true
 
 EXPOSE 3000
