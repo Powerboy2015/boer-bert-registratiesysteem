@@ -1,4 +1,4 @@
-interface EditReservationButtonProps {
+interface EditReservationButtonProps extends React.ComponentProps<"button"> {
     text?: string;
     color?: string;
     colSpan?: number;
@@ -9,10 +9,12 @@ export default function EditReservationButton({
     color = "#556483",
     colSpan = 3,
     btnCallback,
+    ...props
 }: EditReservationButtonProps) {
     return (
         <>
             <button
+                {...props}
                 className={`p-0 w-full h-full shadow-(--box-shadow-button) inset-shadow-(--inner-shadow-button) border-none cursor-pointer`}
                 style={{
                     backgroundColor: color,

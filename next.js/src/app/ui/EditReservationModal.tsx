@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { createPortal } from "react-dom";
 import { Reservering } from "../reserveringen/Widgets/Reserveringen";
 import { Roboto, Roboto_Mono } from "next/font/google";
@@ -8,7 +8,7 @@ import EditReservationButton from "./EditReservationButton";
 
 interface EditReservationProps {
     reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.
-    EditCallback: () => void; // callbacks are functions that we give as parameter and will be used after a certain event e.g. a button click
+    EditCallback: (event: FormEvent<HTMLFormElement>) => void; // callbacks are functions that we give as parameter and will be used after a certain event e.g. a button click
 }
 
 const roboto = Roboto({
@@ -33,9 +33,9 @@ export default function EditReservationModal({
         setShowModal(false);
     };
 
-    const saveData = () => {
+    const saveData = (event: FormEvent<HTMLFormElement>) => {
+        EditCallback(event);
         closeModal();
-        EditCallback();
     };
 
     return (
@@ -63,13 +63,17 @@ export default function EditReservationModal({
                             >
                                 <h2 className={`text-6xl ${roboto.className}`}>
                                     Reservering aanpassen: <br />
-                                    {reservering.Voornaam}
+                                    {reservering.ReseveringsNr}
                                 </h2>
                             </div>
-                            <div className="w-full h-2/3 bg-(--color-accent-2) grid px-8 py-4 grid-cols-2 grid-rows-4 gap-4">
+                            <form
+                                className="w-full h-2/3 bg-(--color-accent-2) grid px-8 py-4 grid-cols-2 grid-rows-4 gap-4"
+                                onSubmit={saveData}
+                                method="PUT"
+                            >
                                 <EditFieldComponent
                                     fieldname="ReserveringsNummer"
-                                    data={reservering.Voornaam}
+                                    data={reservering.ReseveringsNr}
                                     fontSize={24}
                                     lableFontSize={16}
                                     type="text"
@@ -77,7 +81,7 @@ export default function EditReservationModal({
                                 />
                                 <EditFieldComponent
                                     fieldname="ReserveringsDatum"
-                                    data={reservering.reserveringDatum}
+                                    data={reservering.ReserveringsDatum}
                                     fontSize={24}
                                     lableFontSize={16}
                                     type="text"
@@ -85,21 +89,25 @@ export default function EditReservationModal({
                                 />
                                 <EditFieldComponent
                                     fieldname="AankomstDatum"
-                                    data={reservering.DatumAankomst}
+                                    data={
+                                        reservering.DatumAankomst.split("T")[0]
+                                    }
                                     fontSize={24}
                                     lableFontSize={16}
                                     type="date"
                                 />
                                 <EditFieldComponent
                                     fieldname="VertrekDatum"
-                                    data={reservering.DatumVertrek}
+                                    data={
+                                        reservering.DatumVertrek.split("T")[0]
+                                    }
                                     fontSize={24}
                                     lableFontSize={16}
                                     type="date"
                                 />
                                 <EditFieldComponent
                                     fieldname="Plaats"
-                                    data={reservering.PlaatsNummer}
+                                    data={reservering.PlekNummer}
                                     fontSize={24}
                                     lableFontSize={16}
                                     spanSize={2}
@@ -113,14 +121,13 @@ export default function EditReservationModal({
                                     btnCallback={closeModal}
                                 />
 
-                                {/* TODO add code that helps save the data. Only then close modal */}
                                 <EditReservationButton
-                                    btnCallback={saveData}
                                     colSpan={1}
                                     text={"Opslaan"}
                                     color="#55835A"
+                                    type="submit"
                                 />
-                            </div>
+                            </form>
                         </div>
                     </div>,
                     modalCatcher
