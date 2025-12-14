@@ -1,13 +1,6 @@
 import { useState } from "react";
 
-
-export default function ReserveringOverlay({
-  toggle
-
-}: {
-  toggle: () => void;
-
-}) {
+export default function ReserveringOverlay({ toggle }: { toggle: () => void }) {
   /* useStates voor de verschillende input velden */
   const [voornaam, setVoornaam] = useState("");
   const [achternaam, setAchternaam] = useState("");
@@ -17,10 +10,38 @@ export default function ReserveringOverlay({
 
   const [DatumVertrek, setDatumVertrek] = useState("");
   const [DatumAankomst, setDatumAankomst] = useState("");
-  const [plaats, setPlaats] = useState(Number);
+  const [plaats, setPlaats] = useState(0);
   const [gereserveerdDatum, setGereserveerdDatum] = useState("");
 
+  async function sendReservering() {
+    const url = "http://localhost/api/reservatiesenuserdata";
 
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify({
+        UserData: {
+          Voornaam: voornaam,
+          Achternaam: achternaam,
+          Email: email,
+          Telefoonnummer: telNr,
+          Woonplaats: adres,
+        },
+        Reservatie: {
+          ReseveringsNr: "2025-1",
+          DatumAankomst: DatumAankomst,
+          DatumVertrek: DatumVertrek,
+          ReserveringsDatum: "2025-12-14",
+          PlekNummer: plaats,
+          AantalMensen: 0,
+        },
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => console.log(json));
+  }
 
   return (
     <>
@@ -138,7 +159,9 @@ export default function ReserveringOverlay({
               />
             </div>
             <button
-
+              onClick={() => {
+                sendReservering();
+              }}
               className="bg-[#55835A] p-2 absolute bottom-3 left-2/5"
             >
               Opslaan
