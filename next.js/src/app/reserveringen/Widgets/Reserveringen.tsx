@@ -1,5 +1,5 @@
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /* Interface voor alle types van de variabelen */
 export interface Reservering {
@@ -9,10 +9,10 @@ export interface Reservering {
   telNr: string;
   adres: string;
   email: string;
-  PlaatsNummer: number;
+  PlekNummer: number;
   DatumAankomst: string;
   DatumVertrek: string;
-  reserveringDatum: string;
+  ReserveringsDatum: string;
   reserveringBewerkDatum: string;
 }
 
@@ -21,6 +21,28 @@ export default function Reserveringen() {
   const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
   /*UseState voor de overlay, true = overlay showed false = hidden */
   const [overlay, setOverlay] = useState<boolean>(false);
+
+  async function getAPI() {
+    try {
+      const url = "http://localhost/api/reservatiesenuserdata";
+
+      const response = fetch(url);
+
+      const data = await response;
+
+      const res = await data.json();
+
+      setReserveringen(res.Reservation);
+
+      console.log(res.Reservation);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getAPI();
+  }, []);
 
   /* Toggle overlay */
   function toggleOverlay() {
@@ -34,45 +56,19 @@ export default function Reserveringen() {
     );
     setReserveringen(newReserveringen);
   }
-  /*Pak de date van vandaag */
-  const d = new Date(Date.now());
 
-  /*Functie om een reservering toe te voegen */
-  function addReservering({
-    UserData_ID,
-    Voornaam,
-    Achternaam,
-    telNr,
-    adres,
-    email,
-    PlaatsNummer,
-    DatumAankomst,
-    DatumVertrek,
-    reserveringBewerkDatum,
-  }: Reservering) {
-    const nieuw = {
-      UserData_ID: UserData_ID,
-      Voornaam: Voornaam,
-      Achternaam: Achternaam,
-      telNr: telNr,
-      adres: adres,
-      email: email,
-      PlaatsNummer: PlaatsNummer,
-      DatumAankomst: DatumAankomst,
-      DatumVertrek: DatumVertrek,
-      reserveringDatum: d.toDateString(),
-      reserveringBewerkDatum: d.toDateString(),
-    };
-    /*Set reserveringen op wat er nu staat in reserveringen + de nieuwe reserverign */
-    setReserveringen([...reserveringen, nieuw]);
-  }
+  const dateSettings: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  };
 
   return (
     <>
       {overlay ? (
-        <ReserveringOverlay toggle={toggleOverlay} add={addReservering} />
+        <ReserveringOverlay toggle={toggleOverlay} getAPI={getAPI} />
       ) : null}
-      <div className="bg-[#2E3038] h-full mx-5">
+      <div className="bg-[#2E3038] h-full mx-5 overflow-y-auto overflow-x-hidden ">
         <div className="h-1/15 flex w-full">
           <div className="w-1/2 text-4xl m-3">Reserveringslijst</div>
           <div className="flex justify-end w-full">
@@ -93,12 +89,12 @@ export default function Reserveringen() {
           <table className="w-full mt-10">
             <thead>
               <tr className="txt-left text-[10px] md:text-3xl">
-                <th>Naam</th>
-                <th>Eind datum</th>
-                <th>Start datum</th>
-                <th>Plaats</th>
-                <th>Gereserveerd op </th>
-                <th>Opties </th>
+                <th className="text-left">Naam</th>
+                <th className="text-left">Eind datum</th>
+                <th className="text-left">Start datum</th>
+                <th className="text-left">Plaats</th>
+                <th className="text-left">Gereserveerd op </th>
+                <th className="text-left">Opties </th>
               </tr>
             </thead>
             <tbody>
@@ -108,10 +104,25 @@ export default function Reserveringen() {
                   key={index}
                 >
                   <td>{item.Achternaam}</td>
-                  <td>{item.DatumVertrek}</td>
-                  <td>{item.DatumAankomst}</td>
-                  <td>{item.PlaatsNummer}</td>
-                  <td>{item.reserveringDatum}</td>
+                  <td>
+                    {new Date(item.DatumVertrek).toLocaleDateString(
+                      "nl-NL",
+                      dateSettings
+                    )}
+                  </td>
+                  <td>
+                    {new Date(item.DatumAankomst).toLocaleDateString(
+                      "nl-NL",
+                      dateSettings
+                    )}
+                  </td>
+                  <td>{item.PlekNummer}</td>
+                  <td>
+                    {new Date(item.ReserveringsDatum).toLocaleDateString(
+                      "nl-NL",
+                      dateSettings
+                    )}
+                  </td>
                   <td>
                     {" "}
                     <button onClick={() => handleDeleteReservering(index)}>
