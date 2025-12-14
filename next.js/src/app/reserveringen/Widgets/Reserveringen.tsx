@@ -22,25 +22,25 @@ export default function Reserveringen() {
   /*UseState voor de overlay, true = overlay showed false = hidden */
   const [overlay, setOverlay] = useState<boolean>(false);
 
-  useEffect(() => {
-    async function getAPI() {
-      try {
-        const url = "http://localhost/api/reservatiesenuserdata";
+  async function getAPI() {
+    try {
+      const url = "http://localhost/api/reservatiesenuserdata";
 
-        const response = fetch(url);
+      const response = fetch(url);
 
-        const data = await response;
+      const data = await response;
 
-        const res = await data.json();
+      const res = await data.json();
 
-        setReserveringen(res.Reservation);
+      setReserveringen(res.Reservation);
 
-        console.log(res.Reservation);
-      } catch (err) {
-        console.log(err);
-      }
+      console.log(res.Reservation);
+    } catch (err) {
+      console.log(err);
     }
+  }
 
+  useEffect(() => {
     getAPI();
   }, []);
 
@@ -65,7 +65,9 @@ export default function Reserveringen() {
 
   return (
     <>
-      {overlay ? <ReserveringOverlay toggle={toggleOverlay} /> : null}
+      {overlay ? (
+        <ReserveringOverlay toggle={toggleOverlay} getAPI={getAPI} />
+      ) : null}
       <div className="bg-[#2E3038] h-full mx-5 overflow-y-auto overflow-x-hidden ">
         <div className="h-1/15 flex w-full">
           <div className="w-1/2 text-4xl m-3">Reserveringslijst</div>

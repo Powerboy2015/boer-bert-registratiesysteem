@@ -1,6 +1,12 @@
 import { useState } from "react";
 
-export default function ReserveringOverlay({ toggle }: { toggle: () => void }) {
+export default function ReserveringOverlay({
+  toggle,
+  getAPI,
+}: {
+  toggle: () => void;
+  getAPI: () => void;
+}) {
   /* useStates voor de verschillende input velden */
   const [voornaam, setVoornaam] = useState("");
   const [achternaam, setAchternaam] = useState("");
@@ -12,35 +18,66 @@ export default function ReserveringOverlay({ toggle }: { toggle: () => void }) {
   const [DatumAankomst, setDatumAankomst] = useState("");
   const [plaats, setPlaats] = useState(0);
   const [gereserveerdDatum, setGereserveerdDatum] = useState("");
+  const [errorMessage, setErrorMessage] = useState(false);
 
   async function sendReservering() {
     const url = "http://localhost/api/reservatiesenuserdata";
-
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify({
-        UserData: {
-          Voornaam: voornaam,
-          Achternaam: achternaam,
-          Email: email,
-          Telefoonnummer: telNr,
-          Woonplaats: adres,
+    if (
+      voornaam &&
+      achternaam &&
+      telNr &&
+      adres &&
+      email &&
+      DatumAankomst &&
+      DatumVertrek &&
+      plaats
+    ) {
+      setErrorMessage(false);
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          UserData: {
+            Voornaam: voornaam,
+            Achternaam: achternaam,
+            Email: email,
+            Telefoonnummer: telNr,
+            Woonplaats: adres,
+          },
+          Reservatie: {
+            ReseveringsNr: "2025-1",
+            DatumAankomst: DatumAankomst,
+            DatumVertrek: DatumVertrek,
+            ReserveringsDatum: "2025-12-14",
+            PlekNummer: plaats,
+            AantalMensen: 0,
+          },
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
         },
-        Reservatie: {
-          ReseveringsNr: "2025-1",
-          DatumAankomst: DatumAankomst,
-          DatumVertrek: DatumVertrek,
-          ReserveringsDatum: "2025-12-14",
-          PlekNummer: plaats,
-          AantalMensen: 0,
-        },
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => console.log(json));
+      })
+        .then((response) => response.json())
+        .then((json) => console.log(json))
+        .then(() => {
+          setVoornaam("");
+          setAchternaam("");
+          setVoornaam("");
+          setAchternaam("");
+          setTelnr("");
+          setAdres("");
+          setEmail("");
+          setDatumVertrek("");
+          setDatumAankomst("");
+          setPlaats(0);
+          setGereserveerdDatum("");
+        })
+        .then(() => {
+          toggle();
+        })
+        .then(() => {
+          getAPI();
+        });
+    } else setErrorMessage(true);
   }
 
   return (
@@ -167,6 +204,7 @@ export default function ReserveringOverlay({ toggle }: { toggle: () => void }) {
               Opslaan
             </button>
           </div>
+          {errorMessage ? "Voer alle velden in" : null}
         </div>
       </div>
     </>
