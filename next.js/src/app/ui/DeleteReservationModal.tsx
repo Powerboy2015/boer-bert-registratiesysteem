@@ -32,6 +32,16 @@ export default function DeleteReservationModal({
         setShowModal(false);
     };
 
+    const DeleteFromDb = () => {
+        const url = new URL("http://localhost/api/reservaties");
+        url.searchParams.set("id", reservering.ReseveringsNr);
+        fetch(url, {
+            method: "DELETE",
+        }).then((resp) => {
+            console.log(resp);
+        });
+    };
+
     return (
         <>
             <button
@@ -74,7 +84,9 @@ export default function DeleteReservationModal({
                                 <div className="flex">
                                     <strong>Datum: </strong>
                                     <p className="m-0">
-                                        {reservering.ReserveringsDatum}
+                                        {new Date(
+                                            reservering.ReserveringsDatum
+                                        ).toUTCString()}
                                     </p>
                                 </div>
                                 <div className="flex">
@@ -96,6 +108,7 @@ export default function DeleteReservationModal({
                                     color="#FC4545"
                                     btnCallback={() => {
                                         closeModal();
+                                        DeleteFromDb();
                                         DeleteCallback();
                                     }}
                                 />

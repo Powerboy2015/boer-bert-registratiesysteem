@@ -1,20 +1,21 @@
 import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import { useEffect, useState } from "react";
+import { UserAndReservatieBody } from "@/app/api/reservatiesenuserdata/route";
 
 /* Interface voor alle types van de variabelen */
 export interface Reservering {
-    UserData_ID: number;
-    Voornaam: string;
+    AantalMensen: number;
     Achternaam: string;
-    telNr: string;
-    adres: string;
-    email: string;
-    PlekNummer: number;
     DatumAankomst: string;
     DatumVertrek: string;
+    Email: string;
+    PlekNummer: number;
     ReserveringsDatum: string;
-    reserveringBewerkDatum: string;
+    ReseveringsNr: string;
+    Telefoonnummer: string;
+    Voornaam: string;
+    Woonplaats: string;
 }
 
 export default function Reserveringen() {
@@ -42,7 +43,7 @@ export default function Reserveringen() {
     }
 
     useEffect(() => {
-        getAPI();
+        getAPI(); //TODO Refactor to remove possible errors
     }, []);
 
     /* Toggle overlay */
