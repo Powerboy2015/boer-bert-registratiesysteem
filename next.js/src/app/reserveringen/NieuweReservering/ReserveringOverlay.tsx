@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { Reservering } from "../Widgets/Reserveringen";
 
 export default function ReserveringOverlay({
   toggle,
-  add,
+  getAPI,
 }: {
   toggle: () => void;
-  add: (reservering: Reservering) => void;
+  getAPI: () => void;
 }) {
   /* useStates voor de verschillende input velden */
   const [voornaam, setVoornaam] = useState("");
@@ -17,26 +16,68 @@ export default function ReserveringOverlay({
 
   const [DatumVertrek, setDatumVertrek] = useState("");
   const [DatumAankomst, setDatumAankomst] = useState("");
-  const [plaats, setPlaats] = useState(Number);
+  const [plaats, setPlaats] = useState(0);
   const [gereserveerdDatum, setGereserveerdDatum] = useState("");
+  const [errorMessage, setErrorMessage] = useState(false);
 
-  /*Functie voor het versturen van de data */
-  function handleClick() {
-    add({
-      UserData_ID: 1,
-      Voornaam: voornaam,
-      Achternaam: achternaam,
-      telNr: telNr,
-      adres: adres,
-      email: email,
-      PlaatsNummer: plaats,
-      DatumAankomst: DatumAankomst,
-      DatumVertrek: DatumVertrek,
-      reserveringDatum: gereserveerdDatum,
-      reserveringBewerkDatum: "2025-10-11",
-    });
-    toggle();
-    setGereserveerdDatum(Date.now().toString());
+  async function sendReservering() {
+    const url = "http://localhost/api/reservatiesenuserdata";
+    if (
+      voornaam &&
+      achternaam &&
+      telNr &&
+      adres &&
+      email &&
+      DatumAankomst &&
+      DatumVertrek &&
+      plaats
+    ) {
+      setErrorMessage(false);
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          UserData: {
+            Voornaam: voornaam,
+            Achternaam: achternaam,
+            Email: email,
+            Telefoonnummer: telNr,
+            Woonplaats: adres,
+          },
+          Reservatie: {
+            ReseveringsNr: "2025-1",
+            DatumAankomst: DatumAankomst,
+            DatumVertrek: DatumVertrek,
+            ReserveringsDatum: "2025-12-14",
+            PlekNummer: plaats,
+            AantalMensen: 0,
+          },
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => console.log(json))
+        .then(() => {
+          setVoornaam("");
+          setAchternaam("");
+          setVoornaam("");
+          setAchternaam("");
+          setTelnr("");
+          setAdres("");
+          setEmail("");
+          setDatumVertrek("");
+          setDatumAankomst("");
+          setPlaats(0);
+          setGereserveerdDatum("");
+        })
+        .then(() => {
+          toggle();
+        })
+        .then(() => {
+          getAPI();
+        });
+    } else setErrorMessage(true);
   }
 
   return (
@@ -155,12 +196,15 @@ export default function ReserveringOverlay({
               />
             </div>
             <button
-              onClick={() => handleClick()}
+              onClick={() => {
+                sendReservering();
+              }}
               className="bg-[#55835A] p-2 absolute bottom-3 left-2/5"
             >
               Opslaan
             </button>
           </div>
+          {errorMessage ? "Voer alle velden in" : null}
         </div>
       </div>
     </>

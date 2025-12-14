@@ -74,13 +74,13 @@ export default function DeleteReservationModal({
                                 <div className="flex">
                                     <strong>Datum: </strong>
                                     <p className="m-0">
-                                        {reservering.reserveringDatum}
+                                        {reservering.ReserveringsDatum}
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <strong>Plaats: </strong>
                                     <p className="m-0">
-                                        {reservering.PlaatsNummer}
+                                        {reservering.PlekNummer}
                                     </p>
                                 </div>
                             </div>
