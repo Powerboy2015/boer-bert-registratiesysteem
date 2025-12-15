@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import EditReservationModal from "@/app/ui/EditReservationModal";
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import { FormEvent, useEffect, useState } from "react";
@@ -23,6 +24,9 @@ export default function Reserveringen() {
     const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
     /*UseState voor de overlay, true = overlay showed false = hidden */
     const [overlay, setOverlay] = useState<boolean>(false);
+
+    const router = useRouter();
+    const goToReservation = (id: string) => router.push(`/reserveringen/${id}`);
 
     async function getAPI() {
         try {
@@ -65,31 +69,6 @@ export default function Reserveringen() {
         year: "numeric",
     };
 
-    const EditReservation = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const payload = {
-            ReseveringsNr: data.get("ReserveringsNummer") as string,
-            ReserveringsDatum: (data.get("ReserveringsDatum") as string).split(
-                "T"
-            )[0],
-            DatumAankomst: (data.get("AankomstDatum") as string).split("T")[0],
-            DatumVertrek: (data.get("VertrekDatum") as string).split("T")[0],
-            PlekNummer: Number(data.get("Plaats")),
-        };
-        const url = new URL("http://localhost/api/reservaties");
-        url.searchParams.set("id", payload.ReseveringsNr);
-
-        fetch(url, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        }).then((resp) => {
-            console.log(resp);
-            getAPI();
-        });
-    };
-
     return (
         <>
             {overlay ? (
@@ -130,7 +109,17 @@ export default function Reserveringen() {
                                     className="border-y-5 border-[#1F1F21] text-2xl "
                                     key={index}
                                 >
-                                    <td>{item.Achternaam}</td>
+                                    <td
+                                        onClick={() => {
+                                            goToReservation(item.ReseveringsNr);
+                                        }}
+                                        style={{
+                                            textDecoration: "underline",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        {item.Achternaam}
+                                    </td>
                                     <td>
                                         {new Date(
                                             item.DatumVertrek
@@ -160,7 +149,9 @@ export default function Reserveringen() {
                                         {" "}
                                         <EditReservationModal
                                             reservering={item}
-                                            EditCallback={EditReservation}
+                                            reservationCallback={() => {
+                                                getAPI();
+                                            }}
                                         />
                                         <DeleteReservationModal
                                             reservering={item}

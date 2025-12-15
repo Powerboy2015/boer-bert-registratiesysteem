@@ -9,7 +9,8 @@ import EditIcon from "@mui/icons-material/Edit";
 
 interface EditReservationProps {
     reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.
-    EditCallback: (event: FormEvent<HTMLFormElement>) => void; // callbacks are functions that we give as parameter and will be used after a certain event e.g. a button click
+    hideIcon?: boolean;
+    reservationCallback?: () => void;
 }
 
 const roboto = Roboto({
@@ -23,7 +24,8 @@ const roboto_mono = Roboto_Mono({
 
 export default function EditReservationModal({
     reservering,
-    EditCallback,
+    hideIcon = false,
+    reservationCallback,
 }: EditReservationProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
 
@@ -34,19 +36,43 @@ export default function EditReservationModal({
         setShowModal(false);
     };
 
-    const saveData = (event: FormEvent<HTMLFormElement>) => {
-        EditCallback(event);
-        closeModal();
+    const EditReservation = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+
+        const payload = {
+            ReseveringsNr: data.get("ReserveringsNummer") as string,
+            ReserveringsDatum: (data.get("ReserveringsDatum") as string).split(
+                "T"
+            )[0],
+            DatumAankomst: (data.get("AankomstDatum") as string).split("T")[0],
+            DatumVertrek: (data.get("VertrekDatum") as string).split("T")[0],
+            PlekNummer: Number(data.get("Plaats")),
+        };
+
+        const url = new URL("http://localhost/api/reservaties");
+        url.searchParams.set("id", payload.ReseveringsNr);
+
+        fetch(url, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        }).then((resp) => {
+            console.log(resp);
+            if (reservationCallback) reservationCallback();
+            closeModal();
+        });
     };
 
     return (
         <>
             <button
+                className="w-full h-full"
                 onClick={() => {
                     setShowModal(true);
                 }}
             >
-                <EditIcon />
+                {hideIcon ? "" : <EditIcon />}
             </button>
             {showModal &&
                 //portals are used to teleport certain styling upstream, here we teleport this modal to the div with id "Modal-Catcher
@@ -54,7 +80,7 @@ export default function EditReservationModal({
                 // https://react.dev/reference/react-dom/createPortal#rendering-a-modal-dialog-with-a-portal
                 createPortal(
                     <div
-                        className="absolute w-full h-full top-0 left-0 bg-(--overlay-color) z-10 flex items-center justify-center"
+                        className="fixed w-full h-full top-0 left-0 bg-(--overlay-color) z-10 flex items-center justify-center"
                         id="DeleteReservationModal"
                     >
                         <div className="w-[50%] h-[50%] min-h-[500px] bg-(--color-accent-2) flex flex-col">
@@ -69,7 +95,7 @@ export default function EditReservationModal({
                             </div>
                             <form
                                 className="w-full h-2/3 bg-(--color-accent-2) grid px-8 py-4 grid-cols-2 grid-rows-4 gap-4"
-                                onSubmit={saveData}
+                                onSubmit={EditReservation}
                                 method="PUT"
                             >
                                 <EditFieldComponent

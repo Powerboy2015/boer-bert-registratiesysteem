@@ -41,8 +41,21 @@ interface ReservatieBody {
 }
 
 export interface UserAndReservatieBody {
-    UserData: UserDataBody;
-    Reservatie: ReservatieBody;
+    Reservation: [
+        {
+            ReseveringsNr: string;
+            Voornaam: string;
+            Achternaam: string;
+            Email: string;
+            Telefoonnummer: string;
+            Woonplaats: string;
+            DatumAankomst: string;
+            DatumVertrek: string;
+            PlekNummer: number;
+            ReserveringsDatum: string;
+            AantalMensen: number;
+        }
+    ];
 }
 
 export async function GET(req: NextRequest) {

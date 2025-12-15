@@ -3,12 +3,15 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { Reservering } from "../reserveringen/Widgets/Reserveringen";
 import ReservationButtonComponent from "./ReservationButtonComponent";
+import { useRouter } from "next/navigation";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface DeleteReservationProps {
     reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.
-    DeleteCallback: () => void; // callbacks are functions that we give as parameter and will be used after a certain event e.g. a button click
+    DeleteCallback?: () => void; // callbacks are functions that we give as parameter and will be used after a certain event e.g. a button click
+    RedirectCallback?: boolean;
+    hideIcon?: boolean;
 }
 
 const roboto = Roboto({
@@ -23,8 +26,11 @@ const roboto_mono = Roboto_Mono({
 export default function DeleteReservationModal({
     reservering,
     DeleteCallback,
+    RedirectCallback = false,
+    hideIcon = false,
 }: DeleteReservationProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
+    const router = useRouter();
 
     const modalCatcher =
         document.getElementById("Modal-Catcher") ?? document.body;
@@ -40,17 +46,21 @@ export default function DeleteReservationModal({
             method: "DELETE",
         }).then((resp) => {
             console.log(resp);
+            if (RedirectCallback) {
+                router.push("/reserveringen");
+            }
         });
     };
 
     return (
         <>
             <button
+                className="w-full h-full"
                 onClick={() => {
                     setShowModal(true);
                 }}
             >
-                <DeleteIcon sx={{ color: "#fc4545" }} />
+                {hideIcon ? "" : <DeleteIcon sx={{ color: "#fc4545" }} />}
             </button>
             {showModal &&
                 //portals are used to teleport certain styling upstream, here we teleport this modal to the div with id "Modal-Catcher
@@ -58,7 +68,7 @@ export default function DeleteReservationModal({
                 // https://react.dev/reference/react-dom/createPortal#rendering-a-modal-dialog-with-a-portal
                 createPortal(
                     <div
-                        className="absolute w-full h-full top-0 left-0 p-[254px] bg-(--overlay-color) z-10"
+                        className="fixed w-full h-full top-0 left-0 p-[254px] bg-(--overlay-color) z-10"
                         id="DeleteReservationModal"
                     >
                         <div
@@ -110,7 +120,7 @@ export default function DeleteReservationModal({
                                     btnCallback={() => {
                                         closeModal();
                                         DeleteFromDb();
-                                        DeleteCallback();
+                                        if (DeleteCallback) DeleteCallback();
                                     }}
                                 />
                             </div>
