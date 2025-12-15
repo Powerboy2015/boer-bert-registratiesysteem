@@ -1,6 +1,10 @@
 import EditReservationModal from "@/app/ui/EditReservationModal";
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import { FormEvent, useEffect, useState } from "react";
+import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
+import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
+import { useEffect, useState } from "react";
+import { UserAndReservatieBody } from "@/app/api/reservatiesenuserdata/route";
 
 /* Interface voor alle types van de variabelen */
 export interface Reservering {
@@ -160,6 +164,12 @@ export default function Reserveringen() {
                                         <EditReservationModal
                                             reservering={item}
                                             EditCallback={EditReservation}
+                                          />
+                                        <DeleteReservationModal
+                                            reservering={item}
+                                            DeleteCallback={() => {
+                                                handleDeleteReservering(index);
+                                            }}
                                         />
                                     </td>
                                 </tr>

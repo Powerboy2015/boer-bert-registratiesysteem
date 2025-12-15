@@ -162,18 +162,18 @@ export async function DELETE(req: NextRequest) {
         const id = req.nextUrl.searchParams.get("id");
 
         //checks if ID is a number and is also vaild, else give error
-        if (!id || isNaN(Number(id))) {
-            return NextResponse.json(
-                { error: "Geen geldige ID opgegeven" },
-                { status: 400 }
-            );
-        }
+        // if (!id || isNaN(Number(id))) {
+        //     return NextResponse.json(
+        //         { error: "Geen geldige ID opgegeven" },
+        //         { status: 400 }
+        //     );
+        // }
 
         const db = await getDB();
         //proper types
         const [result] = await db.execute<ResultSetHeader>(
-            "DELETE FROM Reservaties WHERE ID = ?",
-            [Number(id)]
+            "DELETE FROM Reservaties WHERE ReseveringsNr = ?",
+            [id]
         );
 
         //if the db.execute didn't make any changes it will respond with a not found error
