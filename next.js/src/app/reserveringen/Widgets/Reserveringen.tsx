@@ -149,6 +149,9 @@ export default function Reserveringen() {
                                         {" "}
                                         <EditReservationModal
                                             reservering={item}
+                                            reservationCallback={() => {
+                                                getAPI();
+                                            }}
                                         />
                                         <DeleteReservationModal
                                             reservering={item}

@@ -68,7 +68,7 @@ export default function DeleteReservationModal({
                 // https://react.dev/reference/react-dom/createPortal#rendering-a-modal-dialog-with-a-portal
                 createPortal(
                     <div
-                        className="absolute w-full h-full top-0 left-0 p-[254px] bg-(--overlay-color) z-10"
+                        className="fixed w-full h-full top-0 left-0 p-[254px] bg-(--overlay-color) z-10"
                         id="DeleteReservationModal"
                     >
                         <div

@@ -10,6 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 interface EditReservationProps {
     reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.
     hideIcon?: boolean;
+    reservationCallback?: () => void;
 }
 
 const roboto = Roboto({
@@ -24,6 +25,7 @@ const roboto_mono = Roboto_Mono({
 export default function EditReservationModal({
     reservering,
     hideIcon = false,
+    reservationCallback,
 }: EditReservationProps) {
     const [showModal, setShowModal] = useState<boolean>(false);
 
@@ -57,6 +59,7 @@ export default function EditReservationModal({
             body: JSON.stringify(payload),
         }).then((resp) => {
             console.log(resp);
+            if (reservationCallback) reservationCallback();
             closeModal();
         });
     };
@@ -77,7 +80,7 @@ export default function EditReservationModal({
                 // https://react.dev/reference/react-dom/createPortal#rendering-a-modal-dialog-with-a-portal
                 createPortal(
                     <div
-                        className="absolute w-full h-full top-0 left-0 bg-(--overlay-color) z-10 flex items-center justify-center"
+                        className="fixed w-full h-full top-0 left-0 bg-(--overlay-color) z-10 flex items-center justify-center"
                         id="DeleteReservationModal"
                     >
                         <div className="w-[50%] h-[50%] min-h-[500px] bg-(--color-accent-2) flex flex-col">
