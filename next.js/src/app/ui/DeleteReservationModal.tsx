@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { Reservering } from "../reserveringen/Widgets/Reserveringen";
 import ReservationButtonComponent from "./ReservationButtonComponent";
 import { Roboto, Roboto_Mono } from "next/font/google";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface DeleteReservationProps {
     reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.
@@ -49,7 +50,7 @@ export default function DeleteReservationModal({
                     setShowModal(true);
                 }}
             >
-                X
+                <DeleteIcon sx={{ color: "#fc4545" }} />
             </button>
             {showModal &&
                 //portals are used to teleport certain styling upstream, here we teleport this modal to the div with id "Modal-Catcher

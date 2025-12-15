@@ -5,6 +5,7 @@ import { Reservering } from "../reserveringen/Widgets/Reserveringen";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import EditFieldComponent from "./EditFieldComponent";
 import EditReservationButton from "./EditReservationButton";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface EditReservationProps {
     reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.
@@ -45,7 +46,7 @@ export default function EditReservationModal({
                     setShowModal(true);
                 }}
             >
-                X
+                <EditIcon />
             </button>
             {showModal &&
                 //portals are used to teleport certain styling upstream, here we teleport this modal to the div with id "Modal-Catcher
