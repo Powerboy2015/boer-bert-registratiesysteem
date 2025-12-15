@@ -1,9 +1,13 @@
 import DisplayFieldComponent from "@/app/ui/DisplayFieldComponent";
 import ButtonComponent from "@/app/ui/ButtonComponent";
+import { redirect } from "next/navigation";
 import MapTargetComponent from "@/app/ui/MapTargetComponent";
 import { Roboto } from "next/font/google";
 import SideBar from "@/app/Sidebar/sidebar";
 import { UserAndReservatieBody } from "@/app/api/reservatiesenuserdata/route";
+import EditReservationModal from "@/app/ui/EditReservationModal";
+import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
+import { FormEvent } from "react";
 
 const robotoBold = Roboto({
     weight: "600",
@@ -81,11 +85,24 @@ export default async function Page({ params }: ViewReservationProps) {
                                         id="inner"
                                         className="w-full h-full bg-(--color-accent-2) px-[32px] py-[48px] grid grid-cols-6 grid-rows-15 gap-[16px] shadow-(--box-shadow-view)"
                                     >
-                                        <ButtonComponent />
+                                        <ButtonComponent>
+                                            <EditReservationModal
+                                                reservering={data}
+                                                hideIcon
+                                            />
+                                        </ButtonComponent>
+
                                         <ButtonComponent
                                             color="#FC4545"
                                             text="Verwijder Reservering"
-                                        />
+                                        >
+                                            <DeleteReservationModal
+                                                reservering={data}
+                                                RedirectCallback
+                                                hideIcon
+                                            />
+                                        </ButtonComponent>
+
                                         <h2
                                             className={`col-span-3 mt-auto mb-[0px] ${roboto.className} text-[40px] text-(--color-text)`}
                                         >
