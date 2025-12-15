@@ -1,21 +1,22 @@
 import { useRouter } from "next/navigation";
+import EditReservationModal from "@/app/ui/EditReservationModal";
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 
 /* Interface voor alle types van de variabelen */
 export interface Reservering {
-    UserData_ID: number;
-    Voornaam: string;
+    AantalMensen: number;
     Achternaam: string;
-    telNr: string;
-    adres: string;
-    email: string;
-    PlekNummer: number;
     DatumAankomst: string;
     DatumVertrek: string;
+    Email: string;
+    PlekNummer: number;
     ReserveringsDatum: string;
-    reserveringBewerkDatum: string;
     ReseveringsNr: string;
+    Telefoonnummer: string;
+    Voornaam: string;
+    Woonplaats: string;
 }
 
 export default function Reserveringen() {
@@ -66,6 +67,31 @@ export default function Reserveringen() {
         day: "numeric",
         month: "short",
         year: "numeric",
+    };
+
+    const EditReservation = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const payload = {
+            ReseveringsNr: data.get("ReserveringsNummer") as string,
+            ReserveringsDatum: (data.get("ReserveringsDatum") as string).split(
+                "T"
+            )[0],
+            DatumAankomst: (data.get("AankomstDatum") as string).split("T")[0],
+            DatumVertrek: (data.get("VertrekDatum") as string).split("T")[0],
+            PlekNummer: Number(data.get("Plaats")),
+        };
+        const url = new URL("http://localhost/api/reservaties");
+        url.searchParams.set("id", payload.ReseveringsNr);
+
+        fetch(url, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        }).then((resp) => {
+            console.log(resp);
+            getAPI();
+        });
     };
 
     return (
@@ -139,13 +165,16 @@ export default function Reserveringen() {
                                     </td>
                                     <td>
                                         {" "}
-                                        <button
-                                            onClick={() =>
-                                                handleDeleteReservering(index)
-                                            }
-                                        >
-                                            X
-                                        </button>
+                                        <EditReservationModal
+                                            reservering={item}
+                                            EditCallback={EditReservation}
+                                        />
+                                        <DeleteReservationModal
+                                            reservering={item}
+                                            DeleteCallback={() => {
+                                                handleDeleteReservering(index);
+                                            }}
+                                        />
                                     </td>
                                 </tr>
                             ))}
