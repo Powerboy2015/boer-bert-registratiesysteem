@@ -5,7 +5,6 @@ import { Reservering } from "../reserveringen/Widgets/Reserveringen";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import EditFieldComponent from "./EditFieldComponent";
 import EditReservationButton from "./EditReservationButton";
-import EditIcon from "@mui/icons-material/Edit";
 
 interface EditReservationProps {
     reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.

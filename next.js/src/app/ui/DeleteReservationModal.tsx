@@ -5,7 +5,6 @@ import { Reservering } from "../reserveringen/Widgets/Reserveringen";
 import ReservationButtonComponent from "./ReservationButtonComponent";
 import { useRouter } from "next/navigation";
 import { Roboto, Roboto_Mono } from "next/font/google";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 interface DeleteReservationProps {
     reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.
