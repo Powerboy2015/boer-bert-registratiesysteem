@@ -105,13 +105,13 @@ export default function Reserveringen() {
                 >
                   <td>{item.Achternaam}</td>
                   <td>
-                    {new Date(item.DatumVertrek).toLocaleDateString(
+                    {new Date(item.DatumAankomst).toLocaleDateString(
                       "nl-NL",
                       dateSettings
                     )}
                   </td>
                   <td>
-                    {new Date(item.DatumAankomst).toLocaleDateString(
+                    {new Date(item.DatumVertrek).toLocaleDateString(
                       "nl-NL",
                       dateSettings
                     )}
