@@ -90,8 +90,8 @@ export default function Reserveringen() {
             <thead>
               <tr className="txt-left text-[10px] md:text-3xl">
                 <th className="text-left">Naam</th>
-                <th className="text-left">Eind datum</th>
                 <th className="text-left">Start datum</th>
+                <th className="text-left">Eind datum</th>
                 <th className="text-left">Plaats</th>
                 <th className="text-left">Gereserveerd op </th>
                 <th className="text-left">Opties </th>

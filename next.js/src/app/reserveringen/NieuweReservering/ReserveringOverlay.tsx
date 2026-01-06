@@ -30,7 +30,8 @@ export default function ReserveringOverlay({
       email &&
       DatumAankomst &&
       DatumVertrek &&
-      plaats
+      plaats &&
+      new Date(DatumAankomst) < new Date(DatumVertrek)
     ) {
       setErrorMessage(false);
       fetch(url, {
@@ -204,27 +205,12 @@ export default function ReserveringOverlay({
               Opslaan
             </button>
           </div>
-          {errorMessage ? "Voer alle velden in" : null}
+          <p className="text-red-400">
+            {errorMessage ? "Er is iets fout gegaan, controleer alle velden" : null}
+          </p>
         </div>
       </div>
     </>
   );
 }
 
-/*          
-
-                <button onClick={() => toggle()}>X</button>
-
-<div>Naam:</div>
-                        <div>Eind datum:</div>
-                        <div>Start datum:</div>
-                        <div>Plaats:</div>
-                        <div>Gereserveerd op:</div>
-                    </div>
-                    <div className="flex flex-col gap-5">
-                        <input type="text" className="border " />
-                        <input type="date" className="border " />
-                        <input type="date" className="border " />
-                        <input type="number" className="border " />
-                        <input type="date" className="border " />
-                        */
