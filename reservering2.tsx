@@ -1,22 +1,22 @@
 "use client";
 import Image from "next/image";
-import Widget1 from "./components/widget1";
-import Widget2 from "./components/widget2";
-import Widgetbar1 from "./components/widgetbar1";
-import Button1 from "./components/button1";
-import Button2 from "./components/button2";
-import Input1 from "./components/input1";
-import Input2 from "./components/input2";
-import Toggle1 from "./components/toggle1";
-import Toggle2 from "./components/toggle2";
-import Optionfield1 from "./components/optionfield1"
-import Optionfield2 from "./components/optionfield2"
+import Widget1 from "../components/widget1";
+import Widget2 from "../components/widget2";
+import Widgetbar1 from "../components/widgetbar1";
+import Button1 from "../components/button1";
+import Button2 from "../components/button2";
+import Input1 from "../components/input1";
+import Input2 from "../components/input2";
+import Toggle1 from "../components/toggle1";
+import Toggle2 from "../components/toggle2";
+import Optionfield1 from "../components/optionfield1"
+import Optionfield2 from "../components/optionfield2"
 import React from 'react';
-import Scrollcontact from "./components/contact";
+import Scrollcontact from "../components/contact";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 {/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */}
-export default function Home() {
+export default function Reservering2() {
   const [shrink, setShrink] = useState(false);
   const router = useRouter();
   const [text, setText] = useState("");
@@ -120,80 +120,96 @@ export default function Home() {
                 <div className="justify-self-start w-full -translate-y-2/5 z-40">
                   <div className="relative bg-[#FFFFFF] rounded-xl shadow-xl overflow-hidden w-250 min-h-[240px]">
                     <div className="bg-[#FFFFFF] text-[#007248] flex text-center p-4 mt-5 text-xl font-bold">
-                      <p className="text-3xl ml-10 mt-5">Plattegrond img</p>
-                      <p className="text-lg mt-5" style={{ fontFamily: "Roboto mono" }}>Je kunt je gewenste ligging in het park of een accommodatienummer selecteren.</p>
+                      <a title="link naar plattegrond camping boer bert"
+                        rel="noopener noreferer"
+                        href="https://www.google.com/maps/place/UMC+Utrecht/@52.0858554,5.1795793,17z/data=!3m1!4b1!4m6!3m5!1s0x47c66885c1ad3c53:0x5778bacf22762084!8m2!3d52.0858554!4d5.1795793!16s%2Fm%2F02qkwv4?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D">
+                        <Image alt="English language" src="/map.jpg" width={300} height={70} 
+                        className="rounded-[1] px-auto opacity-100 object-contain mt-5 ml-10"/>
+                      </a>
+                      <p className="text-lg mt-5 place-content-center" style={{ fontFamily: "Roboto mono" }}>Je kunt je gewenste ligging in het park of een accommodatienummer selecteren.</p>
                     </div>
-                    <div className="p-3">
 
-                      <p className="text-xl text-justify m-10 mt-6" style={{ fontFamily: "Roboto mono" }}>
-                        Gewenste ligging in het park:
-                        <div className="mt-3">
-                          <input
-                            list="ligging-in-het-park"
-                            placeholder="kies hier uw gewenste ligging"
-                            onChange={liggingChange}
-                            onKeyDown={handleKeyDown}
-                            style={{
-                            backgroundColor: "#FFFFFF",   
-                            color: "#cececeff",
-                            padding: "px",
-                            borderRadius: "10px",
-                            border: "2px solid #ccc",
-                            fontSize: "22px",
-                            width: "600px",
-                            height: "50px",
-                            boxSizing: "border-box",
-                            fontFamily: "Roboto mono",
-                            paddingLeft: "15px",
-                            paddingRight: "15px",
-                          }}></input>
-                          <datalist id="ligging-in-het-park">
-                            <option value="in de zon"/>
-                            <option value="in de schaduw"/>
-                            <option value="bij het water"/>
-                            <option value="vlakbij de ingang"/>
-                            <option value="langs de hoodfweg"/>
-                          </datalist> 
+                    <div className="flex flex-row mx-auto my-auto items-center justify-center">
+                      <div className="p-3 mx-auto my-auto">
+
+                        <div className="text-xl text-justify m-10 mt-6" style={{ fontFamily: "Roboto mono" }}>
+                          Gewenste ligging in het park:
+                          <div className="mt-3">
+                            <input
+                              list="ligging-in-het-park"
+                              placeholder="kies hier uw gewenste ligging"
+                              onChange={liggingChange}
+                              onKeyDown={handleKeyDown}
+                              style={{
+                              backgroundColor: "#FFFFFF",   
+                              color: "#595959ff",
+                              padding: "px",
+                              borderRadius: "10px",
+                              border: "2px solid #ccc",
+                              fontSize: "22px",
+                              width: "580px",
+                              height: "50px",
+                              boxSizing: "border-box",
+                              fontFamily: "Roboto mono",
+                              paddingLeft: "15px",
+                              paddingRight: "15px",
+                            }}></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon"/>
+                              <option value="in de schaduw"/>
+                              <option value="bij het water"/>
+                              <option value="vlakbij de ingang"/>
+                              <option value="langs de hoodfweg"/>
+                            </datalist> 
+                          </div>
                         </div>
-                      </p>
 
-                      <p className="text-xl text-justify m-10 mt-3" style={{ fontFamily: "Roboto mono" }}>
-                        Accomodatienummer:
-                        <div className="mt-3">
-                          <input
-                            list="accomodatie-nummers"
-                            placeholder="2323 beschikbare accomodaties"
-                            onChange={accomodatieChange}
-                            onKeyDown={handleKeyDown}
-                            style={{
-                            backgroundColor: "#FFFFFF",   
-                            color: "#cececeff",
-                            padding: "px",
-                            borderRadius: "10px",
-                            border: "2px solid #ccc",
-                            fontSize: "22px",
-                            width: "600px",
-                            height: "50px",
-                            boxSizing: "border-box",
-                            fontFamily: "Roboto mono",
-                            paddingLeft: "15px",
-                            paddingRight: "15px",
-                          }}></input>
-                          <datalist id="accomodatie-nummers">
-                            <option value="1"/>
-                            <option value="2"/>
-                            <option value="3"/>
-                            <option value="4"/>
-                            <option value="5"/>
-                            <option value="6"/>
-                            <option value="7"/>
-                            <option value="8"/>
-                            <option value="9"/>
-                            <option value="10"/>
-                          </datalist>            
-
+                        <div className="text-xl text-justify m-10 mt-3" style={{ fontFamily: "Roboto mono" }}>
+                          Accomodatienummer:
+                          <div className="mt-3">
+                            <input
+                              list="accomodatie-nummers"
+                              placeholder="2323 beschikbare accomodaties"
+                              onChange={accomodatieChange}
+                              onKeyDown={handleKeyDown}
+                              style={{
+                              backgroundColor: "#FFFFFF",   
+                              color: "#595959ff",
+                              padding: "px",
+                              borderRadius: "10px",
+                              border: "2px solid #ccc",
+                              fontSize: "22px",
+                              width: "580px",
+                              height: "50px",
+                              boxSizing: "border-box",
+                              fontFamily: "Roboto mono",
+                              paddingLeft: "15px",
+                              paddingRight: "15px",
+                            }}></input>
+                            <datalist id="accomodatie-nummers">
+                              <option value="1"/>
+                              <option value="2"/>
+                              <option value="3"/>
+                              <option value="4"/>
+                              <option value="5"/>
+                              <option value="6"/>
+                              <option value="7"/>
+                              <option value="8"/>
+                              <option value="9"/>
+                              <option value="10"/>
+                            </datalist>
+                          </div>
                         </div>
-                      </p>
+                      </div> {/*input velden voor ligging en accomodatie nummer*/}
+
+                      <div className="my-auto mx-auto items-center text-center p-3 mr-10">
+                        <a href="/reservering1"
+                          title="knop naar reserverings pagina">
+                          <button className="text-center px-15 py-7 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-xl font-semibold text-[#FDF5D8] rounded-xl">
+                            Terug naar reservering bewerken
+                          </button>
+                        </a>
+                      </div> {/*knop om terug naar reservering bewerken te gaan*/}
 
                     </div>
                   </div>
@@ -202,10 +218,10 @@ export default function Home() {
                 <div className="justify-self-end w-full -translate-y-3/7 z-40">
                   <div className="relative bg-[#FFFFFF] rounded-xl shadow-xl overflow-hidden w-full md:w-[460px] min-h-[680px]">
                     <div className="bg-[#FFFFFF] text-[#007248] text-center p-1 mt-2 text-xl font-bold">
-                      <p className="text-3xl mt-5" style={{ fontFamily: "Roboto mono" }}>Jouw boekingen</p>
+                      <p className="text-3xl mt-5" style={{ fontFamily: "Roboto mono" }}>Jouw boeking</p>
                     </div>
                     <div className="p-1">
-                      <p className="text-xl text-justify m-12 mt-6" style={{ fontFamily: "Roboto mono" }}>
+                      <div className="text-xl text-justify my-1 mx-12 mt-6" style={{ fontFamily: "Roboto mono" }}>
 
                         <div title="box met plaats en aantal personen"
                           className="grid grid-cols-3 gap-1 border-2 p-5 rounded-[15] w-full">
@@ -214,7 +230,12 @@ export default function Home() {
                             <div>2 volwassenen</div>
                           </div>
                           <button>
-                            <a className="justify-self-end text-[#007248] font-bold text-[18px] place-content-center">Meer info</a>
+                            <a
+                              className="justify-self-end text-[#007248] font-bold text-[18px] place-content-center"
+                              rel="noopener noreferer"
+                              href="https://www.google.com/maps/place/UMC+Utrecht/@52.0858554,5.1795793,17z/data=!3m1!4b1!4m6!3m5!1s0x47c66885c1ad3c53:0x5778bacf22762084!8m2!3d52.0858554!4d5.1795793!16s%2Fm%2F02qkwv4?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D">
+                              Meer info
+                            </a>
                           </button>
                         </div>
 
@@ -224,24 +245,92 @@ export default function Home() {
                             Aankomstdatum: ma 26 januari<br/>
                             Vertrekdatum: wo 28 januari
                           </p>
+                          <a 
+                            title="klik her om datum en dagen te wijzigen"
+                            rel="noopener noreferer"
+                            href="/reservering1">
+                            <p className="text-[18px] text-[#007248] text-right mr-3">
+                              Wijzig
+                            </p>
+                          </a>
                         </div>
 
                         <div title="box met soort plaats en prijs">
+                          <div title="soort plaats">
+                            <p className="text-[18px] font-bold mt-5">
+                              Grote plaats
+                            </p>
+                            <div className="flex">
+                              <p className="text-[18px] text-left ml auto">
+                                Accomodatie
+                              </p>
+                              <p className="text-[18px] text-right ml-auto font-bold">
+                                € 183,00
+                              </p>
+                            </div>
+                          </div>
                         </div>
 
-                        <div title="box met info en prijs extra kosten">
+                        <div title="box met info en prijs extra kosten"
+                          className="border-b-1 pb-4">
+                          <div>
+                            <p className="text-[18px] font-bold mt-3">
+                              Extra kosten
+                            </p>
+                            <div className="flex">
+                              <p className="text-[18px] text-left ml auto">
+                                gekozen accomodatie
+                              </p>
+                              <p className="text-[18px] text-right ml-auto font-bold">
+                                € 65,00
+                              </p>
+                              
+                            </div>
+                          </div>
                         </div>
 
-                        <div title="box met totaal prijs">
+                        <div title="box met totaal prijs"
+                          className="flex">
+                          <p className="text-[20px] text-left font-bold mt-5">
+                            Totaal
+                          </p>
+                          <p className="text-[18px] text-right font-bold mt-5 ml-auto">
+                            € 248,00
+                          </p>
                         </div>
 
-                        <div title="knop om boeking te bevestigen">
+                        <div title="knop om boeking te bevestigen"
+                          className="mt-8 text-center">
+                          <button>
+                            <a className="shadow-xl px-10 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
+                              href="https://www.google.com/maps/place/UMC+Utrecht/@52.0858554,5.1795793,17z/data=!3m1!4b1!4m6!3m5!1s0x47c66885c1ad3c53:0x5778bacf22762084!8m2!3d52.0858554!4d5.1795793!16s%2Fm%2F02qkwv4?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D"
+                              rel="noopener noreferer">
+                              Boeken
+                            </a>
+                          </button>
                         </div>
 
                         <div title="box met info metaalmethodes">
+                          <div className="mt-10 flex flex-row gap-3 items-center justify-between">
+                            <p className="text-[18px] text-left">
+                              betaal met:
+                            </p>
+                            <div title="images" className="right-0 flex flex-row gap-3">
+                              <Image alt="English language" src="/ideal.png" width={30} height={30} 
+                              className="rounded-[1] px-auto opacity-100 object-contain"/>
+                              <Image alt="English language" src="/paypal.png" width={30} height={30} 
+                              className="rounded-[1] px-auto opacity-100 object-contain"/>
+                              <Image alt="English language" src="/applepay.png" width={30} height={30} 
+                              className="rounded-[1] px-auto opacity-100 object-contain"/>
+                              <Image alt="English language" src="/mastercard.png" width={30} height={30} 
+                              className="rounded-[1] px-auto opacity-100 object-contain"/>
+                              <Image alt="English language" src="/visa.png" width={30} height={30} 
+                              className="rounded-[1] px-auto opacity-100 object-contain"/>
+                            </div>
+                          </div>
                         </div>
 
-                      </p>
+                      </div>
                     </div>
                   </div>
                 </div> {/* rechter box */}
