@@ -124,7 +124,6 @@ export default function Reserveringen() {
                     )}
                   </td>
                   <td>
-                    {" "}
                     <button onClick={() => handleDeleteReservering(index)}>
                       X
                     </button>
