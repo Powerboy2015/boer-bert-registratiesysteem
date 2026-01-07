@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+import EditReservationModal from "@/app/ui/EditReservationModal";
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import { useEffect, useState } from "react";
 
@@ -17,10 +19,10 @@ export interface Reservering {
 }
 
 export default function Reserveringen() {
-  /* UseState voor de array van alle reserveringen */
-  const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
-  /*UseState voor de overlay, true = overlay showed false = hidden */
-  const [overlay, setOverlay] = useState<boolean>(false);
+    /* UseState voor de array van alle reserveringen */
+    const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
+    /*UseState voor de overlay, true = overlay showed false = hidden */
+    const [overlay, setOverlay] = useState<boolean>(false);
 
   async function getAPI() {
     try {

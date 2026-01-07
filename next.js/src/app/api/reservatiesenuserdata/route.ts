@@ -1,10 +1,26 @@
-import getDB from "@/app/api/lib/db"
+import getDB from "@/app/api/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader } from "mysql2/promise";
 
-const allowedColumnsUserData = ["Woonplaats", "Voornaam", "Achternaam", "Telefoonnummer", "Email"];
-const allowedColumnsReservaties = ["ReseveringsNr","DatumAankomst", "DatumVertrek", "ReserveringsDatum", "PlekNummer", "AantalMensen"];
-const allowedColumnsUserandRes = [...allowedColumnsUserData, ...allowedColumnsReservaties];
+const allowedColumnsUserData = [
+    "Woonplaats",
+    "Voornaam",
+    "Achternaam",
+    "Telefoonnummer",
+    "Email",
+];
+const allowedColumnsReservaties = [
+    "ReseveringsNr",
+    "DatumAankomst",
+    "DatumVertrek",
+    "ReserveringsDatum",
+    "PlekNummer",
+    "AantalMensen",
+];
+const allowedColumnsUserandRes = [
+    ...allowedColumnsUserData,
+    ...allowedColumnsReservaties,
+];
 
 interface UserDataBody {
     Voornaam: string;
@@ -24,24 +40,37 @@ interface ReservatieBody {
     AantalMensen: number;
 }
 
-interface UserAndReservatieBody {
-    UserData: UserDataBody;
-    Reservatie: ReservatieBody;
+export interface UserAndReservatieBody {
+    Reservation: [
+        {
+            ReseveringsNr: string;
+            Voornaam: string;
+            Achternaam: string;
+            Email: string;
+            Telefoonnummer: string;
+            Woonplaats: string;
+            DatumAankomst: string;
+            DatumVertrek: string;
+            PlekNummer: number;
+            ReserveringsDatum: string;
+            AantalMensen: number;
+        }
+    ];
 }
 
 export async function GET(req: NextRequest) {
     try {
         // const data: POSTreq = await req.json();
 
-        const searchParam = req.nextUrl.searchParams
+        const searchParam = req.nextUrl.searchParams;
 
         //limits the amount of reservation being displayed at once, also the page select thing
-        const page: number = Number(searchParam.get("page") || 1); //the page uhh that you're seeing 
+        const page: number = Number(searchParam.get("page") || 1); //the page uhh that you're seeing
         const limit: number = Number(searchParam.get("limit") || 20); // max users that get loaded at once (20 is default)
         const pagestart: number = (page - 1) * limit; // calculates what user it should start from
 
         //search options
-        const searchColumn = searchParam.get("searchColumn"); 
+        const searchColumn = searchParam.get("searchColumn");
         const searchValue = searchParam.get("searchValue");
 
         //sort and order options
@@ -50,10 +79,16 @@ export async function GET(req: NextRequest) {
 
         //checks if column and search prompt are valid
         if (!allowedColumnsUserandRes.includes(sort)) {
-            return NextResponse.json({error: `Foute kolkom: ${sort}`}, {status: 400});
+            return NextResponse.json(
+                { error: `Foute kolkom: ${sort}` },
+                { status: 400 }
+            );
         }
         if (searchColumn && !allowedColumnsUserandRes.includes(searchColumn)) {
-            return NextResponse.json({error: `Foute kolkom: ${searchColumn}`}, { status: 400 });
+            return NextResponse.json(
+                { error: `Foute kolkom: ${searchColumn}` },
+                { status: 400 }
+            );
         }
 
         const db = await getDB();
@@ -69,8 +104,11 @@ export async function GET(req: NextRequest) {
         //ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen
 
         //Sql query database execute
-        const [rows] = await db.execute(`select * from Reservaties INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`, [...likeInput, limit, pagestart]);
-        const reservaties = (rows.map(row => ({
+        const [rows] = await db.execute(
+            `select * from Reservaties INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
+            [...likeInput, limit, pagestart]
+        );
+        const reservaties = rows.map((row) => ({
             ReseveringsNr: row.ReseveringsNr,
             Voornaam: row.Voornaam,
             Achternaam: row.Achternaam,
@@ -82,12 +120,13 @@ export async function GET(req: NextRequest) {
             PlekNummer: row.PlekNummer,
             ReserveringsDatum: row.ReserveringsDatum,
             AantalMensen: row.AantalMensen,
-        })));
+        }));
 
-        return NextResponse.json({ Reservation : reservaties });
+        return NextResponse.json({ Reservation: reservaties });
         // return NextResponse.json({data: rows});
     } catch (err) {
-        return NextResponse.json( //gives error 500 if something went wrong
+        return NextResponse.json(
+            //gives error 500 if something went wrong
             { error: "Interne serverfout", details: `${err}` },
             { status: 500 }
         );
@@ -100,26 +139,38 @@ export async function POST(req: NextRequest) {
     try {
         const body: UserAndReservatieBody = await req.json();
         const { UserData, Reservatie } = body;
-        
+
         //gets the keys and values from the body
         const userKeys = Object.keys(UserData);
-        const reservatieKeys = Object.keys(Reservatie)
+        const reservatieKeys = Object.keys(Reservatie);
         const userValues = Object.values(UserData);
         const reservatieValues = Object.values(Reservatie);
 
         //checks if the body key items are in the vaild columns list
-        const invalidUserColumns = userKeys.filter(key => !allowedColumnsUserData.includes(key));
+        const invalidUserColumns = userKeys.filter(
+            (key) => !allowedColumnsUserData.includes(key)
+        );
         if (invalidUserColumns.length) {
             return NextResponse.json(
-                { error: "Ongeldige UserData kolomm(en): " + invalidUserColumns.join(", ") },
+                {
+                    error:
+                        "Ongeldige UserData kolomm(en): " +
+                        invalidUserColumns.join(", "),
+                },
                 { status: 400 }
             );
         }
 
-        const invalidReservatieColumns = reservatieKeys.filter(key => !allowedColumnsReservaties.includes(key));
+        const invalidReservatieColumns = reservatieKeys.filter(
+            (key) => !allowedColumnsReservaties.includes(key)
+        );
         if (invalidReservatieColumns.length) {
             return NextResponse.json(
-                { error: "Invalid Reservatie columns: " + invalidReservatieColumns.join(", ") },
+                {
+                    error:
+                        "Invalid Reservatie columns: " +
+                        invalidReservatieColumns.join(", "),
+                },
                 { status: 400 }
             );
         }
@@ -127,24 +178,30 @@ export async function POST(req: NextRequest) {
         await db.beginTransaction();
 
         //Sql 👍
-        const sqlUserData =
-            `INSERT INTO UserData (${userKeys.join(", ")}) 
+        const sqlUserData = `INSERT INTO UserData (${userKeys.join(", ")}) 
             VALUES (${userKeys.map(() => "?").join(", ")})`;
 
-        const [resultUserData] = await db.execute<ResultSetHeader>(sqlUserData, userValues);
-        
+        const [resultUserData] = await db.execute<ResultSetHeader>(
+            sqlUserData,
+            userValues
+        );
+
         //takes UserData.ID of the previous execute and makes it a variable
-        const userId = resultUserData.insertId
+        const userId = resultUserData.insertId;
 
         const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys];
         const reservatieValuesWUserDataID = [userId, ...reservatieValues];
 
         //Sql again 👍
-        const sqlReservaties =
-            `INSERT INTO Reservaties (${reservatieKeysWUserDataID.join(", ")}) 
+        const sqlReservaties = `INSERT INTO Reservaties (${reservatieKeysWUserDataID.join(
+            ", "
+        )}) 
             VALUES (${reservatieKeysWUserDataID.map(() => "?").join(", ")})`;
 
-        const [resultReservaties] = await db.execute<ResultSetHeader>(sqlReservaties, reservatieValuesWUserDataID);
+        const [resultReservaties] = await db.execute<ResultSetHeader>(
+            sqlReservaties,
+            reservatieValuesWUserDataID
+        );
 
         //commit database changes if both executed correctly
         await db.commit();
@@ -155,8 +212,8 @@ export async function POST(req: NextRequest) {
             UserDataID: userId, //mag dit? is handig voor testen
             ReservatieID: resultReservaties.insertId,
         });
-
-    } catch (err) { //gives error 500 if something went wrong
+    } catch (err) {
+        //gives error 500 if something went wrong
         await db.rollback();
         return NextResponse.json(
             { error: "Interne serverfout", details: String(err) },
