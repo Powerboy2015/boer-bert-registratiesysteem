@@ -67,7 +67,7 @@ export default function EditReservationModal({
     return (
         <>
             <button
-                className="w-full h-full"
+                className="w-full h-full cursor-pointer"
                 onClick={() => {
                     setShowModal(true);
                 }}

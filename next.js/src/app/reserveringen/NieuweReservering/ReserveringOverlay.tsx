@@ -20,73 +20,73 @@ export default function ReserveringOverlay({
     const [gereserveerdDatum, setGereserveerdDatum] = useState("");
     const [errorMessage, setErrorMessage] = useState(false);
 
-    async function sendReservering() {
-        const url = "http://localhost/api/reservatiesenuserdata";
-        if (
-            voornaam &&
-            achternaam &&
-            telNr &&
-            adres &&
-            email &&
-            DatumAankomst &&
-            DatumVertrek &&
-            plaats
-        ) {
-            const today: Date = new Date();
-            setErrorMessage(false);
-            fetch(url, {
-                method: "POST",
-                body: JSON.stringify({
-                    UserData: {
-                        Voornaam: voornaam,
-                        Achternaam: achternaam,
-                        Email: email,
-                        Telefoonnummer: telNr,
-                        Woonplaats: adres,
-                    },
-                    Reservatie: {
-                        ReseveringsNr: "2025-1",
-                        DatumAankomst: DatumAankomst,
-                        DatumVertrek: DatumVertrek,
-                        ReserveringsDatum: today.toJSON().split("T")[0],
-                        PlekNummer: plaats,
-                        AantalMensen: 0,
-                    },
-                }),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8",
-                },
-            })
-                .then((response) => response.json())
-                .then((json) => console.log(json))
-                .then(() => {
-                    setVoornaam("");
-                    setAchternaam("");
-                    setVoornaam("");
-                    setAchternaam("");
-                    setTelnr("");
-                    setAdres("");
-                    setEmail("");
-                    setDatumVertrek("");
-                    setDatumAankomst("");
-                    setPlaats(0);
-                    setGereserveerdDatum("");
-                })
-                .then(() => {
-                    toggle();
-                })
-                .then(() => {
-                    getAPI();
-                });
-        } else setErrorMessage(true);
-    }
+  function sendReservering() {
+    const url = "http://localhost/api/reservatiesenuserdata";
+    if (
+      voornaam &&
+      achternaam &&
+      telNr &&
+      adres &&
+      email &&
+      DatumAankomst &&
+      DatumVertrek &&
+      plaats &&
+      new Date(DatumAankomst) < new Date(DatumVertrek)
+    ) {
+      setErrorMessage(false);
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          UserData: {
+            Voornaam: voornaam,
+            Achternaam: achternaam,
+            Email: email,
+            Telefoonnummer: telNr,
+            Woonplaats: adres,
+          },
+          Reservatie: {
+            ReseveringsNr: "2025-1",
+            DatumAankomst: DatumAankomst,
+            DatumVertrek: DatumVertrek,
+            ReserveringsDatum: "2025-12-14",
+            PlekNummer: plaats,
+            AantalMensen: 0,
+          },
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => console.log(json))
+        .then(() => {
+          setVoornaam("");
+          setAchternaam("");
+          setVoornaam("");
+          setAchternaam("");
+          setTelnr("");
+          setAdres("");
+          setEmail("");
+          setDatumVertrek("");
+          setDatumAankomst("");
+          setPlaats(0);
+          setGereserveerdDatum("");
+        })
+        .then(() => {
+          toggle();
+        })
+        .then(() => {
+          getAPI();
+        });
+    } else setErrorMessage(true);
+  }
 
     return (
         <>
             <div className="fixed flex h-full w-full left-0 justify-center items-center bg-gray-500/90">
                 <div className="bg-[#2E3038] h-1/2 w-1/2 grid relative min-w-fit min-h-fit p-10">
                     <button
-                        className="absolute top-4 right-4"
+                        className="absolute top-4 right-4 cursor-pointer"
                         onClick={() => toggle()}
                     >
                         X
@@ -209,7 +209,7 @@ export default function ReserveringOverlay({
                             onClick={() => {
                                 sendReservering();
                             }}
-                            className="bg-[#55835A] p-2 absolute bottom-3 left-2/5"
+                            className="bg-[#55835A] p-2 absolute bottom-3 left-2/5 cursor-pointer"
                         >
                             Opslaan
                         </button>
@@ -217,24 +217,21 @@ export default function ReserveringOverlay({
                     {errorMessage ? "Voer alle velden in" : null}
                 </div>
             </div>
-        </>
-    );
+            <button
+              onClick={() => {
+                sendReservering();
+              }}
+              className="bg-[#55835A] p-2 absolute bottom-3 left-2/5"
+            >
+              Opslaan
+            </button>
+          </div>
+          <p className="text-red-400">
+            {errorMessage ? "Er is iets fout gegaan, controleer alle velden" : null}
+          </p>
+        </div>
+      </div>
+    </>
+  );
 }
 
-/*          
-
-                <button onClick={() => toggle()}>X</button>
-
-<div>Naam:</div>
-                        <div>Eind datum:</div>
-                        <div>Start datum:</div>
-                        <div>Plaats:</div>
-                        <div>Gereserveerd op:</div>
-                    </div>
-                    <div className="flex flex-col gap-5">
-                        <input type="text" className="border " />
-                        <input type="date" className="border " />
-                        <input type="date" className="border " />
-                        <input type="number" className="border " />
-                        <input type="date" className="border " />
-                        */
