@@ -5,6 +5,7 @@ import NieuweReserveringen from "./Widgets/NieuweReserveringen";
 import OpenstaandeReserveringen from "./Widgets/OpenstaandeReserveringen";
 import Capaciteit from "./Widgets/Capaciteit";
 import Reserveringen from "./Widgets/Reserveringen";
+import Searchbar from "@/app/reserveringen/Widgets/searchbar";
 
 export default function reserveringen() {
     return (

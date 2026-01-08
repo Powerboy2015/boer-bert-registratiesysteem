@@ -1,10 +1,14 @@
-import { useRouter } from "next/navigation";
-import EditReservationModal from "@/app/ui/EditReservationModal";
-import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
-import { FormEvent, useEffect, useState } from "react";
-import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
+'use client';
 
-/* Interface voor alle types van de variabelen */
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import Searchbar from "../Widgets/searchbar";
+import EditReservationModal from "@/app/ui/EditReservationModal";
+import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
+import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
+
+/* Interface voor reserveringen */
 export interface Reservering {
     AantalMensen: number;
     Achternaam: string;
@@ -19,30 +23,36 @@ export interface Reservering {
     Woonplaats: string;
 }
 
+type SortKey =
+    | "naam"
+    | "startDatum"
+    | "eindDatum"
+    | "plaats"
+    | "gereserveerdOp"
+    | null;
+
+
 export default function Reserveringen() {
-    /* UseState voor de array van alle reserveringen */
     const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
-    /*UseState voor de overlay, true = overlay showed false = hidden */
-    const [overlay, setOverlay] = useState<boolean>(false);
+    const [overlay, setOverlay] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const [sortKey, setSortKey] = useState<SortKey>(null);
+    const [sortDirection, setSortDirection] = useState<"ascending" | "descending">("ascending");
 
     const router = useRouter();
-    const goToReservation = (id: string) => router.push(`/reserveringen/${id}`);
+    const goToReservation = (id: string) =>
+        router.push(`/reserveringen/${id}`);
 
     async function getAPI() {
         try {
-            const url = "http://localhost/api/reservatiesenuserdata";
-
-            const response = fetch(url);
-
-            const data = await response;
-
-            const res = await data.json();
-
-            setReserveringen(res.Reservation);
-
-            console.log(res.Reservation);
+            const response = await fetch(
+                "http://localhost/api/reservatiesenuserdata"
+            );
+            const data = await response.json();
+            setReserveringen(data.Reservation);
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 
@@ -50,18 +60,78 @@ export default function Reserveringen() {
         getAPI();
     }, []);
 
-    /* Toggle overlay */
     function toggleOverlay() {
-        setOverlay(!overlay);
+        setOverlay((prev) => !prev);
     }
-    /* functie voor het verwijderen van reservering, verwijderd de reservering met index nr */
-    function handleDeleteReservering(RemoveIndex: number) {
-        console.log(RemoveIndex);
-        const newReserveringen = reserveringen.filter(
-            (item, index) => index !== RemoveIndex
+
+    function handleDeleteReservering(removeIndex: number) {
+        setReserveringen((prev) =>
+            prev.filter((_, index) => index !== removeIndex)
         );
-        setReserveringen(newReserveringen);
     }
+
+    function handleSort(key: SortKey) {
+        if (sortKey === key) {
+            setSortDirection((prev) => (prev === "ascending" ? "descending" : "ascending"));
+        } else {
+            setSortKey(key);
+            setSortDirection("ascending");
+        }
+    }
+
+    /* Filtering */
+    const filteredReserveringen = reserveringen
+        .filter((r) => {
+            const q = searchQuery.toLowerCase();
+
+            return (
+                r.Achternaam.toLowerCase().includes(q) ||
+                r.Voornaam.toLowerCase().includes(q) ||
+                r.Email.toLowerCase().includes(q) ||
+                r.PlekNummer.toString().includes(q) ||
+                r.ReseveringsNr.toLowerCase().includes(q)
+            );
+        })
+        .sort((val1, val2) => {
+            if (!sortKey) return 0;
+
+            let value1: string | number | Date;
+            let value2: string | number | Date;
+
+            switch (sortKey) {
+                case "naam":
+                    value1 = val1.Achternaam.toLowerCase();
+                    value2 = val2.Achternaam.toLowerCase();
+                    break;
+
+                case "startDatum":
+                    value1 = new Date(val1.DatumAankomst);
+                    value2 = new Date(val2.DatumAankomst);
+                    break;
+
+                case "eindDatum":
+                    value1 = new Date(val1.DatumVertrek);
+                    value2 = new Date(val2.DatumVertrek);
+                    break;
+
+                case "plaats":
+                    value1 = val1.PlekNummer;
+                    value2 = val2.PlekNummer;
+                    break;
+
+                case "gereserveerdOp":
+                    value1 = new Date(val1.ReserveringsDatum);
+                    value2 = new Date(val2.ReserveringsDatum);
+                    break;
+
+                default:
+                    return 0;
+            }
+
+            if (value1 < value2) return sortDirection === "ascending" ? -1 : 1;
+            if (value1 > value2) return sortDirection === "ascending" ? 1 : -1;
+            return 0;
+        });
 
     const dateSettings: Intl.DateTimeFormatOptions = {
         day: "numeric",
@@ -71,99 +141,142 @@ export default function Reserveringen() {
 
     return (
         <>
-            {overlay ? (
-                <ReserveringOverlay toggle={toggleOverlay} getAPI={getAPI} />
-            ) : null}
-            <div className="bg-[#2E3038] h-full mx-5 overflow-y-auto overflow-x-hidden ">
-                <div className="h-1/15 flex w-full">
-                    <div className="w-1/2 text-4xl m-3">Reserveringslijst</div>
-                    <div className="flex justify-end w-full">
-                        <input
-                            className="bg-[#556483] my-3 w-1/3 mx-10 text-4xl p-7"
-                            placeholder="Zoek reservering "
-                            type="text"
-                        />
+            {overlay && (
+                <ReserveringOverlay
+                    toggle={toggleOverlay}
+                    getAPI={getAPI}
+                />
+            )}
+
+            <div className="bg-[#2E3038] h-full mx-5 overflow-y-auto overflow-x-hidden">
+                <div className="flex w-full items-center">
+                    <div className="w-1/2 text-4xl m-3">
+                        Reserveringslijst
+                    </div>
+
+                    <div className="flex justify-end w-full items-center gap-4">
+                        <Searchbar onSearch={setSearchQuery} />
+
                         <button
-                            onClick={() => toggleOverlay()}
-                            className=" bg-[#55835A] h-15 w-15 m-3"
+                            onClick={toggleOverlay}
+                            className="bg-[#55835A] h-14 w-14 text-4xl"
                         >
                             +
                         </button>
                     </div>
                 </div>
+
                 <div className="w-full h-full m-5">
                     <table className="w-full mt-10">
                         <thead>
-                            <tr className="txt-left text-[10px] md:text-3xl">
-                                <th className="text-left">Naam</th>
-                                <th className="text-left">Eind datum</th>
-                                <th className="text-left">Start datum</th>
-                                <th className="text-left">Plaats</th>
-                                <th className="text-left">Gereserveerd op </th>
-                                <th className="text-left">Opties </th>
-                            </tr>
+                        <tr className="text-[10px] md:text-3xl">
+                            <th
+                                className="text-left cursor-pointer select-none"
+                                onClick={() => handleSort("naam")}
+                            >
+                                Naam {sortKey === "naam" && (sortDirection === "ascending" ? "⇧" : "⇩")}
+                            </th>
+
+                            <th
+                                className="text-left cursor-pointer select-none"
+                                onClick={() => handleSort("eindDatum")}
+                            >
+                                Eind datum {sortKey === "eindDatum" && (sortDirection === "ascending" ? "⇧" : "⇩")}
+                            </th>
+
+                            <th
+                                className="text-left cursor-pointer select-none"
+                                onClick={() => handleSort("startDatum")}
+                            >
+                                Start datum {sortKey === "startDatum" && (sortDirection === "ascending" ? "⇧" : "⇩")}
+                            </th>
+
+                            <th
+                                className="text-left cursor-pointer select-none"
+                                onClick={() => handleSort("plaats")}
+                            >
+                                Plaats {sortKey === "plaats" && (sortDirection === "ascending" ? "⇧" : "⇩")}
+                            </th>
+
+                            <th
+                                className="text-left cursor-pointer select-none"
+                                onClick={() => handleSort("gereserveerdOp")}
+                            >
+                                Gereserveerd op {sortKey === "gereserveerdOp" && (sortDirection === "ascending" ? "⇧" : "⇩")}
+                            </th>
+
+                        </tr>
                         </thead>
+
                         <tbody>
-                            {reserveringen.map((item, index) => (
-                                <tr
-                                    className="border-y-5 border-[#1F1F21] text-2xl "
-                                    key={index}
+                        {filteredReserveringen.map((item, index) => (
+                            <tr
+                                key={item.ReseveringsNr}
+                                className="border-y-4 border-[#1F1F21] text-2xl"
+                            >
+                                <td
+                                    onClick={() =>
+                                        goToReservation(
+                                            item.ReseveringsNr
+                                        )
+                                    }
+                                    className="underline cursor-pointer"
                                 >
-                                    <td
-                                        onClick={() => {
-                                            goToReservation(item.ReseveringsNr);
-                                        }}
-                                        style={{
-                                            textDecoration: "underline",
-                                            cursor: "pointer",
-                                        }}
-                                    >
-                                        {item.Achternaam}
-                                    </td>
-                                    <td>
-                                        {new Date(
-                                            item.DatumVertrek
-                                        ).toLocaleDateString(
-                                            "nl-NL",
-                                            dateSettings
-                                        )}
-                                    </td>
-                                    <td>
-                                        {new Date(
-                                            item.DatumAankomst
-                                        ).toLocaleDateString(
-                                            "nl-NL",
-                                            dateSettings
-                                        )}
-                                    </td>
-                                    <td>{item.PlekNummer}</td>
-                                    <td>
-                                        {new Date(
-                                            item.ReserveringsDatum
-                                        ).toLocaleDateString(
-                                            "nl-NL",
-                                            dateSettings
-                                        )}
-                                    </td>
-                                    <td>
-                                        {" "}
-                                        <EditReservationModal
-                                            reservering={item}
-                                            reservationCallback={() => {
-                                                getAPI();
-                                            }}
-                                        />
-                                        <DeleteReservationModal
-                                            reservering={item}
-                                            DeleteCallback={() => {
-                                                handleDeleteReservering(index);
-                                            }}
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
+                                    {item.Achternaam}
+                                </td>
+
+                                <td>
+                                    {new Date(
+                                        item.DatumVertrek
+                                    ).toLocaleDateString(
+                                        "nl-NL",
+                                        dateSettings
+                                    )}
+                                </td>
+
+                                <td>
+                                    {new Date(
+                                        item.DatumAankomst
+                                    ).toLocaleDateString(
+                                        "nl-NL",
+                                        dateSettings
+                                    )}
+                                </td>
+
+                                <td>{item.PlekNummer}</td>
+
+                                <td>
+                                    {new Date(
+                                        item.ReserveringsDatum
+                                    ).toLocaleDateString(
+                                        "nl-NL",
+                                        dateSettings
+                                    )}
+                                </td>
+
+                                <td className="flex gap-2">
+                                    <EditReservationModal
+                                        reservering={item}
+                                        reservationCallback={getAPI}
+                                    />
+
+                                    <DeleteReservationModal
+                                        reservering={item}
+                                        DeleteCallback={() =>
+                                            handleDeleteReservering(index)
+                                        }
+                                    />
+                                </td>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
+
+                    {filteredReserveringen.length === 0 && (
+                        <div className="text-center text-2xl mt-10 text-gray-400">
+                            Geen reserveringen gevonden
+                        </div>
+                    )}
                 </div>
             </div>
         </>

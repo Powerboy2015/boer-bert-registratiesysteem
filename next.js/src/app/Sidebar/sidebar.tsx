@@ -23,7 +23,7 @@ export default function SideBar() {
               </div>
               {/* Sidebar tabs*/}
               <SideBarTab icon={calender} name="Overzicht" />
-              <SideBarTab icon={clock} name="Reserveringen" />
+              <SideBarTab icon={clock} name="reserveringen" />
               <SideBarTab icon={account} name="Accounts" />
             </div>
           </div>
