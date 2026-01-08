@@ -87,7 +87,7 @@ export default function Reservering1() {
 
       
       <div className="bg-[#FDF5D8]">
-        <div className="rounded-bl-[125px] overflow-hidden bg-[#FDF5D8]">
+        <div className="overflow-hidden bg-[#FDF5D8]">
           <section className=" gap-6 p-6 items-center w-full h-100 bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply" /*yuhh de background staat stil hehe */
               style={{ backgroundImage: "url('/campinggestolen.jpg')" }}>
 
@@ -100,7 +100,7 @@ export default function Reservering1() {
                   <option value="wowo">wowo</option>
                   <option value="wewe">wewe</option>
                   <option value="wiwi">wiwi</option>
-                </select>
+                </select> {/*dropdown menu om een plek te kiezen. moet nog zorgen dat die plekken uit een database komen */}
 
                 <select className="text-center px-10 py-7 my-auto bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border">
                   <option value="">Aantal personen</option>
@@ -112,18 +112,18 @@ export default function Reservering1() {
                   <option value="wowo">6</option>
                   <option value="wewe">7</option>
                   <option value="wiwi">8</option>
-                </select>
+                </select> {/*dropdown menu om aantal personen te kiezen. moet nog zorgen dat die uit een database komen */}
 
                 <div className="flex flex-row text-center px-10 py-7 bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border my-auto">
                 <input type="date"></input>
                 <p className="mx-7 font-bold">tot</p>
                 <input type="date"></input>
-                </div>
+                </div> {/*datum kiezen voor aankomst en vertrek. moet nog zorgen dat die plekken uit een database komen */}
                 
                 <a href="/reservering2"
                   title="knop naar reserverings pagina">
                 <button className="text-center px-15 py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] rounded-r-[50]">Boeken</button>
-                </a>
+                </a> 
                 
                 {/*knoppen om je voorkeuren te aan te passen. ze doen nog niks. moet nog zorgen dat je een list krijgt waar je uit kunt kiezen van aantal personen en plekken. ook een kalender die je kan kiezen voor aankomst en vertrek*/}
               </div>
