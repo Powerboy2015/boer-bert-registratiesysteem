@@ -1,18 +1,13 @@
 {
-  "name": "nodemailer-service",
-  "version": "1.0.0",
-  "description": "Email service using nodemailer",
+  "name": "boer-bert-mailer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node app.js"
   },
   "dependencies": {
-    "nodemailer": "^6.9.7",
-    "express": "^4.18.2",
-    "dotenv": "^16.3.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.2"
+    "nodemailer": "^6.9.10"
   }
 }
