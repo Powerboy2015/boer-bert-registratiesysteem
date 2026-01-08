@@ -87,7 +87,7 @@ export default function Reserveringen() {
                             onClick={() => toggleOverlay()}
                             className=" bg-[#55835A] h-15 m-3"
                         >
-                            + Create Reservation
+                            + Reservering Aanmaken
                         </button>
                     </div>
                 </div>
