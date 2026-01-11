@@ -9,6 +9,11 @@ import de from "@/app/Images/de.jpg"
 import eng from "@/app/Images/eng.jpg"
 import nl from "@/app/Images/nl.jpg"
 import w3c from "@/app/Images/w3c.jpg"
+import applepay from "@/app/Images/applepay.png"
+import ideal from "@/app/Images/ideal.png"
+import mastercard from "@/app/Images/mastercard.png"
+import paypal from "@/app/Images/paypal.png"
+import visa from "@/app/Images/visa.png"
 import campinggestolen from "@/app/Images/campinggestolen.jpg"
 {/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */ }
 export default function Reservering2() {
@@ -299,15 +304,15 @@ export default function Reservering2() {
                               betaal met:
                             </p>
                             <div title="images" className="right-0 flex flex-row gap-3">
-                              <Image alt="English language" src="/ideal.png" width={30} height={30}
+                              <Image alt="English language" src={ideal} width={30} height={30}
                                 className="rounded-[1] px-auto opacity-100 object-contain" />
-                              <Image alt="English language" src="/paypal.png" width={30} height={30}
+                              <Image alt="English language" src={paypal} width={30} height={30}
                                 className="rounded-[1] px-auto opacity-100 object-contain" />
-                              <Image alt="English language" src="/applepay.png" width={30} height={30}
+                              <Image alt="English language" src={applepay} width={30} height={30}
                                 className="rounded-[1] px-auto opacity-100 object-contain" />
-                              <Image alt="English language" src="/mastercard.png" width={30} height={30}
+                              <Image alt="English language" src={mastercard} width={30} height={30}
                                 className="rounded-[1] px-auto opacity-100 object-contain" />
-                              <Image alt="English language" src="/visa.png" width={30} height={30}
+                              <Image alt="English language" src={visa} width={30} height={30}
                                 className="rounded-[1] px-auto opacity-100 object-contain" />
                             </div>
                           </div>
