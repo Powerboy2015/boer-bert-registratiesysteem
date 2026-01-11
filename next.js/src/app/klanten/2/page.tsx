@@ -14,9 +14,6 @@ export default function Reservering2() {
   }
 
 
-
-
-
   const [shrink, setShrink] = useState(false);
   const router = useRouter();
   const [Text, setText] = useState<string>("")
@@ -152,10 +149,21 @@ export default function Reservering2() {
                           Accomodatienummer:
                           <div className="mt-3 h-50">
                             <select className="w-100 border-2 " size={6} id="accomodatie-nummers">
-                              {ApiResult.map((item) => (
-                                <option key={item.ID} value={item.ID}> {item.Pleknummer}</option>
-                              ))}
+
+                              {ApiResult
+                                .filter(item => {
+                                  if (Plaats === "Groot") return item.Grootte === "G";
+                                  if (Plaats === "Klein") return item.Grootte === "N";
+                                  return false; // niks tonen als Plaats leeg of onbekend
+                                })
+                                .map(item => (
+                                  <option key={item.ID} value={item.ID}>
+                                    {item.Pleknummer}
+                                  </option>
+                                ))}
                             </select>
+
+
                           </div>
                         </div>
                       </div> {/*input velden voor ligging en accomodatie nummer*/}
