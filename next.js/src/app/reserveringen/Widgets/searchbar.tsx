@@ -21,10 +21,10 @@ export default function Searchbar({ onSearch }: SearchbarProps) {
                 onChange={(e) => setValue(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 placeholder="Zoek reservering..."
-                className="bg-transparent text-white outline-none text-xl w-72"
+                className="bg-transparent text-white outline-none text-xl w-72 search-cancel-button:color-white"
             />
 
-            <button onClick={handleSearch} className="ml-3 text-white text-xl"/>
+
         </div>
     );
 }

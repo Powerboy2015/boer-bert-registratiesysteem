@@ -79,17 +79,60 @@ export default function Reserveringen() {
         }
     }
 
+    /* lijst met maanden om in searchbar met maandnamen te kunnen zoeken en de juiste resultaten te krijgen. */
+    const DateMap: Record<string, number> = {
+        jan: 1,
+        januari: 1,
+        feb: 2,
+        februari: 2,
+        mar: 3,
+        maart: 3,
+        apr: 4,
+        april: 4,
+        mei: 5,
+        jun: 6,
+        juni: 6,
+        jul: 7,
+        juli: 7,
+        aug: 8,
+        augustus: 8,
+        sep: 9,
+        september: 9,
+        okt: 10,
+        oktober: 10,
+        nov: 11,
+        november: 11,
+        dec: 12,
+        december: 12,
+    }
+
     /* Filtering */
     const filteredReserveringen = reserveringen
         .filter((r) => {
             const q = searchQuery.toLowerCase();
+            const date = DateMap[q];
+
+            const searchedMonth = DateMap[q];
+
+            const aankomstDate = new Date(r.DatumAankomst);
+            const vertrekDate = new Date(r.DatumVertrek);
+            const reserveringsDate = new Date(r.ReserveringsDatum);
+
+            const matchesMonth =
+                searchedMonth &&
+                (
+                    aankomstDate.getMonth() + 1 === searchedMonth ||
+                    vertrekDate.getMonth() + 1 === searchedMonth ||
+                    reserveringsDate.getMonth() + 1 === searchedMonth
+                );
 
             return (
+                matchesMonth ||
                 r.Achternaam.toLowerCase().includes(q) ||
-                r.Voornaam.toLowerCase().includes(q) ||
-                r.Email.toLowerCase().includes(q) ||
+                r.DatumAankomst.toString().toLowerCase().includes(q) ||
+                r.DatumVertrek.toString().toLowerCase().includes(q) ||
                 r.PlekNummer.toString().includes(q) ||
-                r.ReseveringsNr.toLowerCase().includes(q)
+                r.ReserveringsDatum.toString().toLowerCase().includes(q)
             );
         })
         .sort((val1, val2) => {
