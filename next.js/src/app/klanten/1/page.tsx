@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+
 {/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */ }
 export default function Reservering1() {
   const [shrink, setShrink] = useState(false);

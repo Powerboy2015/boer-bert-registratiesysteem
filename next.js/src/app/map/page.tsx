@@ -1,14 +1,13 @@
 "use client";
-import map from "./image.png"
+import map from "@/app/Images/image.png"
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import logo from "./logo.jpg"
-import camping2 from "./camping2.jpg"
-import de from "./de.jpg"
-import eng from "./eng.jpg"
-import nl from "./nl.jpg"
-import w3c from "./w3c.jpg"
-import campinggestolen from "./campinggestolen.jpg"
+import logo from "@/app/Images/logo.jpg"
+import de from "@/app/Images/de.jpg"
+import eng from "@/app/Images/eng.jpg"
+import nl from "@/app/Images/nl.jpg"
+import w3c from "@/app/Images/w3c.jpg"
+import campinggestolen from "@/app/Images/campinggestolen.jpg"
 
 export default function Reservering1() {
   const [shrink, setShrink] = useState(false);
@@ -80,7 +79,9 @@ export default function Reservering1() {
 
         <div className="w-full absolute">
           <div className="flex justify-center items-center pt-10">
-            <button className="bg-[#007248] text-[#FDF5D8] px-20 py-5 text-2xl rounded-md self-end mb-30  mr-40">Terug</button>
+            <a href="/klanten/2">            <button className="bg-[#007248] text-[#FDF5D8] px-20 py-5 text-2xl rounded-md self-end mb-30  mr-40">Terug</button>
+            </a>
+
             <Image alt="map" src={map} className="rounded-2xl" />
           </div>
         </div>

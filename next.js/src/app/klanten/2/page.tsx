@@ -3,6 +3,13 @@ import Image from "next/image";
 import React from 'react';
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import map from "@/app/Images/map.jpg"
+import logo from "@/app/Images/logo.jpg"
+import de from "@/app/Images/de.jpg"
+import eng from "@/app/Images/eng.jpg"
+import nl from "@/app/Images/nl.jpg"
+import w3c from "@/app/Images/w3c.jpg"
+import campinggestolen from "@/app/Images/campinggestolen.jpg"
 {/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */ }
 export default function Reservering2() {
   type Accomodatie = {
@@ -136,8 +143,8 @@ export default function Reservering2() {
                     <div className="bg-[#FFFFFF] text-[#007248] flex text-center p-4 mt-5 text-xl font-bold">
                       <a title="link naar plattegrond camping boer bert"
                         rel="noopener noreferer"
-                        href="https://www.google.com/maps/place/UMC+Utrecht/@52.0858554,5.1795793,17z/data=!3m1!4b1!4m6!3m5!1s0x47c66885c1ad3c53:0x5778bacf22762084!8m2!3d52.0858554!4d5.1795793!16s%2Fm%2F02qkwv4?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D">
-                        <Image alt="Link naar map" src="/map.jpg" width={300} height={70}
+                        href="/map">
+                        <Image alt="Link naar map" src={map} width={300} height={70}
                           className="rounded-[1] px-auto opacity-100 object-contain mt-5 ml-10" />
                       </a>
                       <p className="text-lg mt-5 place-content-center" style={{ fontFamily: "Roboto mono" }}>Je kunt je gewenste accommodatienummer selecteren.</p>
