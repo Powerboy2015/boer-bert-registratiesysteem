@@ -24,7 +24,7 @@ export default function Reserveringen() {
 
     async function getAPI() {
         try {
-            const url = "http://localhost/api/reservatiesenuserdata";
+            const url = "http://localhost/api/private/reservatiesenuserdata";
 
             const response = fetch(url);
 
