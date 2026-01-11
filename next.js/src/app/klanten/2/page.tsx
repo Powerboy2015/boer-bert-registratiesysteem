@@ -264,7 +264,7 @@ export default function Reservering2() {
                             Totaal
                           </p>
                           <p className="text-[18px] text-right font-bold mt-5 ml-auto">
-                            € 248,00
+                            € --
                           </p>
                         </div>
 
