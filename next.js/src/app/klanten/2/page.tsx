@@ -253,30 +253,11 @@ export default function Reservering2() {
                                 Accomodatie
                               </p>
                               <p className="text-[18px] text-right ml-auto font-bold">
-                                € 183,00
+                                {Plaats === "Groot" ? "€30 per dag" : "€20 per dag"}
                               </p>
                             </div>
                           </div>
                         </div>
-
-                        <div title="box met info en prijs extra kosten"
-                          className="border-b-1 pb-4">
-                          <div>
-                            <p className="text-[18px] font-bold mt-3">
-                              Extra kosten
-                            </p>
-                            <div className="flex">
-                              <p className="text-[18px] text-left ml auto">
-                                gekozen accomodatie
-                              </p>
-                              <p className="text-[18px] text-right ml-auto font-bold">
-                                € 65,00
-                              </p>
-
-                            </div>
-                          </div>
-                        </div>
-
                         <div title="box met totaal prijs"
                           className="flex">
                           <p className="text-[20px] text-left font-bold mt-5">
@@ -291,7 +272,7 @@ export default function Reservering2() {
                           className="mt-8 text-center">
                           <button>
                             <a className="shadow-xl px-10 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
-                              href="https://www.google.com/maps/place/UMC+Utrecht/@52.0858554,5.1795793,17z/data=!3m1!4b1!4m6!3m5!1s0x47c66885c1ad3c53:0x5778bacf22762084!8m2!3d52.0858554!4d5.1795793!16s%2Fm%2F02qkwv4?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D"
+                              href="/klanten/afrekenen"
                               rel="noopener noreferer">
                               Boeken
                             </a>
