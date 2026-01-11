@@ -140,7 +140,7 @@ export default function Reservering2() {
                       <a title="link naar plattegrond camping boer bert"
                         rel="noopener noreferer"
                         href="https://www.google.com/maps/place/UMC+Utrecht/@52.0858554,5.1795793,17z/data=!3m1!4b1!4m6!3m5!1s0x47c66885c1ad3c53:0x5778bacf22762084!8m2!3d52.0858554!4d5.1795793!16s%2Fm%2F02qkwv4?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D">
-                        <Image alt="English language" src="/map.jpg" width={300} height={70}
+                        <Image alt="Link naar map" src="/map.jpg" width={300} height={70}
                           className="rounded-[1] px-auto opacity-100 object-contain mt-5 ml-10" />
                       </a>
                       <p className="text-lg mt-5 place-content-center" style={{ fontFamily: "Roboto mono" }}>Je kunt je gewenste accommodatienummer selecteren.</p>
@@ -150,33 +150,12 @@ export default function Reservering2() {
                       <div className="p-3 mx-auto my-auto">
                         <div className="text-xl text-justify m-10 mt-3" style={{ fontFamily: "Roboto mono" }}>
                           Accomodatienummer:
-                          <div className="mt-3">
-                            <input
-                              list="accomodatie-nummers"
-                              placeholder="2323 beschikbare accomodaties"
-                              onChange={accomodatieChange}
-                              onKeyDown={handleKeyDown}
-                              style={{
-                                backgroundColor: "#FFFFFF",
-                                color: "#595959ff",
-                                padding: "px",
-                                borderRadius: "10px",
-                                border: "2px solid #ccc",
-                                fontSize: "22px",
-                                width: "580px",
-                                height: "50px",
-                                boxSizing: "border-box",
-                                fontFamily: "Roboto mono",
-                                paddingLeft: "15px",
-                                paddingRight: "15px",
-                              }}></input>
-                            <datalist id="accomodatie-nummers">
+                          <div className="mt-3 h-50">
+                            <select className="w-100 border-2 " size={6} id="accomodatie-nummers">
                               {ApiResult.map((item) => (
-                                <option key={item.ID} value={item.ID} />
+                                <option key={item.ID} value={item.ID}> {item.Pleknummer}</option>
                               ))}
-                            </datalist>
-
-
+                            </select>
                           </div>
                         </div>
                       </div> {/*input velden voor ligging en accomodatie nummer*/}
