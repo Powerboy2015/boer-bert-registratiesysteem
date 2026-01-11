@@ -2,7 +2,14 @@
 import map from "./image.png"
 import Image from "next/image";
 import { useState, useEffect } from "react";
-{/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */ }
+import logo from "./logo.jpg"
+import camping2 from "./camping2.jpg"
+import de from "./de.jpg"
+import eng from "./eng.jpg"
+import nl from "./nl.jpg"
+import w3c from "./w3c.jpg"
+import campinggestolen from "./campinggestolen.jpg"
+
 export default function Reservering1() {
   const [shrink, setShrink] = useState(false);
 
@@ -35,7 +42,7 @@ export default function Reservering1() {
               ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"}`}>
                 <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130">
                   <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125">
-                    <Image alt="boerbert logo met gare ovalen enzo" src="/logo.jpg" width={230} height={230} className="rounded-full object-cover" />
+                    <Image alt="boerbert logo met gare ovalen enzo" src={logo} width={230} height={230} className="rounded-full object-cover" />
                   </div>
                 </div>
               </div>
@@ -48,19 +55,19 @@ export default function Reservering1() {
 
 
             <button>
-              <Image alt="Dutch language" src="/nl.jpg" width={57} height={57}
+              <Image alt="Dutch language" src={nl} width={57} height={57}
                 className="rounded-[10] px-auto opacity-100" />
             </button>
             {/*knop om taal te veranderen naar nederlands */}
 
             <button>
-              <Image alt="German language" src="/de.jpg" width={57} height={57}
+              <Image alt="German language" src={de} width={57} height={57}
                 className="rounded-[10] px-auto opacity-100" />
             </button>
             {/*knop om taal te veranderen naar duits */}
 
             <button>
-              <Image alt="English language" src="/eng.jpg" width={57} height={57}
+              <Image alt="English language" src={eng} width={57} height={57}
                 className="rounded-[10] px-auto opacity-100" />
             </button>
             {/*knop om taal te veranderen naar engels */}
@@ -79,8 +86,8 @@ export default function Reservering1() {
         </div>
         <div className="bg-[#FDF5D8]">
           <div className="rounded-bl-[125px] overflow-hidden bg-[#FDF5D8]">
-            <section className=" gap-6 p-6 items-center w-full h-100 bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply" /*yuhh de background staat stil hehe */
-              style={{ backgroundImage: "url('/campinggestolen.jpg')" }}>
+            <section className=" gap-6 p-6 items-center w-full h-100 bg-fixed bg-black/50 bg-blend-multiply bg-cover bg-center   " /*yuhh de background staat stil hehe */
+              style={{ backgroundImage: `url(${campinggestolen.src})` }}>
 
               <div>
                 <div className="mt-50 flex flex-row justify-center">
@@ -137,7 +144,7 @@ export default function Reservering1() {
             href="https://www.w3.org/"
             target="_blank"
             rel="noopener noreferer"
-          > <Image alt="wcec website link" src="/w3c.jpg" width={180} height={160} className="rounded-[10] px-auto" /> </a>
+          > <Image alt="wcec website link" src={w3c} width={180} height={160} className="rounded-[10] px-auto" /> </a>
           {/*foto waar je op kan klikken om naar w3c te gaan */}
 
         </footer> {/*dikke footer met links voor contact. zei iemand voeten??? :p */}
