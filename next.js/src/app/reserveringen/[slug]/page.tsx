@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import MapTargetComponent from "@/app/ui/MapTargetComponent";
 import { Roboto } from "next/font/google";
 import SideBar from "@/app/Sidebar/sidebar";
-import { UserAndReservatieBody } from "@/app/api/reservatiesenuserdata/route";
+import { UserAndReservatieBody } from "@/app/api/private/reservatiesenuserdata/route";
 import EditReservationModal from "@/app/ui/EditReservationModal";
 import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 import { FormEvent } from "react";
@@ -26,7 +26,7 @@ interface ViewReservationProps {
 export default async function Page({ params }: ViewReservationProps) {
     const { slug } = await params;
 
-    const url = new URL("http://localhost:3000/api/reservatiesenuserdata");
+    const url = new URL("http://localhost:3000/api/private/reservatiesenuserdata");
     url.searchParams.set("searchColumn", "ReseveringsNr");
     url.searchParams.set("searchValue", slug);
 

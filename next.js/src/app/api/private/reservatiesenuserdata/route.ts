@@ -1,4 +1,5 @@
 import getDB from "@/app/api/lib/db";
+import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
 import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
@@ -14,7 +15,6 @@ const allowedColumnsReservaties = [
     "DatumAankomst",
     "DatumVertrek",
     "ReserveringsDatum",
-    "PlekNummer",
     "AantalMensen",
 ];
 const allowedColumnsUserandRes = [
@@ -36,26 +36,17 @@ interface ReservatieBody {
     DatumAankomst: string;
     DatumVertrek: string;
     ReserveringsDatum: string;
-    PlekNummer: number;
     AantalMensen: number;
 }
 
+interface PlekBody {
+    PlekNummer: number;
+}
+
 export interface UserAndReservatieBody {
-    Reservation: [
-        {
-            ReseveringsNr: string;
-            Voornaam: string;
-            Achternaam: string;
-            Email: string;
-            Telefoonnummer: string;
-            Woonplaats: string;
-            DatumAankomst: string;
-            DatumVertrek: string;
-            PlekNummer: number;
-            ReserveringsDatum: string;
-            AantalMensen: number;
-        }
-    ];
+    UserData: UserDataBody;
+    Reservatie: ReservatieBody;
+    Plek: PlekBody;
 }
 
 export async function GET(req: NextRequest) {
@@ -105,9 +96,13 @@ export async function GET(req: NextRequest) {
 
         //Sql query database execute
         const [rows] = await db.execute(
-            `select * from Reservaties INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
+            `select * from Reservaties 
+            INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID
+            INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID 
+            ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
             [...likeInput, limit, pagestart]
         );
+
         const reservaties = rows.map((row) => ({
             ReseveringsNr: row.ReseveringsNr,
             Voornaam: row.Voornaam,
@@ -115,11 +110,12 @@ export async function GET(req: NextRequest) {
             Email: row.Email,
             Telefoonnummer: row.Telefoonnummer,
             Woonplaats: row.Woonplaats,
+            AantalMensen: row.AantalMensen,
+            PlekNummer: row.PlekNummer,
+            PlekGrootte: row.Grootte,
+            ReserveringsDatum: row.ReserveringsDatum,
             DatumAankomst: row.DatumAankomst,
             DatumVertrek: row.DatumVertrek,
-            PlekNummer: row.PlekNummer,
-            ReserveringsDatum: row.ReserveringsDatum,
-            AantalMensen: row.AantalMensen,
         }));
 
         return NextResponse.json({ Reservation: reservaties });
@@ -138,13 +134,14 @@ export async function POST(req: NextRequest) {
     const db = await getDB();
     try {
         const body: UserAndReservatieBody = await req.json();
-        const { UserData, Reservatie } = body;
+        const { UserData, Reservatie, Plek } = body;
 
         Reservatie.ReseveringsNr = await getReservationNr(db);
 
         //gets the keys and values from the body
         const userKeys = Object.keys(UserData);
         const reservatieKeys = Object.keys(Reservatie);
+
         const userValues = Object.values(UserData);
         const reservatieValues = Object.values(Reservatie);
 
@@ -177,6 +174,22 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        const plekNummer = Plek.PlekNummer;
+        const [plek] = await db.execute(
+            `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
+            [plekNummer]
+        );
+
+        if (!Array.isArray(plek) || plek.length === 0) {
+            return NextResponse.json(
+                { error: "Ongeldig PlekNummer" },
+                { status: 400 }
+            );
+        }
+
+        const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
+        console.log(plekkenId)
+
         await db.beginTransaction();
 
         //Sql 👍
@@ -189,16 +202,15 @@ export async function POST(req: NextRequest) {
         );
 
         //takes UserData.ID of the previous execute and makes it a variable
-        const userId = resultUserData.insertId;
+        const userId = resultUserData.insertId; 
 
-        const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys];
-        const reservatieValuesWUserDataID = [userId, ...reservatieValues];
+        const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys, "Plekken_ID"]
+        const reservatieValuesWUserDataID = [userId, ...reservatieValues, plekkenId];
 
         //Sql again 👍
         const sqlReservaties = `INSERT INTO Reservaties (${reservatieKeysWUserDataID.join(
             ", "
-        )}) 
-            VALUES (${reservatieKeysWUserDataID.map(() => "?").join(", ")})`;
+        )}) VALUES (${reservatieKeysWUserDataID.map(() => "?").join(", ")})`;
 
         const [resultReservaties] = await db.execute<ResultSetHeader>(
             sqlReservaties,
@@ -207,6 +219,20 @@ export async function POST(req: NextRequest) {
 
         //commit database changes if both executed correctly
         await db.commit();
+
+        try {
+            await sendMail({
+                to: (UserData as any).Email,
+                name: `${(UserData as any).Voornaam} ${(UserData as any).Achternaam}`.trim(),
+                spot: (Reservatie as any).PlekNummer,
+                peopleCount: (Reservatie as any).AantalMensen,
+                arrivalDate: (Reservatie as any).DatumAankomst,
+                departureDate: (Reservatie as any).DatumVertrek,
+                reservationNumber: (Reservatie as any).ReseveringsNr,
+            });
+        } catch (e) {
+            console.error("Failed to send reservation email:", e);
+        }
 
         return NextResponse.json({
             success: true,

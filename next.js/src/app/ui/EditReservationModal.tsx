@@ -41,17 +41,19 @@ export default function EditReservationModal({
         const data = new FormData(event.currentTarget);
 
         const payload = {
-            ReseveringsNr: data.get("ReserveringsNummer") as string,
-            ReserveringsDatum: (data.get("ReserveringsDatum") as string).split(
-                "T"
-            )[0],
-            DatumAankomst: (data.get("AankomstDatum") as string).split("T")[0],
-            DatumVertrek: (data.get("VertrekDatum") as string).split("T")[0],
-            PlekNummer: Number(data.get("Plaats")),
+            Reservatie: {
+                ReseveringsNr: data.get("ReserveringsNummer") as string,
+                ReserveringsDatum: (data.get("ReserveringsDatum") as string).split("T")[0],
+                DatumAankomst: (data.get("AankomstDatum") as string).split("T")[0],
+                DatumVertrek: (data.get("VertrekDatum") as string).split("T")[0],
+            },
+            Plek: {
+                PlekNummer: Number(data.get("Plaats")),
+            }
         };
 
-        const url = new URL("http://localhost/api/reservaties");
-        url.searchParams.set("id", payload.ReseveringsNr);
+        const url = new URL("http://localhost/api/private/reservaties");
+        url.searchParams.set("id", payload.Reservatie.ReseveringsNr);
 
         fetch(url, {
             method: "PUT",
