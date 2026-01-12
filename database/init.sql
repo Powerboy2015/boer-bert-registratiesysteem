@@ -19,105 +19,146 @@
 --
 -- Table structure for table `Account`
 --
+CREATE OR REPLACE TABLE `Account` (
+	`ID` BIGINT NOT NULL AUTO_INCREMENT,
+	`Created_at` DATETIME NOT NULL DEFAULT NOW(6),
+	`Updated_at` DATETIME NOT NULL DEFAULT NOW(6),
+	`UserData_ID` BIGINT DEFAULT NULL,
+	`Password` VARCHAR(100) DEFAULT NULL,
+	`Status` TINYINT DEFAULT NULL,
+	PRIMARY KEY(`ID`)
+);
 
-DROP TABLE IF EXISTS `Account`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Account` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Password` varchar(100) DEFAULT NULL,
-  `Created_at` datetime NOT NULL DEFAULT NOW(6),  
-  `Updated_at` datetime NOT NULL DEFAULT NOW(6), 
-  `Status` tinyint(1) DEFAULT NULL,
-  `UserData_ID` bigint(20) DEFAULT NULL,
-  PRIMARY KEY (`ID`),
-  KEY `Account_UserData_FK` (`UserData_ID`),
-  CONSTRAINT `Account_UserData_FK` FOREIGN KEY (`UserData_ID`) REFERENCES `UserData` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE OR REPLACE TABLE `Reservaties` (
+	`ID` BIGINT NOT NULL AUTO_INCREMENT,
+	`ReseveringsNr` VARCHAR(100) NOT NULL,
+	`DatumAankomst` DATE DEFAULT NULL,
+	`DatumVertrek` DATE DEFAULT NULL,
+	`ReservatieBewerkDatum` DATETIME DEFAULT NULL,
+	`ReserveringsDatum` DATETIME DEFAULT NULL,
+	`UserData_ID` BIGINT DEFAULT NULL,
+	`Plekken_ID` INTEGER DEFAULT NULL,
+	`AantalMensen` INTEGER NOT NULL,
+	`Created_at` DATETIME NOT NULL DEFAULT NOW(6),
+	`Updated_at` DATETIME NOT NULL DEFAULT NOW(6),
+	PRIMARY KEY(`ID`)
+);
 
---
--- Dumping data for table `Account`
---
+CREATE OR REPLACE TABLE `UserData` (
+	`ID` BIGINT NOT NULL AUTO_INCREMENT,
+	`Created_at` DATETIME NOT NULL DEFAULT NOW(6),
+	`Updated_at` DATETIME NOT NULL DEFAULT NOW(6),
+	`Email` VARCHAR(100) NOT NULL,
+	`Woonplaats` VARCHAR(100) DEFAULT NULL,
+	`Voornaam` VARCHAR(100) DEFAULT NULL,
+	`Achternaam` VARCHAR(100) DEFAULT NULL,
+	`Telefoonnummer` VARCHAR(100) DEFAULT NULL,
+	PRIMARY KEY(`ID`)
+);
+
+CREATE OR REPLACE TABLE `Plekken` (
+	`ID` INTEGER NOT NULL AUTO_INCREMENT UNIQUE,
+	`PlekNummer` INTEGER NOT NULL,
+	`Grootte` CHAR(1) NOT NULL,
+	PRIMARY KEY(`ID`)
+);
+
+ALTER TABLE `Account`
+ADD FOREIGN KEY(`UserData_ID`) REFERENCES `UserData`(`ID`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Reservaties`
+ADD FOREIGN KEY(`UserData_ID`) REFERENCES `UserData`(`ID`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+ALTER TABLE `Reservaties`
+ADD FOREIGN KEY(`Plekken_ID`) REFERENCES `Plekken`(`ID`)
+ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+
 
 LOCK TABLES `Account` WRITE;
 /*!40000 ALTER TABLE `Account` DISABLE KEYS */;
-INSERT INTO `Account` VALUES
-(1,'password123','2025-11-01 10:00:00','2025-11-01 10:00:00',1,1),
-(2,'qwerty456','2025-11-05 12:30:00','2025-11-05 12:30:00',1,2),
-(3,'abc!@#789','2025-11-10 09:45:00','2025-11-10 09:45:00',0,3),
-(4,'securePass1','2025-11-12 15:20:00','2025-11-12 15:20:00',1,4),
-(5,'testPass99','2025-11-20 11:10:00','2025-11-20 11:10:00',0,5);
+INSERT INTO Account (Password, Created_at, Updated_at, Status, UserData_ID) VALUES
+('Henk123','2025-11-01 08:00:00','2025-11-01 08:00:00',1,1),
+('ISDSIJDAIO','2025-11-01 08:05:00','2025-11-01 08:05:00',1,2),
+('SansKetchup','2025-11-01 08:10:00','2025-11-01 08:10:00',1,3),
+('PPassword123','2025-11-01 08:15:00','2025-11-01 08:15:00',1,4),
+('KipEter','2025-11-01 08:20:00','2025-11-01 08:20:00',0,5),
+('Geheim2','2025-11-02 09:00:00','2025-11-02 09:00:00',1,6),
+('AAAA123','2025-11-02 09:05:00','2025-11-02 09:05:00',1,7),
+('letmein','2025-11-02 09:10:00','2025-11-02 09:10:00',1,8),
+('hall0','2025-11-02 09:15:00','2025-11-02 09:15:00',1,9),
+('weelkom','2025-11-02 09:20:00','2025-11-02 09:20:00',1,10),
+('passwoord','2025-11-03 10:00:00','2025-11-03 10:00:00',1,11),
+('Imgoingtokillyou','2025-11-03 10:05:00','2025-11-03 10:05:00',1,12),
+('testtest','2025-11-03 10:10:00','2025-11-03 10:10:00',1,13),
+('Mijnwachtwoord','2025-11-03 10:15:00','2025-11-03 10:15:00',0,14),
+('iloveyou','2025-11-03 10:20:00','2025-11-03 10:20:00',1,15),
+('ihateyou','2025-11-04 11:00:00','2025-11-04 11:00:00',1,16),
+('Pass123','2025-11-04 11:05:00','2025-11-04 11:05:00',0,17),
+('Qwerty123','2025-11-04 11:10:00','2025-11-04 11:10:00',1,18),
+('TestAccount','2025-11-04 11:15:00','2025-11-04 11:15:00',0,19),
+('Login123','2025-11-04 11:20:00','2025-11-04 11:20:00',1,20),
+('SterkWachtwoord','2025-11-05 12:00:00','2025-11-05 12:00:00',1,21),
+('Hallo1','2025-11-05 12:05:00','2025-11-05 12:05:00',0,22),
+('Demo123','2025-11-05 12:10:00','2025-11-05 12:10:00',1,23),
+('Tester','2025-11-05 12:15:00','2025-11-05 12:15:00',1,24),
+('ABCD1234','2025-11-05 12:20:00','2025-11-05 12:20:00',1,25),
+('NoPassword','2025-11-06 13:00:00','2025-11-06 13:00:00',1,26),
+('Password','2025-11-06 13:05:00','2025-11-06 13:05:00',1,27),
+('Iwillblowupyourcamping','2025-11-06 13:10:00','2025-11-06 13:10:00',1,28),
+('Geheimgeheim','2025-11-06 13:15:00','2025-11-06 13:15:00',1,29),
+('Welkomwelkom','2025-11-06 13:20:00','2025-11-06 13:20:00',0,30);
 /*!40000 ALTER TABLE `Account` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `Reservaties`
---
 
-DROP TABLE IF EXISTS `Reservaties`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Reservaties` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `ReseveringsNr` varchar(100) NOT NULL,  
-  `DatumAankomst` date DEFAULT NULL,
-  `DatumVertrek` date DEFAULT NULL,
-  `ReserveringsDatum` datetime DEFAULT NULL,
-  `UserData_ID` bigint(20) DEFAULT NULL,
-  `ReservatieBewerkDatum` datetime DEFAULT NULL,
-  `PlekNummer` int(60) DEFAULT NULL,
-  `AantalMensen` int(11) NOT NULL,
-  `Created_at` datetime NOT NULL DEFAULT NOW(6),  
-  `Updated_at` datetime NOT NULL DEFAULT NOW(6),  
-  PRIMARY KEY (`ID`),
-  KEY `Reservaties_UserData_FK` (`UserData_ID`),
-  CONSTRAINT `Reservaties_UserData_FK` FOREIGN KEY (`UserData_ID`) REFERENCES `UserData` (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `Plekken` WRITE;
+INSERT INTO Plekken (Pleknummer, Grootte) VALUES
+(1, 'G'), (2, 'G'), (3, 'G'), (4, 'G'), (5, 'G'),
+(6, 'G'), (7, 'G'), (8, 'G'), (9, 'G'), (10, 'G'),
+(11, 'G'), (12, 'G'), (13, 'G'), (14, 'G'), (15, 'G'),
+(16, 'G'), (17, 'G'), (18, 'G'), (19, 'G'), (20, 'G'),
+(21, 'G'), (22, 'G'), (23, 'G'), (24, 'G'), (25, 'G'),
+(26, 'G'), (27, 'G'), (28, 'G'), (29, 'G'), (30, 'G'),
+(31, 'G'), (32, 'G'), 
+(33, 'N'), (34, 'N'), (35, 'N'), (36, 'N'), (37, 'N'),
+(38, 'N'), (39, 'N'), (40, 'N'), (41, 'N'), (42, 'N'),
+(43, 'N'), (44, 'N'), (45, 'N'), (46, 'N'), (47, 'N'),
+(48, 'N'), (49, 'N'), (50, 'N'), (51, 'N'), (52, 'N'),
+(53, 'N'), (54, 'N'), (55, 'N'), (56, 'N'), (57, 'N'),
+(58, 'N'), (59, 'N'), (60, 'N');
+UNLOCK TABLES;
 
---
--- Dumping data for table `Reservaties`
---
 
 LOCK TABLES `Reservaties` WRITE;
 /*!40000 ALTER TABLE `Reservaties` DISABLE KEYS */;
-INSERT INTO `Reservaties` VALUES
-(1,'2025-6','2025-12-10','2025-12-15','2025-11-01 10:30:00',1,'2025-11-01 10:30:00',12,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
-(2,'2025-2','2025-12-20','2025-12-25','2025-11-05 14:20:00',2,'2025-11-05 14:20:00',25,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
-(3,'2025-3','2026-01-05','2026-01-10','2025-11-10 09:15:00',3,'2025-11-10 09:15:00',8,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
-(4,'2025-4','2026-01-15','2026-01-20','2025-11-12 16:45:00',4,'2025-11-12 16:45:00',33,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
-(5,'2025-5','2026-02-01','2026-02-05','2025-11-20 11:00:00',5,'2025-11-20 11:00:00',50,0,'2025-11-01 10:00:00','2025-11-01 10:00:00');
+INSERT INTO Reservaties (ReseveringsNr, DatumAankomst, DatumVertrek, ReserveringsDatum, UserData_ID, ReservatieBewerkDatum, Plekken_ID, AantalMensen, Created_at, Updated_at) VALUES
+('2025-1','2025-12-10','2025-12-15','2025-11-01 10:30:00',1,'2025-11-01 10:30:00',12,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
+('2025-2','2025-12-20','2025-12-25','2025-11-05 14:20:00',2,'2025-11-05 14:20:00',25,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
+('2025-3','2025-12-12','2025-12-14','2025-11-10 09:15:00',3,'2025-11-10 09:15:00',8,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
+('2025-4','2025-01-15','2025-01-20','2025-11-12 16:45:00',4,'2025-11-12 16:45:00',33,0,'2025-11-01 10:00:00','2025-11-01 10:00:00'),
+('2025-5','2025-02-01','2025-02-05','2025-11-20 11:00:00',5,'2025-11-20 11:00:00',50,0,'2025-11-01 10:00:00','2025-11-05 10:00:00'),
+('2025-7','2025-12-18','2025-12-22','2025-11-03 11:30:00',7,'2025-11-03 11:30:00',12,4,'2025-11-03 11:30:00','2025-11-07 11:30:00'),
+('2025-8','2025-12-01','2025-12-05','2025-11-04 12:00:00',8,'2025-11-04 12:00:00',5,2,'2025-11-04 12:00:00','2025-11-05 12:00:00'),
+('2025-9','2025-12-06','2025-12-10','2025-11-04 12:30:00',9,'2025-11-04 12:30:00',5,3,'2025-11-07 12:30:00','2025-11-10 12:30:00'),
+('2026-1','2026-01-01','2026-01-10','2025-11-05 09:00:00',10,'2025-11-05 09:00:00',20,5,'2025-11-05 09:00:00','2025-11-05 09:00:00'),
+('2026-2','2026-01-05','2026-01-15','2025-11-06 10:00:00',11,'2025-11-06 10:00:00',21,2,'2025-11-06 10:00:00','2025-11-06 10:00:00'),
+('2026-3','2026-02-10','2026-02-20','2025-11-07 13:00:00',12,'2025-11-07 13:00:00',30,4,'2025-11-07 13:00:00','2025-11-07 13:00:00'),
+('2026-4','2026-02-22','2026-02-25','2025-11-08 14:00:00',13,'2025-11-08 14:00:00',30,2,'2025-11-08 14:00:00','2025-11-11 14:00:00'),
+('2026-5','2026-03-01','2026-03-10','2025-11-09 09:00:00',14,'2025-11-09 09:00:00',40,3,'2025-11-09 09:00:00','2025-11-09 09:00:00'),
+('2026-6','2026-03-05','2026-03-15','2025-11-10 10:00:00',15,'2025-11-10 10:00:00',41,2,'2025-11-10 10:00:00','2025-11-10 10:00:00'),
+('2026-7','2026-04-01','2026-04-07','2025-11-11 12:00:00',16,'2025-11-11 12:00:00',50,4,'2025-11-10 12:00:00','2025-11-11 12:00:00'),
+('2026-8','2026-04-10','2026-04-12','2025-11-12 12:30:00',17,'2025-11-12 12:30:00',50,6,'2025-11-12 12:30:00','2025-11-12 12:30:00'),
+('2026-9','2026-05-01','2026-05-10','2025-11-13 10:00:00',18,'2025-11-13 10:00:00',60,3,'2025-11-13 10:00:00','2025-11-13 10:00:00'),
+('2026-10','2026-05-11','2026-05-15','2025-11-14 10:30:00',19,'2025-11-14 10:30:00',60,2,'2025-11-14 10:30:00','2025-11-17 10:30:00'),
+('2026-11','2026-06-01','2026-06-10','2025-11-15 09:00:00',20,'2025-11-15 09:00:00',3,2,'2025-11-15 09:00:00','2025-11-15 09:00:00'),
+('2026-12','2026-06-05','2026-06-15','2025-11-16 09:30:00',21,'2025-11-16 09:30:00',4,4,'2025-11-16 09:30:00','2025-11-16 09:30:00');
 /*!40000 ALTER TABLE `Reservaties` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `UserData`
---
-
-DROP TABLE IF EXISTS `UserData`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `UserData` (
-  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
-  `Created_at` datetime NOT NULL DEFAULT NOW(6),  
-  `Updated_at` datetime NOT NULL DEFAULT NOW(6), 
-  `Woonplaats` varchar(100) DEFAULT NULL,
-  `Voornaam` varchar(100) DEFAULT NULL,
-  `Achternaam` varchar(100) DEFAULT NULL,
-  `Telefoonnummer` varchar(100) DEFAULT NULL,
-  `Email` varchar(100) NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `UserData`
---
-
 LOCK TABLES `UserData` WRITE;
 /*!40000 ALTER TABLE `UserData` DISABLE KEYS */;
-INSERT INTO `UserData` VALUES
+INSERT INTO UserData (ID, Created_at, Updated_at, Woonplaats, Voornaam, Achternaam, Telefoonnummer, Email) VALUES
 (1,'2025-11-27 11:20:40','2025-11-27 11:20:40','Amsterdam','Henk','Henkie','0612345678','henkie@gmail.com'),
 (2,'2025-01-16 00:09:03','2025-08-21 23:14:21','56878 Lighthouse Bay Crossing','Editha','Kinner','600-737-9675','ekinnerrr@cisco.com'),
 (3,'2025-01-16 00:09:03','2025-08-21 23:14:21','56878 Lighthouse Bay Crossing','Editha','Kinner','600-737-9675','ekinnerrr@cisco.com'),
