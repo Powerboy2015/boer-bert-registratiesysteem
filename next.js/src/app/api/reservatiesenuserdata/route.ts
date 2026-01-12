@@ -1,4 +1,5 @@
 import getDB from "@/app/api/lib/db";
+import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader } from "mysql2/promise";
 
@@ -205,6 +206,20 @@ export async function POST(req: NextRequest) {
 
         //commit database changes if both executed correctly
         await db.commit();
+
+        try {
+            await sendMail({
+                to: (UserData as any).Email,
+                name: `${(UserData as any).Voornaam} ${(UserData as any).Achternaam}`.trim(),
+                spot: (Reservatie as any).PlekNummer,
+                peopleCount: (Reservatie as any).AantalMensen,
+                arrivalDate: (Reservatie as any).DatumAankomst,
+                departureDate: (Reservatie as any).DatumVertrek,
+                reservationNumber: (Reservatie as any).ReseveringsNr,
+            });
+        } catch (e) {
+            console.error("Failed to send reservation email:", e);
+        }
 
         return NextResponse.json({
             success: true,

@@ -1,4 +1,5 @@
 import getDB from "@/app/api/lib/db";
+import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader } from "mysql2/promise";
 
@@ -141,6 +142,27 @@ export async function POST(req: NextRequest) {
         `;
 
         const [result] = await db.execute<ResultSetHeader>(sql, values);
+
+        try {
+            const [urows]: any = await db.execute(
+                "SELECT Voornaam, Achternaam, Email FROM UserData WHERE ID = ?",
+                [body.UserData_ID]
+            );
+            if (Array.isArray(urows) && urows.length > 0) {
+                const u = urows[0] as any;
+                await sendMail({
+                    to: u.Email,
+                    name: `${u.Voornaam} ${u.Achternaam}`.trim(),
+                    spot: body.PlekNummer,
+                    peopleCount: body.AantalMensen,
+                    arrivalDate: body.DatumAankomst,
+                    departureDate: body.DatumVertrek,
+                    reservationNumber: body.ReseveringsNr,
+                });
+            }
+        } catch (e) {
+            console.error("Failed to send reservation email:", e);
+        }
 
         return NextResponse.json({
             success: true,

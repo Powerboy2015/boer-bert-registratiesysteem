@@ -32,22 +32,27 @@ export async function sendReservationEmail(params: {
   const transporter = getTransporter();
   const fromUser = process.env.GMAIL_USER as string;
 
+  const spotText = spot !== undefined && spot !== null && spot !== "" ? `Plek nummer: ${spot}` : "Plek nummer: ";
+  const reservationText = reservationNumber ? `Reserveringsnummer: ${reservationNumber}` : "Reserveringsnummer: ";
+
   const lines = [
-    `Beste ${name || "gast"},`,
+    "Hartelijk dank voor uw boeking.",
     "",
-    "Bedankt voor uw reservering bij Camping Boer Bert.",
-    reservationNumber ? `Reserveringsnummer: ${reservationNumber}` : undefined,
-    `Gebookte plaats/gebied: ${area || "Onbekend"}`,
-    spot !== undefined && spot !== null && spot !== "" ? `Specifieke plek: ${spot}` : undefined,
-    `Aantal personen: ${peopleCount}`,
+    "Wij hebben de reservering ontvangen en verwerkt.",
+    "",
     `Aankomst: ${arrivalDate}`,
     `Vertrek: ${departureDate}`,
+    spotText,
+    `Aantal personen: ${peopleCount}`,
+    reservationText,
     "",
-    "Als er iets niet klopt of u wilt wijzigingen doorgeven, neem dan contact met ons op door te antwoorden op deze e-mail.",
+    "U dient zich bij aankomst te melden bij de receptie tussen 8:00 en 12:00.",
+    "📍 Heidelberglaan 15, 3584 CS",
     "",
+    "Mocht er iets niet kloppen en/of wilt u iets wijzigen, neem dan contact met ons op door te antwoorden op deze E-mail.",
     "Met vriendelijke groet,",
-    "Camping Boer Bert",
-  ].filter(Boolean) as string[];
+    "Camping Boer Bert.",
+  ];
 
   const text = lines.join("\n");
 

@@ -1,11 +1,12 @@
+require('dotenv').config();
 const nodemailer = require('nodemailer');
+const mysql = require('mysql2/promise');
 
-// Creates and caches a Gmail transporter using environment variables
 let cachedTransporter = null;
 function getTransporter() {
   if (cachedTransporter) return cachedTransporter;
-  const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_PASS;
+  const user = process.env.GMAIL_USER || 'testboerbert@gmail.com';
+  const pass = process.env.GMAIL_PASS || 'swtcxzgsgymnflpo';
   if (!user || !pass) {
     throw new Error('Missing GMAIL_USER or GMAIL_PASS environment variables');
   }
@@ -21,18 +22,15 @@ function getTransporter() {
   return cachedTransporter;
 }
 
-/**
- * Send reservation confirmation email.
- * @param {Object} params
- * @param {string} params.to - Recipient email address.
- * @param {string} params.name - Guest full name.
- * @param {string|number} [params.spot] - Specific spot number/name if selected.
- * @param {number} params.peopleCount - Number of people in the booking.
- * @param {string} params.arrivalDate - Arrival date (YYYY-MM-DD or human-readable).
- * @param {string} params.departureDate - Departure date.
- * @param {string} [params.reservationNumber] - Optional reservation identifier.
- * @returns {Promise<Object>} Nodemailer sendMail info
- */
+async function getDBConnection() {
+  return await mysql.createConnection({
+    host: process.env.DATABASE_HOST || 'localhost',
+    user: process.env.DATABASE_USER || 'root',
+    password: process.env.DATABASE_PASSWORD || '',
+    database: process.env.DATABASE_NAME || 'boerbert',
+  });
+}
+
 async function sendReservationEmail({
   to,
   name,
@@ -45,24 +43,30 @@ async function sendReservationEmail({
   if (!to) throw new Error('Recipient email (to) is required');
   const transporter = getTransporter();
 
-  const fromUser = process.env.GMAIL_USER;
+  const fromUser = process.env.GMAIL_USER || 'testboerbert@gmail.com';
   const subject = 'Bevestiging van uw reservering bij Camping Boer Bert';
 
+  const spotText = spot ? `Plek nummer: ${spot}` : 'Plek nummer: ';
+  const reservationText = reservationNumber ? `Reserveringsnummer: ${reservationNumber}` : 'Reserveringsnummer: ';
+
   const lines = [
-    `Beste ${name || 'gast'},`,
+    'Hartelijk dank voor uw boeking.',
     '',
-    'Bedankt voor uw reservering bij Camping Boer Bert.',
-    reservationNumber ? `Reserveringsnummer: ${reservationNumber}` : undefined,
-    typeof spot !== 'undefined' && spot !== null && spot !== '' ? `Specifieke plek: ${spot}` : undefined,
-    `Aantal personen: ${peopleCount}`,
+    'Wij hebben de reservering ontvangen en verwerkt.',
+    '',
     `Aankomst: ${arrivalDate}`,
     `Vertrek: ${departureDate}`,
+    `Plek nummer: ${typeof spot !== 'undefined' && spot !== null && spot !== '' ? spot : ''}`,
+    `Aantal personen: ${peopleCount}`,
+    `Reserveringsnummer: ${reservationNumber || ''}`,
     '',
-    'Als er iets niet klopt of u wilt wijzigingen doorgeven, neem dan contact met ons op door te antwoorden op deze e-mail.',
+    'U dient zich bij aankomst te melden bij de receptie tussen 8:00 en 12:00.',
+    '📍 Heidelberglaan 15, 3584 CS',
     '',
+    'Mocht er iets niet kloppen en/of wilt u iets wijzigen, neem dan contact met ons op door te antwoorden op deze E-mail.',
     'Met vriendelijke groet,',
-    'Camping Boer Bert',
-  ].filter(Boolean);
+    'Camping Boer Bert.',
+  ];
 
   const text = lines.join('\n');
 
@@ -76,30 +80,54 @@ async function sendReservationEmail({
   return transporter.sendMail(mailOptions);
 }
 
-module.exports = { sendReservationEmail };
+async function sendReservationEmailFromDatabase(reservationId) {
+  const connection = await getDBConnection();
+  try {
+    const query = `
+      SELECT 
+        r.ReseveringsNr,
+        r.DatumAankomst,
+        r.DatumVertrek,
+        r.PlekNummer,
+        r.AantalMensen,
+        u.Email,
+        u.Voornaam,
+        u.Achternaam
+      FROM Reservaties r
+      JOIN UserData u ON r.UserData_ID = u.ID
+      WHERE r.ID = ?
+    `;
 
-// Optional: allow running directly for a quick manual test
-if (require.main === module) {
-  (async () => {
-    try {
-      const to = process.argv[2];
-      if (!to) {
-        console.error('Usage: node app.js <recipient@example.com>');
-        process.exit(1);
-      }
-      const info = await sendReservationEmail({
-        to,
-        name: 'Voorbeeld Gast',
-        spot: '12A',
-        peopleCount: 2,
-        arrivalDate: '2026-06-01',
-        departureDate: '2026-06-07',
-        reservationNumber: 'BB-12345',
-      });
-      console.log('Email sent:', info.messageId);
-    } catch (err) {
-      console.error('Failed to send email:', err);
-      process.exit(1);
+    const [rows] = await connection.execute(query, [reservationId]);
+    
+    if (rows.length === 0) {
+      throw new Error(`Reservation with ID ${reservationId} not found`);
     }
-  })();
+
+    const reservation = rows[0];
+    const formatDate = (date) => {
+      if (!date) return '';
+      return new Date(date).toLocaleDateString('nl-NL', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      });
+    };
+
+    const fullName = `${reservation.Voornaam} ${reservation.Achternaam}`;
+    
+    return await sendReservationEmail({
+      to: reservation.Email,
+      name: fullName,
+      spot: reservation.PlekNummer,
+      peopleCount: reservation.AantalMensen,
+      arrivalDate: formatDate(reservation.DatumAankomst),
+      departureDate: formatDate(reservation.DatumVertrek),
+      reservationNumber: reservation.ReseveringsNr,
+    });
+  } finally {
+    await connection.end();
+  }
 }
+
+module.exports = { sendReservationEmail, sendReservationEmailFromDatabase };
