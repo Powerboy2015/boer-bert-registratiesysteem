@@ -1,6 +1,8 @@
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import { useEffect, useState } from "react";
 import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
+import { useRouter } from "next/router";
+import EditReservationModal from "@/app/ui/EditReservationModal";
 
 /* Interface voor alle types van de variabelen */
 export interface Reservering {
@@ -25,20 +27,17 @@ export default function Reserveringen() {
 
     const router = useRouter();
     const goToReservation = (id: string) => router.push(`/reserveringen/${id}`);
+
     async function getAPI() {
         try {
             const url = "http://localhost/api/reservatiesenuserdata";
 
             const response = fetch(url);
-            const response = fetch(url);
 
-            const data = await response;
             const data = await response;
 
             const res = await data.json();
-            const res = await data.json();
 
-            setReserveringen(res.Reservation);
             setReserveringen(res.Reservation);
 
             console.log(res.Reservation);
@@ -46,15 +45,7 @@ export default function Reserveringen() {
             console.log(err);
         }
     }
-            console.log(res.Reservation);
-        } catch (err) {
-            console.log(err);
-        }
-    }
 
-    useEffect(() => {
-        getAPI();
-    }, []);
     useEffect(() => {
         getAPI();
     }, []);
@@ -71,24 +62,7 @@ export default function Reserveringen() {
         );
         setReserveringen(newReserveringen);
     }
-    /* Toggle overlay */
-    function toggleOverlay() {
-        setOverlay(!overlay);
-    }
-    /* functie voor het verwijderen van reservering, verwijderd de reservering met index nr */
-    function handleDeleteReservering(RemoveIndex: number) {
-        console.log(RemoveIndex);
-        const newReserveringen = reserveringen.filter(
-            (item, index) => index !== RemoveIndex
-        );
-        setReserveringen(newReserveringen);
-    }
 
-    const dateSettings: Intl.DateTimeFormatOptions = {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-    };
     const dateSettings: Intl.DateTimeFormatOptions = {
         day: "numeric",
         month: "short",
