@@ -131,3 +131,20 @@ async function sendReservationEmailFromDatabase(reservationId) {
 }
 
 module.exports = { sendReservationEmail, sendReservationEmailFromDatabase };
+
+if (require.main === module) {
+  (async () => {
+    try {
+      const reservationId = process.argv[2];
+      if (!reservationId) {
+        console.error('Usage: node app.js <reservation_id>');
+        process.exit(1);
+      }
+      const info = await sendReservationEmailFromDatabase(parseInt(reservationId));
+      console.log('Email sent:', info.messageId);
+    } catch (err) {
+      console.error('Failed to send email:', err);
+      process.exit(1);
+    }
+  })();
+}
