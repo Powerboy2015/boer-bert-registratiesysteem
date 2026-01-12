@@ -6,19 +6,16 @@ import { useEffect, useState } from "react";
 import Searchbar from "../Widgets/searchbar";
 import EditReservationModal from "@/app/ui/EditReservationModal";
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
-import { useEffect, useState } from "react";
+import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 
 /* Interface voor reserveringen */
 export interface Reservering {
-    UserData_ID: number;
-    Voornaam: string;
+    AantalMensen: number;
     Achternaam: string;
-    telNr: string;
-    adres: string;
-    email: string;
-    PlekNummer: number;
     DatumAankomst: string;
     DatumVertrek: string;
+    Email: string;
+    PlekNummer: number;
     ReserveringsDatum: string;
     reserveringBewerkDatum: string;
 }
@@ -40,6 +37,9 @@ export default function Reserveringen() {
     const [sortDirection, setSortDirection] = useState<
         "ascending" | "descending"
     >("ascending");
+
+    const router = useRouter();
+    const goToReservation = (id: string) => router.push(`/reserveringen/${id}`);
 
     async function getAPI() {
         try {
@@ -275,9 +275,9 @@ export default function Reserveringen() {
 
                         <button
                             onClick={toggleOverlay}
-                            className="bg-[#55835A] h-14 w-14 text-4xl"
+                            className="bg-[#55835A] h-14 w-14 text-4xl cursor-pointer"
                         >
-                            +
+                            + Reservering Aanmaken
                         </button>
                     </div>
                 </div>
@@ -386,18 +386,19 @@ export default function Reserveringen() {
                                             dateSettings
                                         )}
                                     </td>
-
-                                    <td className="flex gap-2">
+                                    <td>
+                                        {" "}
                                         <EditReservationModal
                                             reservering={item}
-                                            reservationCallback={getAPI}
+                                            reservationCallback={() => {
+                                                getAPI();
+                                            }}
                                         />
-
                                         <DeleteReservationModal
                                             reservering={item}
-                                            DeleteCallback={() =>
-                                                handleDeleteReservering(index)
-                                            }
+                                            DeleteCallback={() => {
+                                                handleDeleteReservering(index);
+                                            }}
                                         />
                                     </td>
                                 </tr>
