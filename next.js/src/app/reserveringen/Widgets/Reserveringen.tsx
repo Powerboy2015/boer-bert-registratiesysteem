@@ -1,19 +1,22 @@
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import { useEffect, useState } from "react";
+import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
+import { useRouter } from "next/navigation";
+import EditReservationModal from "@/app/ui/EditReservationModal";
 
 /* Interface voor alle types van de variabelen */
 export interface Reservering {
-    UserData_ID: number;
-    Voornaam: string;
+    AantalMensen: number;
     Achternaam: string;
-    telNr: string;
-    adres: string;
-    email: string;
-    PlekNummer: number;
     DatumAankomst: string;
     DatumVertrek: string;
+    Email: string;
+    PlekNummer: number;
     ReserveringsDatum: string;
-    reserveringBewerkDatum: string;
+    ReseveringsNr: string;
+    Telefoonnummer: string;
+    Voornaam: string;
+    Woonplaats: string;
 }
 
 export default function Reserveringen() {
@@ -21,6 +24,9 @@ export default function Reserveringen() {
     const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
     /*UseState voor de overlay, true = overlay showed false = hidden */
     const [overlay, setOverlay] = useState<boolean>(false);
+
+    const router = useRouter();
+    const goToReservation = (id: string) => router.push(`/reserveringen/${id}`);
 
     async function getAPI() {
         try {
@@ -79,9 +85,9 @@ export default function Reserveringen() {
                         />
                         <button
                             onClick={() => toggleOverlay()}
-                            className=" bg-[#55835A] h-15 w-15 m-3"
+                            className=" bg-[#55835A] h-15 w-15 m-3 cursor-pointer"
                         >
-                            +
+                            + Reservering Aanmaken
                         </button>
                     </div>
                 </div>
@@ -90,8 +96,8 @@ export default function Reserveringen() {
                         <thead>
                             <tr className="txt-left text-[10px] md:text-3xl">
                                 <th className="text-left">Naam</th>
-                                <th className="text-left">Start datum</th>
                                 <th className="text-left">Eind datum</th>
+                                <th className="text-left">Start datum</th>
                                 <th className="text-left">Plaats</th>
                                 <th className="text-left">Gereserveerd op </th>
                                 <th className="text-left">Opties </th>
@@ -103,30 +109,56 @@ export default function Reserveringen() {
                                     className="border-y-5 border-[#1F1F21] text-2xl "
                                     key={index}
                                 >
-                                    <td>{item.Achternaam}</td>
+                                    <td
+                                        onClick={() => {
+                                            goToReservation(item.ReseveringsNr);
+                                        }}
+                                        style={{
+                                            textDecoration: "underline",
+                                            cursor: "pointer",
+                                        }}
+                                    >
+                                        {item.Achternaam}
+                                    </td>
                                     <td>
-                                        {new Date(item.DatumAankomst).toLocaleDateString(
+                                        {new Date(
+                                            item.DatumVertrek
+                                        ).toLocaleDateString(
                                             "nl-NL",
                                             dateSettings
                                         )}
                                     </td>
                                     <td>
-                                        {new Date(item.DatumVertrek).toLocaleDateString(
+                                        {new Date(
+                                            item.DatumAankomst
+                                        ).toLocaleDateString(
                                             "nl-NL",
                                             dateSettings
                                         )}
                                     </td>
                                     <td>{item.PlekNummer}</td>
                                     <td>
-                                        {new Date(item.ReserveringsDatum).toLocaleDateString(
+                                        {new Date(
+                                            item.ReserveringsDatum
+                                        ).toLocaleDateString(
                                             "nl-NL",
                                             dateSettings
                                         )}
                                     </td>
                                     <td>
-                                        <button onClick={() => handleDeleteReservering(index)}>
-                                            X
-                                        </button>
+                                        {" "}
+                                        <EditReservationModal
+                                            reservering={item}
+                                            reservationCallback={() => {
+                                                getAPI();
+                                            }}
+                                        />
+                                        <DeleteReservationModal
+                                            reservering={item}
+                                            DeleteCallback={() => {
+                                                handleDeleteReservering(index);
+                                            }}
+                                        />
                                     </td>
                                 </tr>
                             ))}
