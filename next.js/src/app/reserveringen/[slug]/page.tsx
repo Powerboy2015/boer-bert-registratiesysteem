@@ -26,7 +26,7 @@ interface ViewReservationProps {
 export default async function Page({ params }: ViewReservationProps) {
     const { slug } = await params;
 
-    const url = new URL("http://localhost:3000/api/reservatiesenuserdata");
+    const url = new URL("http://localhost:3000/api/private/reservatiesenuserdata");
     url.searchParams.set("searchColumn", "ReseveringsNr");
     url.searchParams.set("searchValue", slug);
 

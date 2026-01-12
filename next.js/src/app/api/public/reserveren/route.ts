@@ -16,10 +16,6 @@ const allowedColumnsReservaties = [
     "ReserveringsDatum",
     "AantalMensen",
 ];
-const allowedColumnsUserandRes = [
-    ...allowedColumnsUserData,
-    ...allowedColumnsReservaties,
-];
 
 interface UserDataBody {
     Voornaam: string;
@@ -46,86 +42,6 @@ export interface UserAndReservatieBody {
     UserData: UserDataBody;
     Reservatie: ReservatieBody;
     Plek: PlekBody;
-}
-
-export async function GET(req: NextRequest) {
-    try {
-        // const data: POSTreq = await req.json();
-
-        const searchParam = req.nextUrl.searchParams;
-
-        //limits the amount of reservation being displayed at once, also the page select thing
-        const page: number = Number(searchParam.get("page") || 1); //the page uhh that you're seeing
-        const limit: number = Number(searchParam.get("limit") || 20); // max users that get loaded at once (20 is default)
-        const pagestart: number = (page - 1) * limit; // calculates what user it should start from
-
-        //search options
-        const searchColumn = searchParam.get("searchColumn");
-        const searchValue = searchParam.get("searchValue");
-
-        //sort and order options
-        const sort = searchParam.get("sort") || "ReseveringsNr";
-        const order = searchParam.get("order") === "desc" ? "DESC" : "ASC";
-
-        //checks if column and search prompt are valid
-        if (!allowedColumnsUserandRes.includes(sort)) {
-            return NextResponse.json(
-                { error: `Foute kolkom: ${sort}` },
-                { status: 400 }
-            );
-        }
-        if (searchColumn && !allowedColumnsUserandRes.includes(searchColumn)) {
-            return NextResponse.json(
-                { error: `Foute kolkom: ${searchColumn}` },
-                { status: 400 }
-            );
-        }
-
-        const db = await getDB();
-
-        let whereSQLquery = "";
-        // eslint-disable-next-line prefer-const
-        let likeInput: string[] = [];
-        if (searchColumn && searchValue) {
-            whereSQLquery = `WHERE ${searchColumn} LIKE ?`;
-            likeInput.push(`%${searchValue}%`);
-        }
-
-        //ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen
-
-        //Sql query database execute
-        const [rows] = await db.execute(
-            `select * from Reservaties 
-            INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID
-            INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID 
-            ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
-            [...likeInput, limit, pagestart]
-        );
-
-        const reservaties = rows.map((row) => ({
-            ReseveringsNr: row.ReseveringsNr,
-            Voornaam: row.Voornaam,
-            Achternaam: row.Achternaam,
-            Email: row.Email,
-            Telefoonnummer: row.Telefoonnummer,
-            Woonplaats: row.Woonplaats,
-            AantalMensen: row.AantalMensen,
-            PlekNummer: row.PlekNummer,
-            PlekGrootte: row.Grootte,
-            ReserveringsDatum: row.ReserveringsDatum,
-            DatumAankomst: row.DatumAankomst,
-            DatumVertrek: row.DatumVertrek,
-        }));
-
-        return NextResponse.json({ Reservation: reservaties });
-        // return NextResponse.json({data: rows});
-    } catch (err) {
-        return NextResponse.json(
-            //gives error 500 if something went wrong
-            { error: "Interne serverfout", details: `${err}` },
-            { status: 500 }
-        );
-    }
 }
 
 export async function POST(req: NextRequest) {
