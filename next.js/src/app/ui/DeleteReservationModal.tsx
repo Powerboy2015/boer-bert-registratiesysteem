@@ -40,7 +40,7 @@ export default function DeleteReservationModal({
     };
 
     const DeleteFromDb = () => {
-        const url = new URL("http://localhost/api/reservaties");
+        const url = new URL("http://localhost/api/private/reservaties");
         url.searchParams.set("id", reservering.ReseveringsNr);
         fetch(url, {
             method: "DELETE",

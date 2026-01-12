@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ export default function Searchbar({ onSearch }: SearchbarProps) {
     };
 
     return (
-        <div className="flex items-center bg-[#556483] px-4 py-3 rounded">
+        <div className="flex items-center bg-[#556483] px-4 py-3 m-3 rounded">
             <input
                 type="search"
                 value={value}
@@ -23,8 +23,6 @@ export default function Searchbar({ onSearch }: SearchbarProps) {
                 placeholder="Zoek reservering..."
                 className="bg-transparent text-white outline-none text-xl w-72 search-cancel-button:color-white"
             />
-
-
         </div>
     );
 }
