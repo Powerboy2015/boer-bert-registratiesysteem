@@ -137,6 +137,7 @@ export async function POST(req: NextRequest) {
         const { UserData, Reservatie, Plek } = body;
 
         Reservatie.ReseveringsNr = await getReservationNr(db);
+        Reservatie.ReserveringsDatum = new Date().getFullYear().toString();
 
         //gets the keys and values from the body
         const userKeys = Object.keys(UserData);
@@ -188,7 +189,7 @@ export async function POST(req: NextRequest) {
         }
 
         const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
-        console.log(plekkenId)
+        console.log(plekkenId);
 
         await db.beginTransaction();
 
@@ -202,10 +203,18 @@ export async function POST(req: NextRequest) {
         );
 
         //takes UserData.ID of the previous execute and makes it a variable
-        const userId = resultUserData.insertId; 
+        const userId = resultUserData.insertId;
 
-        const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys, "Plekken_ID"]
-        const reservatieValuesWUserDataID = [userId, ...reservatieValues, plekkenId];
+        const reservatieKeysWUserDataID = [
+            "UserData_ID",
+            ...reservatieKeys,
+            "Plekken_ID",
+        ];
+        const reservatieValuesWUserDataID = [
+            userId,
+            ...reservatieValues,
+            plekkenId,
+        ];
 
         //Sql again 👍
         const sqlReservaties = `INSERT INTO Reservaties (${reservatieKeysWUserDataID.join(
@@ -222,8 +231,11 @@ export async function POST(req: NextRequest) {
 
         try {
             await sendMail({
+                //type script but we remove type. It will be -script.
                 to: (UserData as any).Email,
-                name: `${(UserData as any).Voornaam} ${(UserData as any).Achternaam}`.trim(),
+                name: `${(UserData as any).Voornaam} ${
+                    (UserData as any).Achternaam
+                }`.trim(),
                 spot: (Reservatie as any).PlekNummer,
                 peopleCount: (Reservatie as any).AantalMensen,
                 arrivalDate: (Reservatie as any).DatumAankomst,
