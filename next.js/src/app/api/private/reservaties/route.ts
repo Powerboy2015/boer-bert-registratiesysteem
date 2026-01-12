@@ -1,4 +1,5 @@
 import getDB from "@/app/api/lib/db";
+import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader } from "mysql2/promise";
 
@@ -147,10 +148,33 @@ export async function GET(req: NextRequest) {
 //         //Sql 👍
 //         const sql = `
 //             INSERT INTO Reservaties (${keys.join(", ")})
-//             VALUES (${keys.map(() => "?").join(", ")})      
+//             VALUES (${keys.map(() => "?").join(", ")})
 //         `;
 
-//         const [result] = await db.execute<ResultSetHeader>(sql, values);
+// const [result] = await db.execute<ResultSetHeader>(sql, values);
+
+//EMAIL RESPONSE.
+
+// try {
+//     const [urows]: any = await db.execute(
+//         "SELECT Voornaam, Achternaam, Email FROM UserData WHERE ID = ?",
+//         [body.UserData_ID]
+//     );
+//     if (Array.isArray(urows) && urows.length > 0) {
+//         const u = urows[0] as any;
+//         await sendMail({
+//             to: u.Email,
+//             name: `${u.Voornaam} ${u.Achternaam}`.trim(),
+//             spot: body.PlekNummer,
+//             peopleCount: body.AantalMensen,
+//             arrivalDate: body.DatumAankomst,
+//             departureDate: body.DatumVertrek,
+//             reservationNumber: body.ReseveringsNr,
+//         });
+//     }
+// } catch (e) {
+//     console.error("Failed to send reservation email:", e);
+// }
 
 //         return NextResponse.json({
 //             success: true,
@@ -226,12 +250,10 @@ export async function PUT(req: NextRequest) {
         const keys = Object.keys(Reservatie);
         const values = Object.values(Reservatie);
 
-
         //checks if the body key items are in the vaild columns list
         const invalidColumns = keys.filter(
             (key) => !allowedColumnsReservaties.includes(key)
         );
-
 
         if (invalidColumns.length) {
             return NextResponse.json(
@@ -247,14 +269,14 @@ export async function PUT(req: NextRequest) {
             `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
             [plekNummer]
         );
-        
+
         if (!Array.isArray(plek) || plek.length === 0) {
             return NextResponse.json(
                 { error: "Ongeldig PlekNummer" },
                 { status: 400 }
             );
         }
-        
+
         const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
 
         //takes the keys from the body and sets them up as "key = ?", and if body has more keys, then add ", ". this is for the sql query
@@ -277,7 +299,6 @@ export async function PUT(req: NextRequest) {
             success: true,
             message: "Reservatie geüpdatet",
         });
-
     } catch (err) {
         return NextResponse.json(
             //gives error 500 if something went wrong

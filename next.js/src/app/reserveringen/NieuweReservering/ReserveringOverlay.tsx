@@ -20,7 +20,7 @@ export default function ReserveringOverlay({
   const [gereserveerdDatum, setGereserveerdDatum] = useState("");
   const [errorMessage, setErrorMessage] = useState(false);
 
-  async function sendReservering() {
+  function sendReservering() {
     const url = "http://localhost/api/private/reservatiesenuserdata";
     if (
       voornaam &&
@@ -202,7 +202,7 @@ export default function ReserveringOverlay({
               onClick={() => {
                 sendReservering();
               }}
-              className="bg-[#55835A] p-2 absolute bottom-3 left-2/5"
+              className="bg-[#55835A] p-2 absolute bottom-3 left-2/5 cursor-pointer"
             >
               Opslaan
             </button>
@@ -210,7 +210,18 @@ export default function ReserveringOverlay({
           {errorMessage ? "Voer alle velden in" : null}
         </div>
       </div>
+      <button
+        onClick={() => {
+          sendReservering();
+        }}
+        className="bg-[#55835A] p-2 absolute bottom-3 left-2/5"
+      >
+        Opslaan
+      </button>
+
+      <p className="text-red-400">
+        {errorMessage ? "Er is iets fout gegaan, controleer alle velden" : null}
+      </p>
     </>
   );
 }
-
