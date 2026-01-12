@@ -275,7 +275,7 @@ export default function Reserveringen() {
 
                         <button
                             onClick={toggleOverlay}
-                            className="bg-[#55835A] h-14 w-14 text-4xl cursor-pointer"
+                            className="bg-[#55835A] h-14 cursor-pointer"
                         >
                             + Reservering Aanmaken
                         </button>

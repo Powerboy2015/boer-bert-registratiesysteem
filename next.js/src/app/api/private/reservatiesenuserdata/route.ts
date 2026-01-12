@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
         const { UserData, Reservatie, Plek } = body;
 
         Reservatie.ReseveringsNr = await getReservationNr(db);
-        Reservatie.ReserveringsDatum = new Date().getFullYear().toString();
+        Reservatie.ReserveringsDatum = new Date().toJSON().split("T")[0];
 
         //gets the keys and values from the body
         const userKeys = Object.keys(UserData);
