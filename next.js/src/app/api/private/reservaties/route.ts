@@ -11,7 +11,6 @@ const allowedColumnsUserData = [
     "Email",
 ];
 const allowedColumnsReservaties = [
-    "UserData_ID",
     "ReseveringsNr",
     "DatumAankomst",
     "DatumVertrek",
@@ -30,8 +29,16 @@ interface ReservatieBody {
     DatumAankomst: string;
     DatumVertrek: string;
     ReserveringsDatum: string;
-    PlekNummer: number;
     AantalMensen: number;
+}
+
+interface PlekBody {
+    PlekNummer: number;
+}
+
+export interface ReservatieAndPlekBody {
+    Reservatie: ReservatieBody;
+    Plek: PlekBody;
 }
 
 export async function GET(req: NextRequest) {
@@ -81,7 +88,7 @@ export async function GET(req: NextRequest) {
 
         //Sql query database execute
         const [rows] = await db.execute(
-            `select * from Reservaties ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
+            `select * from Reservaties INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
             [...likeInput, limit, pagestart]
         );
         const reservaties = rows.map((row) => ({
@@ -89,6 +96,7 @@ export async function GET(req: NextRequest) {
             DatumAankomst: row.DatumAankomst,
             DatumVertrek: row.DatumVertrek,
             PlekNummer: row.PlekNummer,
+            PlekGrootte: row.Grootte,
             ReserveringsDatum: row.ReserveringsDatum,
             AantalMensen: row.AantalMensen,
         }));
@@ -104,57 +112,59 @@ export async function GET(req: NextRequest) {
     }
 }
 
-export async function POST(req: NextRequest) {
-    try {
-        const body: ReservatieBody = await req.json();
+//TODO POST request werkt voor nu niet meer. ik moet dit later fixen (volgensmij gebruikt niemand dit nog) Dit is ook omdat het UserData_ID nodig had wat liever niet gedaan wordt.
 
-        //checks if UserData_ID is a number and is also vaild, else give error
-        if (!body.UserData_ID || isNaN(Number(body.UserData_ID))) {
-            return NextResponse.json(
-                { error: "UserData_ID moet gegeven worden" },
-                { status: 400 }
-            );
-        }
+// export async function POST(req: NextRequest) {
+//     try {
+//         const body: ReservatieBody = await req.json();
 
-        const db = await getDB();
+//         //checks if UserData_ID is a number and is also vaild, else give error
+//         if (!body.UserData_ID || isNaN(Number(body.UserData_ID))) {
+//             return NextResponse.json(
+//                 { error: "UserData_ID moet gegeven worden" },
+//                 { status: 400 }
+//             );
+//         }
 
-        //gets the keys and values from the body
-        const keys = Object.keys(body);
-        const values = Object.values(body);
+//         const db = await getDB();
 
-        //checks if the body key items are in the vaild columns list
-        const invalidColumns = keys.filter(
-            (key) => !allowedColumnsReservaties.includes(key)
-        );
+//         //gets the keys and values from the body
+//         const keys = Object.keys(body);
+//         const values = Object.values(body);
 
-        if (invalidColumns.length) {
-            return NextResponse.json(
-                { error: "Ongeldige kolomm(en): " + invalidColumns.join(", ") },
-                { status: 400 }
-            );
-        }
+//         //checks if the body key items are in the vaild columns list
+//         const invalidColumns = keys.filter(
+//             (key) => !allowedColumnsReservaties.includes(key)
+//         );
 
-        //Sql 👍
-        const sql = `
-            INSERT INTO Reservaties (${keys.join(", ")})
-            VALUES (${keys.map(() => "?").join(", ")})      
-        `;
+//         if (invalidColumns.length) {
+//             return NextResponse.json(
+//                 { error: "Ongeldige kolomm(en): " + invalidColumns.join(", ") },
+//                 { status: 400 }
+//             );
+//         }
 
-        const [result] = await db.execute<ResultSetHeader>(sql, values);
+//         //Sql 👍
+//         const sql = `
+//             INSERT INTO Reservaties (${keys.join(", ")})
+//             VALUES (${keys.map(() => "?").join(", ")})      
+//         `;
 
-        return NextResponse.json({
-            success: true,
-            message: "Reservatie aangemaakt",
-            reservatieId: result.insertId,
-        });
-    } catch (err) {
-        //gives error 500 if something went wrong
-        return NextResponse.json(
-            { error: "Interne serverfout", details: String(err) },
-            { status: 500 }
-        );
-    }
-}
+//         const [result] = await db.execute<ResultSetHeader>(sql, values);
+
+//         return NextResponse.json({
+//             success: true,
+//             message: "Reservatie aangemaakt",
+//             reservatieId: result.insertId,
+//         });
+//     } catch (err) {
+//         //gives error 500 if something went wrong
+//         return NextResponse.json(
+//             { error: "Interne serverfout", details: String(err) },
+//             { status: 500 }
+//         );
+//     }
+// }
 
 export async function DELETE(req: NextRequest) {
     try {
@@ -201,7 +211,6 @@ export async function PUT(req: NextRequest) {
     try {
         const searchParams = req.nextUrl.searchParams;
         const id = searchParams.get("id");
-
         //checks if ID is a number and is also vaild, else give error
         // if (!id || isNaN(Number(id))) {
         //     return NextResponse.json(
@@ -210,16 +219,19 @@ export async function PUT(req: NextRequest) {
         //     );
         // }
 
-        const body = await req.json();
+        const body: ReservatieAndPlekBody = await req.json();
+        const { Reservatie, Plek } = body;
 
         //gets the keys and values from the body
-        const keys = Object.keys(body);
-        const values = Object.values(body);
+        const keys = Object.keys(Reservatie);
+        const values = Object.values(Reservatie);
+
 
         //checks if the body key items are in the vaild columns list
         const invalidColumns = keys.filter(
             (key) => !allowedColumnsReservaties.includes(key)
         );
+
 
         if (invalidColumns.length) {
             return NextResponse.json(
@@ -230,15 +242,29 @@ export async function PUT(req: NextRequest) {
 
         const db = await getDB();
 
+        const plekNummer = Plek.PlekNummer;
+        const [plek] = await db.execute(
+            `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
+            [plekNummer]
+        );
+        
+        if (!Array.isArray(plek) || plek.length === 0) {
+            return NextResponse.json(
+                { error: "Ongeldig PlekNummer" },
+                { status: 400 }
+            );
+        }
+        
+        const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
+
         //takes the keys from the body and sets them up as "key = ?", and if body has more keys, then add ", ". this is for the sql query
         const setInput = keys.map((key) => `${key} = ?`).join(", ");
 
         //sql execute 👍👍👍👍👍👍👍👍👍👍👍👍👍
         const [result] = await db.execute<ResultSetHeader>(
-            `UPDATE Reservaties SET ${setInput} WHERE ReseveringsNr = ?`,
-            [...values, id]
+            `UPDATE Reservaties SET ${setInput}, Plekken_ID = ? WHERE ReseveringsNr = ?`,
+            [...values, plekkenId, id]
         );
-
         //if the db.execute didn't make any changes it will respond with a not found error
         if (result.affectedRows === 0) {
             return NextResponse.json(
@@ -251,6 +277,7 @@ export async function PUT(req: NextRequest) {
             success: true,
             message: "Reservatie geüpdatet",
         });
+
     } catch (err) {
         return NextResponse.json(
             //gives error 500 if something went wrong

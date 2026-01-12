@@ -21,7 +21,7 @@ export default function ReserveringOverlay({
     const [errorMessage, setErrorMessage] = useState(false);
 
     async function sendReservering() {
-        const url = "http://localhost/api/reservatiesenuserdata";
+        const url = "http://localhost/api/private/reservatiesenuserdata";
         if (
             voornaam &&
             achternaam &&
