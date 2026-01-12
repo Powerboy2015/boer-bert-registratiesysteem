@@ -33,6 +33,7 @@ export default function Reservering2() {
   const [Plaats, setPlaats] = useState<string>("");
   const [Personen, setPersonen] = useState<string>("");
   const [ApiResult, setApiResult] = useState<Accomodatie[]>([]);
+  const [PlekNr, setPlekNr] = useState<string>("");
 
   useEffect(() => {
     let ticking = false;
@@ -182,6 +183,9 @@ export default function Reservering2() {
                               className="w-100 border-2 "
                               size={6}
                               id="accomodatie-nummers"
+                              onChange={(e) => {
+                                localStorage.setItem("PlekNr", e.target.value);
+                              }}
                             >
                               {ApiResult.filter((item) => {
                                 if (Plaats === "Groot")

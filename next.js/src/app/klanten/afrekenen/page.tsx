@@ -63,7 +63,7 @@ export default function Reservering2() {
             AantalMensen: localStorage.getItem("Personen"),
           },
           Plek: {
-            PlekNummer: 1,
+            PlekNummer: localStorage.getItem("PlekNr"),
           },
         }),
       });
