@@ -67,8 +67,9 @@ export default function Reservering2() {
           },
         }),
       });
-      setVoornaam("");
-      setAchternaam("");
+      if (voornaam && achternaam && telNr && email && plaats) {
+        window.location.href = "https://ideal.nl/";
+      }
     } catch (err) {
       console.log(err);
     }

@@ -59,9 +59,6 @@ export default function Reservering2() {
 
       const response = await fetch(url);
       const result = await response.json();
-      console.log(result["Beschikbare plekken"]);
-      console.log(Array.isArray(result["Beschikbare plekken"]));
-
       setApiResult(result["Beschikbare plekken"]);
     }
     setDatumAankomst(localStorage.getItem("DatumAankomst") ?? "");
@@ -70,25 +67,6 @@ export default function Reservering2() {
     setPlaats(localStorage.getItem("Plaats") ?? "");
     fetchAPI();
   }, []);
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      /*als je enter drukt moet de knop iets doen*/
-      router.push(
-        "/Testlink"
-      ); /*moet aangepasst worden zodat je kan opzoeken wat je intypt*/
-    }
-  };
-  const liggingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(
-      e.target.value
-    ); /*zegt zovan yuh, de waarde van het input veld in de text variable moet dit zijn nzo :P*/
-  };
-  const accomodatieChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(
-      e.target.value
-    ); /*zegt zovan yuh, de waarde van het input veld in de text variable moet dit zijn nzo :P*/
-  };
 
   return (
     <>
