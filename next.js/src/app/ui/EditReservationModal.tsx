@@ -52,7 +52,7 @@ export default function EditReservationModal({
             }
         };
 
-        const url = new URL("http://localhost/api/reservaties");
+        const url = new URL("http://localhost/api/private/reservaties");
         url.searchParams.set("id", payload.Reservatie.ReseveringsNr);
 
         fetch(url, {
