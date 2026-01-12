@@ -1,7 +1,7 @@
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import { useEffect, useState } from "react";
 import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import EditReservationModal from "@/app/ui/EditReservationModal";
 
 /* Interface voor alle types van de variabelen */
@@ -30,7 +30,7 @@ export default function Reserveringen() {
 
     async function getAPI() {
         try {
-            const url = "http://localhost/api/reservatiesenuserdata";
+            const url = "http://localhost/api/private/reservatiesenuserdata";
 
             const response = fetch(url);
 
