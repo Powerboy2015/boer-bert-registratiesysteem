@@ -106,35 +106,103 @@ export default function Reserveringen() {
         december: 12,
     }
 
-    /* Filtering */
-    const filteredReserveringen = reserveringen
-        .filter((r) => {
-            const q = searchQuery.toLowerCase();
-            const date = DateMap[q];
+    /* Dagen van de maand */
+    const DayMap: Record<string, number> = {
+        1: 1,
+        2: 2,
+        3: 3,
+        4: 4,
+        5: 5,
+        6: 6,
+        7: 7,
+        8: 8,
+        9: 9,
+        10: 10,
+        11: 11,
+        12: 12,
+        13: 13,
+        14: 14,
+        15: 15,
+        16: 16,
+        17: 17,
+        18: 18,
+        19: 19,
+        20: 20,
+        21: 21,
+        22: 22,
+        23: 23,
+        24: 24,
+        25: 25,
+        26: 26,
+        27: 27,
+        28: 28,
+        29: 29,
+        30: 30,
+        31: 31,
+    }
 
-            const searchedMonth = DateMap[q];
+    /* Functie voor het splitten van de datum en zo dus specifieke data op te kunnen zoeken */
+    function parseDateQuery(query: string) {
+        const fulldate = query
+            .toLowerCase()
+            .trim()
+            .split(/\s+/); //https://stackoverflow.com/questions/28127794/difference-between-split-s-and-split
 
-            const aankomstDate = new Date(r.DatumAankomst);
-            const vertrekDate = new Date(r.DatumVertrek);
-            const reserveringsDate = new Date(r.ReserveringsDatum);
+        /* Undefined is voor als niet een volledige datum is opgezocht. De dag is bijvoorbeeld undefined als alleen maand en jaar zijn opgezocht.*/
+        let day: number | undefined;
+        let month: number | undefined;
+        let year: number | undefined;
 
-            const matchesMonth =
-                searchedMonth &&
-                (
-                    aankomstDate.getMonth() + 1 === searchedMonth ||
-                    vertrekDate.getMonth() + 1 === searchedMonth ||
-                    reserveringsDate.getMonth() + 1 === searchedMonth
-                );
+        for (const partdate of fulldate) {
+            if (DayMap[partdate]) {
+                day = DayMap[partdate];
+            } else if (DateMap[partdate]) {
+                month = DateMap[partdate];
+            } else if (/^\d{4}$/.test(partdate)) { //Het controleert of er precies 4 cijfers zijn gegeven voor het jaartal.
+                year = Number(partdate);
+            }
+        }
 
-            return (
-                matchesMonth ||
-                r.Achternaam.toLowerCase().includes(q) ||
-                r.DatumAankomst.toString().toLowerCase().includes(q) ||
-                r.DatumVertrek.toString().toLowerCase().includes(q) ||
-                r.PlekNummer.toString().includes(q) ||
-                r.ReserveringsDatum.toString().toLowerCase().includes(q)
+        return { day, month, year };
+    }
+
+    /* Filtering van zoekresultaat */
+    const filteredReserveringen = reserveringen.filter((reservering) => {
+        const query = searchQuery.toLowerCase().trim();
+        if (!query) return true;
+
+        const { day, month, year } = parseDateQuery(query);
+        const hasDateParts = day !== undefined || month !== undefined || year !== undefined;
+        const isNumber = /^\d+$/.test(query); //Returns true als query een string die alleen is gemaakt van nummers
+
+        const dates = [
+            new Date(reservering.DatumAankomst),
+            new Date(reservering.DatumVertrek),
+            new Date(reservering.ReserveringsDatum),
+        ];
+
+        const matchesParsedDate =
+            hasDateParts &&
+            dates.some((date) =>
+                (day === undefined || date.getDate() === day) &&
+                (month === undefined || date.getMonth() + 1 === month) &&
+                (year === undefined || date.getFullYear() === year)
             );
-        })
+
+        if (hasDateParts && !isNumber) {
+            return matchesParsedDate;
+        }
+        const matchesPlekNummer =
+            isNumber &&
+            reservering.PlekNummer === Number(query);
+
+        return (
+            matchesParsedDate ||
+            matchesPlekNummer ||
+            reservering.Achternaam.toLowerCase().includes(query)
+        );
+    })
+        /* Sorteren van de resultaten in oplopende of aflopende volgorde (alfabetisch of numeriek, afhankelijk van waar je op sorteert */
         .sort((val1, val2) => {
             if (!sortKey) return 0;
 
@@ -176,8 +244,9 @@ export default function Reserveringen() {
             return 0;
         });
 
+    /* https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat/DateTimeFormat#options */
     const dateSettings: Intl.DateTimeFormatOptions = {
-        day: "numeric",
+        day: "2-digit",
         month: "short",
         year: "numeric",
     };
@@ -317,7 +386,7 @@ export default function Reserveringen() {
 
                     {filteredReserveringen.length === 0 && (
                         <div className="text-center text-2xl mt-10 text-gray-400">
-                            Geen reserveringen gevonden
+                            Geen reserveringen gevonden.
                         </div>
                     )}
                 </div>
