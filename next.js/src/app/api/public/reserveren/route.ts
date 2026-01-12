@@ -1,6 +1,6 @@
 import getDB from "@/app/api/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { ResultSetHeader } from "mysql2/promise";
+import { ResultSetHeader, Connection, RowDataPacket } from "mysql2/promise";
 
 const allowedColumnsUserData = [
     "Woonplaats",
@@ -50,6 +50,9 @@ export async function POST(req: NextRequest) {
     try {
         const body: UserAndReservatieBody = await req.json();
         const { UserData, Reservatie, Plek } = body;
+
+        Reservatie.ReseveringsNr = await getReservationNr(db);
+        Reservatie.ReserveringsDatum = new Date().toJSON().split("T")[0];
 
         //gets the keys and values from the body
         const userKeys = Object.keys(UserData);
@@ -101,7 +104,7 @@ export async function POST(req: NextRequest) {
         }
 
         const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
-        console.log(plekkenId)
+        console.log(plekkenId);
 
         await db.beginTransaction();
 
@@ -115,10 +118,18 @@ export async function POST(req: NextRequest) {
         );
 
         //takes UserData.ID of the previous execute and makes it a variable
-        const userId = resultUserData.insertId; 
+        const userId = resultUserData.insertId;
 
-        const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys, "Plekken_ID"]
-        const reservatieValuesWUserDataID = [userId, ...reservatieValues, plekkenId];
+        const reservatieKeysWUserDataID = [
+            "UserData_ID",
+            ...reservatieKeys,
+            "Plekken_ID",
+        ];
+        const reservatieValuesWUserDataID = [
+            userId,
+            ...reservatieValues,
+            plekkenId,
+        ];
 
         //Sql again 👍
         const sqlReservaties = `INSERT INTO Reservaties (${reservatieKeysWUserDataID.join(
@@ -147,4 +158,35 @@ export async function POST(req: NextRequest) {
             { status: 500 }
         );
     }
+}
+
+interface IreservationNr extends RowDataPacket {
+    ID: string;
+}
+
+// simple helper query function.
+async function SelectQuery<T>(db: Connection, query: string): Promise<T[]> {
+    const [results] = await db.execute(query);
+    return results as T[];
+}
+
+/**
+ * Creates a newly generated reservation number.
+ * @param db the database connection object
+ * @returns the next usable reservation number.
+ */
+async function getReservationNr(db: Connection): Promise<string> {
+    // TODO fix a less lazy way to calculate a reservationID. Currently using ids.
+    const reservationID = await SelectQuery<IreservationNr>(
+        db,
+        "SELECT MAX(ID) as ID FROM Reservaties"
+    );
+
+    console.log(reservationID);
+
+    const nextID = reservationID[0].ID + 1;
+    // Uses the year added
+    const currentYear: string = new Date().getFullYear().toString();
+
+    return currentYear + "-" + nextID;
 }
