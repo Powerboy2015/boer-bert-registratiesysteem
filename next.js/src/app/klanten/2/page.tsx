@@ -21,7 +21,7 @@ import campinggestolen from "@/app/Images/campinggestolen.jpg";
 export default function Reservering2() {
   type Accomodatie = {
     ID: number;
-    Pleknummer: number;
+    PlekNummer: number;
     Grootte: string;
   };
 
@@ -60,6 +60,7 @@ export default function Reservering2() {
       const response = await fetch(url);
       const result = await response.json();
       console.log(result["Beschikbare plekken"]);
+      console.log(Array.isArray(result["Beschikbare plekken"]));
 
       setApiResult(result["Beschikbare plekken"]);
     }
@@ -212,7 +213,7 @@ export default function Reservering2() {
                                 return false; // niks tonen als Plaats leeg of onbekend
                               }).map((item) => (
                                 <option key={item.ID} value={item.ID}>
-                                  {item.Pleknummer}
+                                  {item.PlekNummer}
                                 </option>
                               ))}
                             </select>
