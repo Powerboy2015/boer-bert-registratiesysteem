@@ -5,22 +5,22 @@ import { useEffect, useState } from "react";
 
 import Searchbar from "../Widgets/searchbar";
 import EditReservationModal from "@/app/ui/EditReservationModal";
-import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
+import { useEffect, useState } from "react";
 
 /* Interface voor reserveringen */
 export interface Reservering {
-    AantalMensen: number;
-    Achternaam: string;
-    DatumAankomst: string;
-    DatumVertrek: string;
-    Email: string;
-    PlekNummer: number;
-    ReserveringsDatum: string;
-    ReseveringsNr: string;
-    Telefoonnummer: string;
-    Voornaam: string;
-    Woonplaats: string;
+  UserData_ID: number;
+  Voornaam: string;
+  Achternaam: string;
+  telNr: string;
+  adres: string;
+  email: string;
+  PlekNummer: number;
+  DatumAankomst: string;
+  DatumVertrek: string;
+  ReserveringsDatum: string;
+  reserveringBewerkDatum: string;
 }
 
 type SortKey =
@@ -40,34 +40,39 @@ export default function Reserveringen() {
     const [sortKey, setSortKey] = useState<SortKey>(null);
     const [sortDirection, setSortDirection] = useState<"ascending" | "descending">("ascending");
 
-    const router = useRouter();
-    const goToReservation = (id: string) =>
-        router.push(`/reserveringen/${id}`);
+  async function getAPI() {
+    try {
+      const url = "http://localhost/api/reservatiesenuserdata";
 
-    async function getAPI() {
-        try {
-            const response = await fetch(
-                "http://localhost/api/reservatiesenuserdata"
-            );
-            const data = await response.json();
-            setReserveringen(data.Reservation);
-        } catch (err) {
-            console.error(err);
-        }
+      const response = fetch(url);
+
+      const data = await response;
+
+      const res = await data.json();
+
+      setReserveringen(res.Reservation);
+
+      console.log(res.Reservation);
+    } catch (err) {
+      console.log(err);
     }
+  }
 
-    useEffect(() => {
-        getAPI();
-    }, []);
+  useEffect(() => {
+    getAPI();
+  }, []);
 
     function toggleOverlay() {
-        setOverlay((prev) => !prev);
+        setOverlay(!overlay);
     }
 
-    function handleDeleteReservering(removeIndex: number) {
-        setReserveringen((prev) =>
-            prev.filter((_, index) => index !== removeIndex)
-        );
+    /* functie voor het verwijderen van reservering, verwijderd de reservering met index nr */
+    function handleDeleteReservering(RemoveIndex: number) {
+        console.log(RemoveIndex);
+        const newReserveringen = reserveringen.filter(
+            (item, index) => index !== RemoveIndex
+         );
+        setReserveringen(newReserveringen);
     }
 
     function handleSort(key: SortKey) {

@@ -55,7 +55,7 @@ export default function DeleteReservationModal({
     return (
         <>
             <button
-                className="w-full h-full"
+                className="w-full h-full cursor-pointer"
                 onClick={() => {
                     setShowModal(true);
                 }}
