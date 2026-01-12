@@ -45,7 +45,7 @@ export default function ReserveringOverlay({
             Woonplaats: adres,
           },
           Reservatie: {
-            ReseveringsNr: "2025-1",
+            ReseveringsNr: "2025-1", //FIXME dynamic reserverings nummer
             DatumAankomst: DatumAankomst,
             DatumVertrek: DatumVertrek,
             ReserveringsDatum: "2025-12-14",
