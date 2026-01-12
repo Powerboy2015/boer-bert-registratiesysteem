@@ -14,11 +14,11 @@ export default function ReserveringOverlay({
   const [adres, setAdres] = useState("");
   const [email, setEmail] = useState("");
 
-  const [DatumVertrek, setDatumVertrek] = useState("");
-  const [DatumAankomst, setDatumAankomst] = useState("");
-  const [plaats, setPlaats] = useState(0);
-  const [gereserveerdDatum, setGereserveerdDatum] = useState("");
-  const [errorMessage, setErrorMessage] = useState(false);
+    const [DatumVertrek, setDatumVertrek] = useState("");
+    const [DatumAankomst, setDatumAankomst] = useState("");
+    const [plaats, setPlaats] = useState(0);
+    const [gereserveerdDatum, setGereserveerdDatum] = useState("");
+    const [errorMessage, setErrorMessage] = useState(false);
 
   function sendReservering() {
     const url = "http://localhost/api/private/reservatiesenuserdata";
