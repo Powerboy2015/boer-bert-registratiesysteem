@@ -12,7 +12,7 @@ export default class adminAPI {
      * Gets all reservations made
      */
     static async getAllReservations() {
-        const reservations = await API.GET<ReservationsUserdataResponse>("/api/reservatiesenuserdata");
+        const reservations = await API.GET<ReservationsUserdataResponse>("/api/private/reservatiesenuserdata");
         if (!reservations) {
             throw new Error("API endpoint could not gather data.");
         }

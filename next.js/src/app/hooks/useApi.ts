@@ -9,8 +9,8 @@ type Fetcher<T> = () => Promise<T | false>;
  * @returns loading - if the current request is still loading
  * @returns error - any errors that were found if the request failed.
  */
-export function useApi<T>(_fetcher: Fetcher<T>): [T | null, boolean, string | null, () => void] {
-    const [data, setData] = useState<T | null>(null);
+export function useApi<T>(_fetcher: Fetcher<T>): [T | undefined, boolean, string | null, () => void] {
+    const [data, setData] = useState<T | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     // in order to prevent infinite reloads, we are only using a reference of the fetch.

@@ -25,6 +25,7 @@ export interface IReservationUserdata extends dbColumn {
     Woonplaats: string;
     Telefoonnummer: string;
     PlekNummer: number;
+    Grootte: string;
     AantalMensen: number;
     ReserveringsDatum: string;
 }

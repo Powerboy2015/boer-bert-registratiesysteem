@@ -15,7 +15,7 @@ export default function ReserveringOverlay({ toggle, getAPI }: { toggle: () => v
     const [errorMessage, setErrorMessage] = useState(false);
 
     function sendReservering() {
-        const url = "http://localhost/api/reservatiesenuserdata";
+        const url = "http://localhost/api/private/reservatiesenuserdata";
         if (
             voornaam &&
             achternaam &&
@@ -39,12 +39,14 @@ export default function ReserveringOverlay({ toggle, getAPI }: { toggle: () => v
                         Woonplaats: adres,
                     },
                     Reservatie: {
-                        ReseveringsNr: "2025-1",
+                        ReseveringsNr: "2025-1", //FIXME dynamic reserverings nummer
                         DatumAankomst: DatumAankomst,
                         DatumVertrek: DatumVertrek,
                         ReserveringsDatum: "2025-12-14",
-                        PlekNummer: plaats,
                         AantalMensen: 0,
+                    },
+                    Plek: {
+                        PlekNummer: plaats,
                     },
                 }),
                 headers: {

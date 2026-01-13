@@ -14,4 +14,7 @@ interface reservationUserdataRequest {
         PlekNummer: number;
         AantalMensen: number;
     };
+    Plek: {
+        PlekNummer: number;
+    };
 }
