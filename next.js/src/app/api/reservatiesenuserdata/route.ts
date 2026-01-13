@@ -3,14 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader } from "mysql2/promise";
 import db from "@/app/classes/database";
 import { IReservationUserdata } from "@/app/types/database";
+import { start } from "repl";
+import { abort } from "process";
 
-const allowedColumnsUserData = [
-    "Woonplaats",
-    "Voornaam",
-    "Achternaam",
-    "Telefoonnummer",
-    "Email",
-];
+const allowedColumnsUserData = ["Woonplaats", "Voornaam", "Achternaam", "Telefoonnummer", "Email"];
 const allowedColumnsReservaties = [
     "ReseveringsNr",
     "DatumAankomst",
@@ -19,46 +15,7 @@ const allowedColumnsReservaties = [
     "PlekNummer",
     "AantalMensen",
 ];
-const allowedColumnsUserandRes = [
-    ...allowedColumnsUserData,
-    ...allowedColumnsReservaties,
-];
-
-interface UserDataBody {
-    Voornaam: string;
-    Achternaam: string;
-    Email: string;
-    Telefoonnummer: string;
-    Woonplaats: string;
-}
-
-interface ReservatieBody {
-    UserData_ID: number;
-    ReseveringsNr: string;
-    DatumAankomst: string;
-    DatumVertrek: string;
-    ReserveringsDatum: string;
-    PlekNummer: number;
-    AantalMensen: number;
-}
-
-export interface UserAndReservatieBody {
-    Reservation: [
-        {
-            ReseveringsNr: string;
-            Voornaam: string;
-            Achternaam: string;
-            Email: string;
-            Telefoonnummer: string;
-            Woonplaats: string;
-            DatumAankomst: string;
-            DatumVertrek: string;
-            PlekNummer: number;
-            ReserveringsDatum: string;
-            AantalMensen: number;
-        }
-    ];
-}
+const allowedColumnsUserandRes = [...allowedColumnsUserData, ...allowedColumnsReservaties];
 
 export async function GET(req: NextRequest) {
     try {
@@ -81,18 +38,11 @@ export async function GET(req: NextRequest) {
 
         //checks if column and search prompt are valid
         if (!allowedColumnsUserandRes.includes(sort)) {
-            return NextResponse.json(
-                { error: `Foute kolkom: ${sort}` },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: `Foute kolkom: ${sort}` }, { status: 400 });
         }
         if (searchColumn && !allowedColumnsUserandRes.includes(searchColumn)) {
-            return NextResponse.json(
-                { error: `Foute kolkom: ${searchColumn}` },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: `Foute kolkom: ${searchColumn}` }, { status: 400 });
         }
-
 
         let whereSQLquery = "";
         // eslint-disable-next-line prefer-const
@@ -135,10 +85,9 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-    //await getDB outside because if error occurs it can rollback changes.
-    const db = await getDB();
+    //big try to catch any issues that show up.
     try {
-        const body: UserAndReservatieBody = await req.json();
+        const body: reservationUserdataRequest = await req.json();
         const { UserData, Reservatie } = body;
 
         //gets the keys and values from the body
@@ -147,65 +96,62 @@ export async function POST(req: NextRequest) {
         const userValues = Object.values(UserData);
         const reservatieValues = Object.values(Reservatie);
 
-        //checks if the body key items are in the vaild columns list
-        const invalidUserColumns = userKeys.filter(
-            (key) => !allowedColumnsUserData.includes(key)
-        );
+        //returns an error if any invalid columns are requested to be changed for userdata
+        const invalidUserColumns = userKeys.filter((key) => !allowedColumnsUserData.includes(key));
         if (invalidUserColumns.length) {
             return NextResponse.json(
                 {
-                    error:
-                        "Ongeldige UserData kolomm(en): " +
-                        invalidUserColumns.join(", "),
+                    error: "Ongeldige UserData kolomm(en): " + invalidUserColumns.join(", "),
                 },
                 { status: 400 }
             );
         }
 
-        const invalidReservatieColumns = reservatieKeys.filter(
-            (key) => !allowedColumnsReservaties.includes(key)
-        );
+        //returns an error if any invalid columns are requested to be changed for reservations
+        const invalidReservatieColumns = reservatieKeys.filter((key) => !allowedColumnsReservaties.includes(key));
         if (invalidReservatieColumns.length) {
             return NextResponse.json(
                 {
-                    error:
-                        "Invalid Reservatie columns: " +
-                        invalidReservatieColumns.join(", "),
+                    error: "Invalid Reservatie columns: " + invalidReservatieColumns.join(", "),
                 },
                 { status: 400 }
             );
         }
 
-        await db.beginTransaction();
+        // starts the rollback checkpoint.
+        // when rolling back, it will return to here, before any changes were made.
+        const started = await db.instance.startTransaction();
+        if (!started) {
+            throw new Error("failed to start database inserts while creating new reservation.");
+        }
 
         //Sql 👍
+        //Creates the insert query for userdata by adding the keys and adds ? for all the values in order to later add them in.
         const sqlUserData = `INSERT INTO UserData (${userKeys.join(", ")}) 
             VALUES (${userKeys.map(() => "?").join(", ")})`;
 
-        const [resultUserData] = await db.execute<ResultSetHeader>(
-            sqlUserData,
-            userValues
-        );
+        // inserts query into the database.
+        const resultUserData = await db.instance.insertQuery(sqlUserData, userValues);
 
-        //takes UserData.ID of the previous execute and makes it a variable
+        //adds userId to be added with the reservation (to create connection between user and reservation)
         const userId = resultUserData.insertId;
-
         const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys];
         const reservatieValuesWUserDataID = [userId, ...reservatieValues];
 
         //Sql again 👍
-        const sqlReservaties = `INSERT INTO Reservaties (${reservatieKeysWUserDataID.join(
-            ", "
-        )}) 
+        //Creates the insert query for reservations by adding the keys and adds ? for all the values in order to later add them in.
+
+        const sqlReservaties = `INSERT INTO Reservaties (${reservatieKeysWUserDataID.join(", ")}) 
             VALUES (${reservatieKeysWUserDataID.map(() => "?").join(", ")})`;
 
-        const [resultReservaties] = await db.execute<ResultSetHeader>(
-            sqlReservaties,
-            reservatieValuesWUserDataID
-        );
+        //inserts query into the database.
+        const resultReservaties = await db.instance.insertQuery(sqlReservaties, reservatieValuesWUserDataID);
 
         //commit database changes if both executed correctly
-        await db.commit();
+        const stopped = await db.instance.saveTransaction();
+        if (!stopped) {
+            throw new Error("could not save transaction while creating reservation.");
+        }
 
         return NextResponse.json({
             success: true,
@@ -215,10 +161,12 @@ export async function POST(req: NextRequest) {
         });
     } catch (err) {
         //gives error 500 if something went wrong
-        await db.rollback();
-        return NextResponse.json(
-            { error: "Interne serverfout", details: String(err) },
-            { status: 500 }
-        );
+        const aborted = await db.instance.abortTransaction();
+        if (!aborted) {
+            throw new Error(
+                "could not roll back database changes when something went wrong. Please look into the shit code."
+            );
+        }
+        return NextResponse.json({ error: "Interne serverfout", details: String(err) }, { status: 500 });
     }
 }

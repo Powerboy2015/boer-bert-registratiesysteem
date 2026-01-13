@@ -1,5 +1,5 @@
 import { IReservationUserdata } from "./database";
 
-interface ResReservationsUserdata {
-    Reservations: IReservationUserdata[]
+export interface ReservationsUserdataResponse {
+    Reservation: IReservationUserdata[];
 }

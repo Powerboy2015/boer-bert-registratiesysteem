@@ -9,47 +9,46 @@ type Fetcher<T> = () => Promise<T | false>;
  * @returns loading - if the current request is still loading
  * @returns error - any errors that were found if the request failed.
  */
-export function useApi<T>(_fetcher: Fetcher<T>): [T, boolean, string | null] {
-    const [data,setData] = useState<T | null>(null);
-    const [loading,setLoading] = useState<boolean>(true);
-    const [error,setError] = useState<string | null>(null);
-
+export function useApi<T>(_fetcher: Fetcher<T>): [T | null, boolean, string | null, () => void] {
+    const [data, setData] = useState<T | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
     // in order to prevent infinite reloads, we are only using a reference of the fetch.
     const fetcherRef = useRef(_fetcher);
     fetcherRef.current = _fetcher;
 
+    const fetchData = async () => {
+        setLoading(true);
+        setError(null);
 
-    useEffect(() =>{
+        try {
+            const result = await fetcherRef.current();
+            if (result === false) {
+                setError("No data found");
+            } else {
+                setData(result);
+            }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            setError(err?.message || "Unknown error");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         let cancelled = false;
 
-        const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-
-            try{
-                const result = await fetcherRef.current();
-                if (cancelled) return;
-
-                if (result === false) {
-                    setError("No data found");
-                } else {
-                    setData(result);
-                }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (err: any) {
-                if (!cancelled) setError(err?.message || "Unkown error");
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
+        const run = async () => {
+            if (!cancelled) await fetchData();
         };
 
-        fetchData();
+        run();
 
         return () => {
             cancelled = true;
         };
+    }, []);
 
-    },[]);
-
-    return [data,loading,error];
+    return [data, loading, error, fetchData];
 }
