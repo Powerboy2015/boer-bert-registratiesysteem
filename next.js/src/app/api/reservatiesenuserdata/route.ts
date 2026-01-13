@@ -1,11 +1,6 @@
-import getDB from "@/app/api/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { ResultSetHeader } from "mysql2/promise";
 import db from "@/app/classes/database";
 import { IReservationUserdata } from "@/app/types/database";
-import { start } from "repl";
-import { abort } from "process";
-
 const allowedColumnsUserData = ["Woonplaats", "Voornaam", "Achternaam", "Telefoonnummer", "Email"];
 const allowedColumnsReservaties = [
     "ReseveringsNr",

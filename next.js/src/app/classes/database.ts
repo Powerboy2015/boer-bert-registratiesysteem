@@ -64,7 +64,7 @@ export default class db {
             const db = await this.connection;
             db.beginTransaction();
             return true;
-        } catch (e) {
+        } catch {
             return false;
         }
     }
@@ -74,7 +74,7 @@ export default class db {
             const db = await this.connection;
             db.commit();
             return true;
-        } catch (e) {
+        } catch {
             return false;
         }
     }
@@ -84,7 +84,7 @@ export default class db {
             const db = await this.connection;
             db.rollback();
             return true;
-        } catch (e) {
+        } catch {
             return false;
         }
     }
