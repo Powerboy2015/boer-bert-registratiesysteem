@@ -1,7 +1,7 @@
 import getDB from "@/app/api/lib/db";
 import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
-import { IReservationUserdata } from "@/app/types/database";
+import { IPlekken, IReservationUserdata } from "@/app/types/database";
 import db from "@/app/classes/database";
 import { RowDataPacket } from "mysql2";
 const allowedColumnsUserData = ["Woonplaats", "Voornaam", "Achternaam", "Telefoonnummer", "Email"];
@@ -125,7 +125,9 @@ export async function POST(req: NextRequest) {
         }
 
         const plekNummer = Plek.PlekNummer;
-        const [plek] = await db.instance.selectQuery(`SELECT ID FROM Plekken WHERE PlekNummer = ?`, [plekNummer]);
+        const plek = await db.instance.selectQuery<IPlekken>(`SELECT ID FROM Plekken WHERE PlekNummer = ?`, [
+            plekNummer,
+        ]);
 
         if (!Array.isArray(plek) || plek.length === 0) {
             return NextResponse.json({ error: "Ongeldig PlekNummer" }, { status: 400 });

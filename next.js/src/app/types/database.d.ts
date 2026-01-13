@@ -37,3 +37,8 @@ export interface IUserData extends dbColumn {
     Telefoonnummer: string;
     Woonplaats: string;
 }
+
+export interface IPlekken extends dbColumn {
+    PlekNummer: number;
+    Grootte: string;
+}
