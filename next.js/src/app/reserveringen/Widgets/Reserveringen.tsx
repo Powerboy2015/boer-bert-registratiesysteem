@@ -221,7 +221,7 @@ export default function Reserveringen() {
                     <div className="flex justify-end w-full items-center gap-4">
                         <Searchbar onSearch={setSearchQuery} />
 
-                        <button onClick={toggleOverlay} className="bg-[#55835A] h-14 w-14 text-4xl cursor-pointer">
+                        <button onClick={toggleOverlay} className="bg-[#55835A] h-14 cursor-pointer">
                             + Reservering Aanmaken
                         </button>
                     </div>
