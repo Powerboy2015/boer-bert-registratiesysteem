@@ -1,6 +1,8 @@
 import getDB from "@/app/api/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader } from "mysql2/promise";
+import db from "@/app/classes/database";
+import { IReservationUserdata } from "@/app/types/database";
 
 const allowedColumnsUserData = [
     "Woonplaats",
@@ -91,7 +93,6 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        const db = await getDB();
 
         let whereSQLquery = "";
         // eslint-disable-next-line prefer-const
@@ -104,7 +105,7 @@ export async function GET(req: NextRequest) {
         //ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen
 
         //Sql query database execute
-        const [rows] = await db.execute(
+        const rows = await db.instance.selectQuery<IReservationUserdata>(
             `select * from Reservaties INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
             [...likeInput, limit, pagestart]
         );

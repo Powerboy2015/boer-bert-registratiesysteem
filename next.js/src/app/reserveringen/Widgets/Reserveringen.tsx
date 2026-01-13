@@ -2,6 +2,10 @@ import { useRouter } from "next/navigation";
 import EditReservationModal from "@/app/ui/EditReservationModal";
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import { useEffect, useState } from "react";
+import { useApi } from "@/app/hooks/useApi";
+import adminAPI from "@/app/classes/adminAPI";
+import { IReservationUserdata } from "@/app/types/database";
+import { ResReservationsUserdata } from "@/app/types/APIresp";
 
 /* Interface voor alle types van de variabelen */
 export interface Reservering {
@@ -19,45 +23,27 @@ export interface Reservering {
 }
 
 export default function Reserveringen() {
-    /* UseState voor de array van alle reserveringen */
-    const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
+    // /* UseState voor de array van alle reserveringen */
+    // const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
     /*UseState voor de overlay, true = overlay showed false = hidden */
     const [overlay, setOverlay] = useState<boolean>(false);
 
-  async function getAPI() {
-    try {
-      const url = "http://localhost/api/reservatiesenuserdata";
-
-      const response = fetch(url);
-
-      const data = await response;
-
-      const res = await data.json();
-
-      setReserveringen(res.Reservation);
-
-      console.log(res.Reservation);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    getAPI();
-  }, []);
+  const [reserveringen,loading,error] = useApi<IReservationUserdata[]>(() => {
+    return adminAPI.getAllReservations();
+  })
 
   /* Toggle overlay */
   function toggleOverlay() {
     setOverlay(!overlay);
   }
-  /* functie voor het verwijderen van reservering, verwijderd de reservering met index nr */
-  function handleDeleteReservering(RemoveIndex: number) {
-    console.log(RemoveIndex);
-    const newReserveringen = reserveringen.filter(
-      (item, index) => index !== RemoveIndex
-    );
-    setReserveringen(newReserveringen);
-  }
+  // /* functie voor het verwijderen van reservering, verwijderd de reservering met index nr */
+  // function handleDeleteReservering(RemoveIndex: number) {
+  //   console.log(RemoveIndex);
+  //   const newReserveringen = reserveringen.filter(
+  //     (item, index) => index !== RemoveIndex
+  //   );
+  //   setReserveringen(newReserveringen);
+  // }
 
   const dateSettings: Intl.DateTimeFormatOptions = {
     day: "numeric",
@@ -65,6 +51,8 @@ export default function Reserveringen() {
     year: "numeric",
   };
 
+  if (loading) return (<h1>Loading....</h1>);
+  
   return (
     <>
       {overlay ? (

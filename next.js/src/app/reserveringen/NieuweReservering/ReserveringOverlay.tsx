@@ -225,12 +225,9 @@ export default function ReserveringOverlay({
             >
               Opslaan
             </button>
-          </div>
           <p className="text-red-400">
             {errorMessage ? "Er is iets fout gegaan, controleer alle velden" : null}
           </p>
-        </div>
-      </div>
     </>
   );
 }

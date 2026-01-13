@@ -1,6 +1,8 @@
 import getDB from "@/app/api/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader } from "mysql2/promise";
+import db from "@/app/classes/database";
+import { IReservering } from "@/app/types/database";
 
 //allowed columns that can be given from the front end
 const allowedColumnsUserData = [
@@ -23,16 +25,6 @@ const allowedColumnsUserandRes = [
     ...allowedColumnsUserData,
     ...allowedColumnsReservaties,
 ];
-
-interface ReservatieBody {
-    UserData_ID: number;
-    ReseveringsNr: string;
-    DatumAankomst: string;
-    DatumVertrek: string;
-    ReserveringsDatum: string;
-    PlekNummer: number;
-    AantalMensen: number;
-}
 
 export async function GET(req: NextRequest) {
     try {
@@ -67,7 +59,7 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        const db = await getDB();
+        // const db = await getDB();
 
         let whereSQLquery = "";
         // eslint-disable-next-line prefer-const
@@ -79,11 +71,21 @@ export async function GET(req: NextRequest) {
 
         //ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen
 
-        //Sql query database execute
-        const [rows] = await db.execute(
-            `select * from Reservaties ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
-            [...likeInput, limit, pagestart]
-        );
+        // dev comment
+        // I've decided using singletons for database is easier, 
+        // it keeps connections minimal and reusable. 
+        // Not causing any issues with too many connections.
+        // Thus in the refactor we are using this db class (custom made) that has a selectQuery option.
+        const rows = await db.instance.selectQuery<IReservering>(`select * from Reservaties ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
+            [...likeInput, limit, pagestart])
+
+        // //Sql query database execute
+        // const [rows] = await db.execute(
+        //     `select * from Reservaties ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
+        //     [...likeInput, limit, pagestart]
+        // );
+
+
         const reservaties = rows.map((row) => ({
             ReseveringsNr: row.ReseveringsNr,
             DatumAankomst: row.DatumAankomst,
@@ -106,7 +108,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
     try {
-        const body: ReservatieBody = await req.json();
+        const body: IReservering = await req.json();
 
         //checks if UserData_ID is a number and is also vaild, else give error
         if (!body.UserData_ID || isNaN(Number(body.UserData_ID))) {
@@ -116,7 +118,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const db = await getDB();
+        // const db = await getDB();
 
         //gets the keys and values from the body
         const keys = Object.keys(body);
@@ -140,7 +142,9 @@ export async function POST(req: NextRequest) {
             VALUES (${keys.map(() => "?").join(", ")})      
         `;
 
-        const [result] = await db.execute<ResultSetHeader>(sql, values);
+        const result = await db.instance.createQuery(sql,values);
+
+        // const [result] = await db.execute<ResultSetHeader>(sql, values);
 
         return NextResponse.json({
             success: true,
