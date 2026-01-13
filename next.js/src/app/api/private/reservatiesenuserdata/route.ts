@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
         }
 
         const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
-        console.log(plekkenId);
+        console.log("plekID: " + plekkenId);
 
         // starts the rollback checkpoint.
         // when rolling back, it will return to here, before any changes were made.
@@ -153,8 +153,8 @@ export async function POST(req: NextRequest) {
 
         //adds userId to be added with the reservation (to create connection between user and reservation)
         const userId = resultUserData.insertId;
-        const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys];
-        const reservatieValuesWUserDataID = [userId, ...reservatieValues];
+        const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys, "Plekken_ID"];
+        const reservatieValuesWUserDataID = [userId, ...reservatieValues, plekkenId];
 
         //Sql again 👍
         //Creates the insert query for reservations by adding the keys and adds ? for all the values in order to later add them in.
