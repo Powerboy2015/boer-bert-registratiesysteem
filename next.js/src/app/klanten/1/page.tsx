@@ -6,6 +6,7 @@ import de from "@/app/Images/de.jpg";
 import eng from "@/app/Images/eng.jpg";
 import nl from "@/app/Images/nl.jpg";
 import w3c from "@/app/Images/w3c.jpg";
+import home from "@/app/Images/house-door-fill.svg"
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
 
 {
@@ -63,6 +64,10 @@ export default function Reservering1() {
             {/*big ahhhhh logo met gare ovalen enzo waar je op kan klikken om naar main page te gaan*/}
           </div>
           <div className="flex items-center pr-8 gap-6">
+            <a className="md:hidden" href="/">
+              <button><Image width={65}
+                height={65} src={home} alt="home" /></button>
+            </a>
             <button>
               <Image
                 alt="Dutch language"
