@@ -133,8 +133,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Ongeldig PlekNummer" }, { status: 400 });
         }
 
-        const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
-        console.log("plekID: " + plekkenId);
+        const plekkenId = plek[0].ID;
 
         // starts the rollback checkpoint.
         // when rolling back, it will return to here, before any changes were made.
@@ -143,12 +142,10 @@ export async function POST(req: NextRequest) {
             throw new Error("failed to start database inserts while creating new reservation.");
         }
 
-        //Sql 👍
         //Creates the insert query for userdata by adding the keys and adds ? for all the values in order to later add them in.
         const sqlUserData = `INSERT INTO UserData (${userKeys.join(", ")}) 
             VALUES (${userKeys.map(() => "?").join(", ")})`;
 
-        // inserts query into the database.
         const resultUserData = await db.instance.insertQuery(sqlUserData, userValues);
 
         //adds userId to be added with the reservation (to create connection between user and reservation)
@@ -156,13 +153,10 @@ export async function POST(req: NextRequest) {
         const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys, "Plekken_ID"];
         const reservatieValuesWUserDataID = [userId, ...reservatieValues, plekkenId];
 
-        //Sql again 👍
         //Creates the insert query for reservations by adding the keys and adds ? for all the values in order to later add them in.
-
         const sqlReservaties = `INSERT INTO Reservaties (${reservatieKeysWUserDataID.join(", ")}) 
             VALUES (${reservatieKeysWUserDataID.map(() => "?").join(", ")})`;
 
-        //inserts query into the database.
         const resultReservaties = await db.instance.insertQuery(sqlReservaties, reservatieValuesWUserDataID);
 
         //commit database changes if both executed correctly

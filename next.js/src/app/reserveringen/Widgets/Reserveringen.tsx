@@ -13,16 +13,21 @@ import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 type SortKey = "naam" | "startDatum" | "eindDatum" | "plaats" | "gereserveerdOp" | null;
 
 export default function Reserveringen() {
+    //overlay to create a new reservation
     const [overlay, setOverlay] = useState(false);
+    
+    //search query for filtering reservations.
     const [searchQuery, setSearchQuery] = useState("");
 
+    // lets us select a certain row to sort on and if it's ascending or descending.
     const [sortKey, setSortKey] = useState<SortKey>(null);
     const [sortDirection, setSortDirection] = useState<"ascending" | "descending">("ascending");
 
+    //used to do routing for the individual reservations.
     const router = useRouter();
     const goToReservation = (id: string) => router.push(`/reserveringen/${id}`);
 
-    const [reserveringen, loading, error, getAPI] = useApi<ReservationsUserdataResponse>(() => {
+    const [reserveringen, resLoading, resError, getAPI] = useApi<ReservationsUserdataResponse>(() => {
         return adminAPI.getAllReservations();
     });
 
@@ -208,7 +213,7 @@ export default function Reserveringen() {
         year: "numeric",
     };
 
-    if (loading && error == null && reserveringen == null) return <h1>Loading....</h1>;
+    if (resLoading && resError == null && reserveringen == null) return <h1>Loading....</h1>;
 
     return (
         <>

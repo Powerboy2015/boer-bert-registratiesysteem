@@ -3,7 +3,7 @@ import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader } from "mysql2/promise";
 import db from "@/app/classes/database";
-import { IReservering } from "@/app/types/database";
+import { IPlekken, IReservering } from "@/app/types/database";
 
 //allowed columns that can be given from the front end
 const allowedColumnsUserData = ["Woonplaats", "Voornaam", "Achternaam", "Telefoonnummer", "Email"];
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
         // Not causing any issues with too many connections.
         // Thus in the refactor we are using this db class (custom made) that has a selectQuery option.
         const rows = await db.instance.selectQuery<IReservering>(
-            `select * from Reservaties ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
+            `select * from Reservaties INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
             [...likeInput, limit, pagestart]
         );
 
@@ -77,10 +77,10 @@ export async function GET(req: NextRequest) {
             ReseveringsNr: row.ReseveringsNr,
             DatumAankomst: row.DatumAankomst,
             DatumVertrek: row.DatumVertrek,
-            PlekNummer: row.PlekNummer,
-            PlekGrootte: row.Grootte,
             ReserveringsDatum: row.ReserveringsDatum,
             AantalMensen: row.AantalMensen,
+            PlekNummer: row.PlekNummer,
+            Grootte: row.Grootte
         }));
 
         return NextResponse.json({ Reservation: reservaties });
@@ -220,7 +220,7 @@ export async function PUT(req: NextRequest) {
         //     );
         // }
 
-        const body: ReservatieAndPlekBody = await req.json();
+        const body: reservationUserdataRequest = await req.json();
         const { Reservatie, Plek } = body;
 
         //gets the keys and values from the body
@@ -237,24 +237,23 @@ export async function PUT(req: NextRequest) {
             );
         }
 
-        const db = await getDB();
 
         const plekNummer = Plek.PlekNummer;
-        const [plek] = await db.execute(`SELECT ID FROM Plekken WHERE PlekNummer = ?`, [plekNummer]);
+        const plek = await db.instance.selectQuery<IPlekken>(`SELECT ID FROM Plekken WHERE PlekNummer = ?`, [plekNummer]);
 
         if (!Array.isArray(plek) || plek.length === 0) {
             return NextResponse.json({ error: "Ongeldig PlekNummer" }, { status: 400 });
         }
 
-        const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
+        const plekkenId = plek[0].ID;
 
         //takes the keys from the body and sets them up as "key = ?", and if body has more keys, then add ", ". this is for the sql query
         const setInput = keys.map((key) => `${key} = ?`).join(", ");
 
         //sql execute 👍👍👍👍👍👍👍👍👍👍👍👍👍
-        const [result] = await db.execute<ResultSetHeader>(
-            `UPDATE Reservaties SET ${setInput} WHERE ReseveringsNr = ?`,
-            [...values, id]
+        const result = await db.instance.insertQuery(
+            `UPDATE Reservaties SET ${setInput}, Plekken_ID = ? WHERE ReseveringsNr = ?`,
+            [...values, plekkenId, id]
         );
 
         //if the db.execute didn't make any changes it will respond with a not found error

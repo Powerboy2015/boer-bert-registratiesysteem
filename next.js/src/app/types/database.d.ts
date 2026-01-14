@@ -11,8 +11,9 @@ export interface IReservering extends dbColumn {
     ReserveringsDatum: string;
     UserData_ID: number;
     ReservatieBewerkDatum: string;
-    PlekNummer: number;
     AantalMensen: number;
+    PlekNummer: number;
+    Grootte:string;
 }
 
 export interface IReservationUserdata extends dbColumn {

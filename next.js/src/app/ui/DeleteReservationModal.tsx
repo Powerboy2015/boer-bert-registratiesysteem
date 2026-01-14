@@ -1,14 +1,14 @@
 "use client";
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { Reservering } from "../reserveringen/Widgets/Reserveringen";
 import ReservationButtonComponent from "./ReservationButtonComponent";
 import { useRouter } from "next/navigation";
 import { Roboto, Roboto_Mono } from "next/font/google";
-import DeleteIcon from "@mui/icons-material/Delete";
+import DeleteIcon from "@mui/icons-material/Delete"
+import { IReservationUserdata, IReservering } from "../types/database";
 
 interface DeleteReservationProps {
-    reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.
+    reservering: IReservationUserdata; // The reservation object that we use to add the info of which reservation you are deleting.
     DeleteCallback?: () => void; // callbacks are functions that we give as parameter and will be used after a certain event e.g. a button click
     RedirectCallback?: boolean;
     hideIcon?: boolean;

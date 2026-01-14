@@ -1,14 +1,14 @@
 "use client";
 import { FormEvent, useState } from "react";
 import { createPortal } from "react-dom";
-import { Reservering } from "../reserveringen/Widgets/Reserveringen";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import EditFieldComponent from "./EditFieldComponent";
 import EditReservationButton from "./EditReservationButton";
 import EditIcon from "@mui/icons-material/Edit";
+import { IReservationUserdata, IReservering } from "../types/database";
 
 interface EditReservationProps {
-    reservering: Reservering; // The reservation object that we use to add the info of which reservation you are deleting.
+    reservering: IReservationUserdata; // The reservation object that we use to add the info of which reservation you are deleting.
     hideIcon?: boolean;
     reservationCallback?: () => void;
 }
