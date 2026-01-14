@@ -11,7 +11,6 @@ export default function ReserveringOverlay({ toggle, getAPI }: { toggle: () => v
     const [DatumVertrek, setDatumVertrek] = useState("");
     const [DatumAankomst, setDatumAankomst] = useState("");
     const [plaats, setPlaats] = useState(0);
-    const [gereserveerdDatum, setGereserveerdDatum] = useState("");
     const [errorMessage, setErrorMessage] = useState(false);
 
     function sendReservering() {
@@ -66,7 +65,6 @@ export default function ReserveringOverlay({ toggle, getAPI }: { toggle: () => v
                     setDatumVertrek("");
                     setDatumAankomst("");
                     setPlaats(0);
-                    setGereserveerdDatum("");
                 })
                 .then(() => {
                     toggle();

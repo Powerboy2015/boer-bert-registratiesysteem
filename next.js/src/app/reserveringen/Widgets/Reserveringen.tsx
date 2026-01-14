@@ -277,7 +277,7 @@ export default function Reserveringen() {
                         </thead>
 
                         <tbody>
-                            {filteredReserveringen?.map((item, index) => (
+                            {filteredReserveringen?.map((item) => (
                                 <tr key={item.ReseveringsNr} className="border-y-4 border-[#1F1F21] text-2xl">
                                     <td
                                         onClick={() => goToReservation(item.ReseveringsNr)}

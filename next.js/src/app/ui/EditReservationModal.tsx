@@ -1,11 +1,11 @@
 "use client";
 import { FormEvent, useState } from "react";
 import { createPortal } from "react-dom";
-import { Roboto, Roboto_Mono } from "next/font/google";
+import { Roboto } from "next/font/google";
 import EditFieldComponent from "./EditFieldComponent";
 import EditReservationButton from "./EditReservationButton";
 import EditIcon from "@mui/icons-material/Edit";
-import { IReservationUserdata, IReservering } from "../types/database";
+import { IReservationUserdata } from "../types/database";
 
 interface EditReservationProps {
     reservering: IReservationUserdata; // The reservation object that we use to add the info of which reservation you are deleting.
@@ -15,10 +15,6 @@ interface EditReservationProps {
 
 const roboto = Roboto({
     weight: "500",
-    subsets: ["latin"],
-});
-const roboto_mono = Roboto_Mono({
-    weight: "400",
     subsets: ["latin"],
 });
 

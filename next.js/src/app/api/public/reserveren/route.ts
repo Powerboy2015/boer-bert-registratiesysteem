@@ -1,6 +1,7 @@
-import getDB from "@/app/api/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { ResultSetHeader, Connection, RowDataPacket } from "mysql2/promise";
+import  { RowDataPacket } from "mysql2/promise";
+import db from "@/app/classes/database";
+import { IPlekken } from "@/app/types/database";
 
 const allowedColumnsUserData = [
     "Woonplaats",
@@ -46,12 +47,11 @@ export interface UserAndReservatieBody {
 
 export async function POST(req: NextRequest) {
     //await getDB outside because if error occurs it can rollback changes.
-    const db = await getDB();
     try {
         const body: UserAndReservatieBody = await req.json();
         const { UserData, Reservatie, Plek } = body;
 
-        Reservatie.ReseveringsNr = await getReservationNr(db);
+        Reservatie.ReseveringsNr = await getReservationNr();
         Reservatie.ReserveringsDatum = new Date().toJSON().split("T")[0];
 
         //gets the keys and values from the body
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
         }
 
         const plekNummer = Plek.PlekNummer;
-        const [plek] = await db.execute(
+        const plek = await db.instance.selectQuery<IPlekken>(
             `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
             [plekNummer]
         );
@@ -106,13 +106,13 @@ export async function POST(req: NextRequest) {
         const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
         console.log(plekkenId);
 
-        await db.beginTransaction();
+        await db.instance.startTransaction();
 
         //Sql 👍
         const sqlUserData = `INSERT INTO UserData (${userKeys.join(", ")}) 
             VALUES (${userKeys.map(() => "?").join(", ")})`;
 
-        const [resultUserData] = await db.execute<ResultSetHeader>(
+        const resultUserData = await db.instance.insertQuery(
             sqlUserData,
             userValues
         );
@@ -136,13 +136,13 @@ export async function POST(req: NextRequest) {
             ", "
         )}) VALUES (${reservatieKeysWUserDataID.map(() => "?").join(", ")})`;
 
-        const [resultReservaties] = await db.execute<ResultSetHeader>(
+        const resultReservaties = await db.instance.insertQuery(
             sqlReservaties,
             reservatieValuesWUserDataID
         );
 
         //commit database changes if both executed correctly
-        await db.commit();
+        await db.instance.saveTransaction();
 
         return NextResponse.json({
             success: true,
@@ -152,7 +152,7 @@ export async function POST(req: NextRequest) {
         });
     } catch (err) {
         //gives error 500 if something went wrong
-        await db.rollback();
+        await db.instance.saveTransaction();
         return NextResponse.json(
             { error: "Interne serverfout", details: String(err) },
             { status: 500 }
@@ -164,27 +164,20 @@ interface IreservationNr extends RowDataPacket {
     ID: string;
 }
 
-// simple helper query function.
-async function SelectQuery<T>(db: Connection, query: string): Promise<T[]> {
-    const [results] = await db.execute(query);
-    return results as T[];
-}
-
 /**
  * Creates a newly generated reservation number.
  * @param db the database connection object
  * @returns the next usable reservation number.
  */
-async function getReservationNr(db: Connection): Promise<string> {
+async function getReservationNr(): Promise<string> {
     // TODO fix a less lazy way to calculate a reservationID. Currently using ids.
-    const reservationID = await SelectQuery<IreservationNr>(
-        db,
+    const reservationID = await db.instance.selectQuery<IreservationNr>(
         "SELECT MAX(ID) as ID FROM Reservaties"
     );
 
     console.log(reservationID);
 
-    const nextID = reservationID[0].ID + 1;
+    const nextID = Number(reservationID[0]?.ID ?? 0) + 1;
     // Uses the year added
     const currentYear: string = new Date().getFullYear().toString();
 

@@ -18,4 +18,24 @@ export default class adminAPI {
         }
         return reservations;
     }
+
+    static async getReservation(resID: string): Promise<ReservationsUserdataResponse> {
+        const searchParams: Record<string,string> = {
+            "searchColumn": "ReseveringsNr",
+            "searchValue" : resID
+        }
+        
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000"
+
+        const reservation = await API.GET<ReservationsUserdataResponse>(
+        `${baseUrl}/api/private/reservatiesenuserdata`,
+        searchParams
+        );
+        
+        if (!reservation) {
+            throw new Error("API endpoint could not gather data.");
+        }
+
+        return reservation;
+    }
 }
