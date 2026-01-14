@@ -38,7 +38,7 @@ export default function Reservering1() {
 
   return (
     <>
-      <div className="min-h-screen w-full text-[#2c2c2c] font-sans">
+      <div className="min-h-screen w-full text-[#2c2c2c] font-sans bg-[#FDF5D8]">
         <header className="shadow-xl w-full flex items-center h-auto justify-between p-4 bg-[#93DAB8] relative sticky top-0 z-50">
           <div className="flex items-center gap-3">
             <a href="http://localhost:3000/" title="knop naar home page">
@@ -81,7 +81,7 @@ export default function Reservering1() {
 
             <button>
               <Image
-                alt="German language"
+                alt="deutsche sprache"
                 src={de}
                 width={57}
                 height={57}
@@ -105,7 +105,7 @@ export default function Reservering1() {
         </header>{" "}
         {/*header met wat dingen er in */}
         <div className="bg-[#FDF5D8]">
-          <div className="rounded-bl-[125px] overflow-hidden bg-[#FDF5D8]">
+          <div className="overflow-hidden bg-[#FDF5D8]">
             <section
               className=" gap-6 p-6 items-center w-full h-full bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply " /*yuhh de background staat stil hehe */
               style={{ backgroundImage: `url(${campinggestolen.src})` }}
