@@ -1,18 +1,6 @@
 "use client";
 import Image from "next/image";
-import Widget1 from "../components/widget1";
-import Widget2 from "../components/widget2";
-import Widgetbar1 from "../components/widgetbar1";
-import Button1 from "../components/button1";
-import Button2 from "../components/button2";
-import Input1 from "../components/input1";
-import Input2 from "../components/input2";
-import Toggle1 from "../components/toggle1";
-import Toggle2 from "../components/toggle2";
-import Optionfield1 from "../components/optionfield1"
-import Optionfield2 from "../components/optionfield2"
-import React from 'react';
-import Scrollcontact from "../components/contact";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 {/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */}
@@ -63,7 +51,7 @@ export default function Reservering2() {
 
           <div className="pr-8">
             <div title="scroll naar beneden voor contact gegevens">
-            <Scrollcontact/> 
+            {/*<Scrollcontact/>*/} 
             </div>
           </div>
           {/*fkn coole knop, je gaat naar beneden O.O T_T */}
