@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { encryptReservationToken } from "../lib/encryption";
 
 function getTransporter() {
   const user = process.env.GMAIL_USER;
@@ -29,6 +30,7 @@ export async function POST(req: NextRequest) {
       arrivalDate,
       departureDate,
       reservationNumber,
+      reservationToken,
     } = body || {};
 
     if (!to) {
@@ -44,6 +46,11 @@ export async function POST(req: NextRequest) {
     const spotText = spot !== undefined && spot !== null && spot !== "" ? `Plek nummer: ${spot}` : "Plek nummer: ";
     const reservationText = reservationNumber ? `Reserveringsnummer: ${reservationNumber}` : "Reserveringsnummer: ";
 
+    const encryptedToken = reservationToken
+      ? encryptReservationToken(reservationToken)
+      : encryptReservationToken(reservationNumber || to);
+    const reservationLink = `https://www.google.com?token=${encryptedToken}`;
+
     const lines = [
       "Hartelijk dank voor uw boeking.",
       "",
@@ -57,6 +64,8 @@ export async function POST(req: NextRequest) {
       "",
       "U dient zich bij aankomst te melden bij de receptie tussen 8:00 en 12:00.",
       "📍 Heidelberglaan 15, 3584 CS",
+      "",
+      `Uw reservering bekijken: ${reservationLink}`,
       "",
       "Mocht er iets niet kloppen en/of wilt u iets wijzigen, neem dan contact met ons op door te antwoorden op deze E-mail.",
       "Met vriendelijke groet,",
