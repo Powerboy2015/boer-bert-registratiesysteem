@@ -70,7 +70,7 @@ export default function Reservering1() {
             </a>
             <button>
               <Image
-                alt="Dutch language"
+                alt="Nederlandse taal"
                 src={nl}
                 width={57}
                 height={57}
