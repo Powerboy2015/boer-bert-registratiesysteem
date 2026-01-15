@@ -59,7 +59,7 @@ export default function Reservering1() {
 
           <div className="pr-8">
             <div title="scroll naar beneden voor contact gegevens">
-            <Scrollcontact/> 
+              <Scrollcontact/>
             </div>
           </div>
           {/*fkn coole knop, je gaat naar beneden O.O T_T */}
