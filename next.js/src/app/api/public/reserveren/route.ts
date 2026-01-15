@@ -145,7 +145,6 @@ export async function POST(req: NextRequest) {
         //commit database changes if both executed correctly
         await db.commit();
 
-        // Send confirmation email to the guest
         try {
             await sendReservationEmail({
                 to: UserData.Email,
@@ -159,7 +158,6 @@ export async function POST(req: NextRequest) {
             });
         } catch (emailError) {
             console.error("Failed to send confirmation email:", emailError);
-            // Don't fail the reservation if email fails
         }
 
         return NextResponse.json({
