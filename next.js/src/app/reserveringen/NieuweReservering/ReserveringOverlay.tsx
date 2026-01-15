@@ -45,11 +45,11 @@ export default function ReserveringOverlay({
                         Woonplaats: adres,
                     },
                     Reservatie: {
-                        ReseveringsNr: "2025-1", //FIXME dynamic reserverings nummer
+                        ReseveringsNr: "2025-1",
                         DatumAankomst: DatumAankomst,
                         DatumVertrek: DatumVertrek,
                         ReserveringsDatum: "2025-12-14",
-                        AantalMensen: 0,
+                        AantalMensen: 0, //FIXME ER MOET EEN VAKJE KOMEN OM DE AANTAL MENSEN IN TE VULLEN 0 werkt niet meer met input validation
                     },
                     Plek: {
                         PlekNummer: plaats,

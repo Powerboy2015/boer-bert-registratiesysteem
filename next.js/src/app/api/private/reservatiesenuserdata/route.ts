@@ -136,8 +136,73 @@ export async function POST(req: NextRequest) {
         const body: UserAndReservatieBody = await req.json();
         const { UserData, Reservatie, Plek } = body;
 
+
+        //fuck it ik kan typescript niet goed laten werken met for loops (checkt als alle velden er zijn)
+        if (!UserData.Voornaam ||!UserData.Achternaam ||!UserData.Email ||!UserData.Telefoonnummer ||!UserData.Woonplaats) {
+            return NextResponse.json(
+            { error: "Je mist een iets in userdata body" },
+            { status: 400 }
+            );
+        }
+        if (!Reservatie.ReseveringsNr ||!Reservatie.DatumAankomst ||!Reservatie.DatumVertrek ||!Reservatie.ReserveringsDatum ||!Reservatie.AantalMensen) {
+            return NextResponse.json(
+            { error: "Je mist een iets in reservatie body" },
+            { status: 400 }
+            );
+        }
+        if (!Plek.PlekNummer) {
+            return NextResponse.json(
+            { error: "Je mist een iets in plek body" },
+            { status: 400 }
+            );
+        }
+
+        //checkt als datums in correcte formaat zijn
+        const regdatum = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regdatum.test(Reservatie.DatumAankomst) || !regdatum.test(Reservatie.DatumVertrek)) {
+            return NextResponse.json(
+                { error: "Datums moeten in formaat YYYY-MM-DD zijn." },
+                { status: 400 }
+            );
+        }
+        //checkt als email @ bevat en een .
+        const regemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regemail.test(UserData.Email)) {
+            return NextResponse.json(
+                { error: "Ongeldig email-adres." },
+                { status: 400 }
+            );
+        }
+
+
+        const aankomst = new Date(Reservatie.DatumAankomst);
+        const vertrek = new Date(Reservatie.DatumVertrek);
+        const vandaag = new Date();
+        vandaag.setHours(0, 0, 0, 0);
+        //checkt als aankomst groter is dan vertrek en als aankomst datum niet eerder is dan vandaag.
+        if (aankomst >= vertrek) {
+            return NextResponse.json(
+                { error: "Aankomst datum moet voor vertrek datum zijn. Mag ook niet op zelfde dag." },
+                { status: 400 }
+            );
+        }
+        if (vandaag > aankomst) {
+            return NextResponse.json(
+                { error: "Aankomst datum kan niet eerder zijn dan vandaag" },
+                { status: 400 }
+            );
+        }
+
+        //checkt als aantalmensen niet negatief is
+        if (Reservatie.AantalMensen < 1) {
+            return NextResponse.json(
+                { error: "AantalMensen moet een positief getal zijn." },
+                { status: 400 }
+            );
+        }
+
         Reservatie.ReseveringsNr = await getReservationNr(db);
-        Reservatie.ReserveringsDatum = new Date().toJSON().split("T")[0];
+        Reservatie.ReserveringsDatum = new Date().toISOString().slice(0, 19).replace("T", " ");
 
         //gets the keys and values from the body
         const userKeys = Object.keys(UserData);
@@ -176,7 +241,7 @@ export async function POST(req: NextRequest) {
         }
 
         const plekNummer = Plek.PlekNummer;
-        const [plek] = await db.execute(
+        const [plek] = await db.execute<RowDataPacket[]>(
             `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
             [plekNummer]
         );
@@ -189,7 +254,6 @@ export async function POST(req: NextRequest) {
         }
 
         const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
-        console.log(plekkenId);
 
         await db.beginTransaction();
 
@@ -228,23 +292,6 @@ export async function POST(req: NextRequest) {
 
         //commit database changes if both executed correctly
         await db.commit();
-
-        try {
-            await sendMail({
-                //type script but we remove type. It will be -script.
-                to: (UserData as any).Email,
-                name: `${(UserData as any).Voornaam} ${
-                    (UserData as any).Achternaam
-                }`.trim(),
-                spot: (Reservatie as any).PlekNummer,
-                peopleCount: (Reservatie as any).AantalMensen,
-                arrivalDate: (Reservatie as any).DatumAankomst,
-                departureDate: (Reservatie as any).DatumVertrek,
-                reservationNumber: (Reservatie as any).ReseveringsNr,
-            });
-        } catch (e) {
-            console.error("Failed to send reservation email:", e);
-        }
 
         return NextResponse.json({
             success: true,
