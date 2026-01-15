@@ -1,16 +1,9 @@
 "use client";
 import Image from "next/image";
-import map from "@/app/Images/map.jpg";
 import logo from "@/app/Images/logo.jpg";
 import de from "@/app/Images/de.jpg";
-import eng from "@/app/Images/eng.jpg";
+import en from "@/app/Images/eng.jpg";
 import nl from "@/app/Images/nl.jpg";
-import w3c from "@/app/Images/w3c.jpg";
-import applepay from "@/app/Images/applepay.png";
-import ideal from "@/app/Images/ideal.png";
-import mastercard from "@/app/Images/mastercard.png";
-import paypal from "@/app/Images/paypal.png";
-import visa from "@/app/Images/visa.png";
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
 import boerbert2 from "@/app/Images/boerbert2.jpg";
 import camping6 from "@/app/Images/camping6.jpg";
@@ -41,262 +34,228 @@ export default function Home() {
 
   return (
     <>
-    <div className="text-[#2c2c2c] font-sans" content="width=device-width, initial-scale=1.0">
-      <header className="shadow-xl flex items-center h-auto justify-between p-4 bg-[#93DAB8] relative sticky top-0 z-50">
-        <div className="flex items-center gap-3">
-          
-          <a href="http://localhost:3000/" title="knop naar home page">
-            <div className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50
-               transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"}`}>
-              <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130 hidden md:block">
-                <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125 hidden md:block">
-                  <Image alt="boerbert logo met gare ovalen enzo" src={logo} width={230} height={230} className="rounded-full object-cover hidden md:block"/>
-                </div>
-              </div>
+    <div className="font-sans text-[#2c2c2c]">
+        <header className="sticky top-0 z-50 bg-[#93DAB8] shadow-lg flex justify-between items-center p-4">
+            <Image
+                src={logo}
+                alt="Boer Bert Logo"
+                width={shrink ? 60 : 90}
+                height={shrink ? 60 : 90}
+                className="rounded-full transition-all duration-300"
+            />
+            <div className="flex gap-3">
+                <button className="text-sm"><Image alt="Dutch language" src={nl} width={57} height={57} className="rounded-[10] px-auto"/></button>
+                <button className="text-sm"><Image alt="German language" src={de} width={57} height={57} className="rounded-[10] px-auto"/></button>
+                <button className="text-sm"><Image alt="English language" src={en} width={57} height={57} className="rounded-[10] px-auto"/></button>
             </div>
-          </a>
-          {/*big ahhhhh logo met gare ovalen enzo waar je op kan klikken om naar main page te gaan*/}
+        </header>
 
-        </div>
-        <div className="flex items-center pr-8 gap-6">
-          {/*fkn coole knop, je gaat naar beneden */}
-
-          <button>
-            <Image alt="Dutch language" src={nl} width={57} height={57}
-            className="rounded-[10] px-auto"/>
-          </button>
-          {/*knop om taal te veranderen naar nederlands */}
-
-          <button>
-          <Image alt="German language" src={de} width={57} height={57}
-          className="rounded-[10] px-auto"/>
-          </button>
-          {/*knop om taal te veranderen naar duits */}
-
-          <button>
-          <Image alt="English language" src={eng} width={57} height={57}
-          className="rounded-[10] px-auto"/>
-          </button>
-          {/*knop om taal te veranderen naar engels */}
-
-        </div>  {/*de knoppen zijn onzichtbaar omdat ze niet werken */}
-      </header> {/*header met wat dingen er in */}
-
-      
-      <div className="bg-[#007248]">
-        <div className="md:rounded-bl-[500px] rounded-bl-[125px] overflow-hidden bg-[#007248]" content="width=device-width, initial-scale=1.0, height=device-height , initial-scale=0.75">
-          <section className=" gap-6 p-6 items-center bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply"
-                   style={{ backgroundImage: `url(${campinggestolen.src})` }}>
-            <div className=" gap-20 p-6 h-230 flex flex-col items-center m-auto">
-              
-                <h1 className="text-center font-bold md:pt-50 md:text-6xl pt-30 text-4xl p-5 text-[#fdf5d8]">Boerencamping Boer Bert</h1>
-                <a href="/reservering1"
-                  title="knop naar reserverings pagina">
-                <button className="text-center px-15 py-7 bg-[#FDF5D8] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] rounded-xl">Reserveer nu</button>
+    <section className="bg-[#007248]">
+        <section
+            className="min-h-screen flex flex-col justify-center items-center text-center px-4
+             bg-black/60 bg-blend-multiply bg-cover bg-center
+             rounded-bl-[200px] md:rounded-bl-[500px] overflow-hidden"
+            style={{ backgroundImage: `url(${campinggestolen.src})` }}
+        >
+                <h1 className="text-4xl md:text-6xl font-bold text-[#FDF5D8] mb-6">
+                    Boerencamping Boer Bert
+                </h1>
+                <a href="/reservering1">
+                    <button className="px-8 py-4 text-xl bg-[#FDF5D8] text-[#007248] rounded-xl hover:bg-[#a4debc] transition">
+                        Reserveer nu
+                    </button>
                 </a>
                 {/*button om naar de pagina reserveringen te gaan */}
-
-            </div>
           </section>
-        </div>
-      </div> {/*sectie die je ziet als je op de pagina komt */}
+    </section>
 
-      <div className="bg-[#FDF5D8]">
-        <div className="md:rounded-bl-[500px] rounded-bl-[125px] md:rounded-bl-lg-[500px] rounded-bl-lg-[125px] overflow-hidden">
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6 p-2 h-150  bg-[#007248] text-[#FDF5D8]">
-            <div className="overflow-hidden w-200 h-200px mx-auto flex-top mt-15 w-160 hidden md:block">
+        <section className="bg-[#FDF5D8]">
+            <section className="bg-[#007248] text-[#FDF5D8] py-16 px-6 md:rounded-bl-[500px] rounded-bl-[180px] overflow-hidden">
+                <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-14">
+                    <div className="hidden md:flex justify-center shrink-0">
+                        <div className="bg-[#FDF5D8] rounded-[50%] w-[420px] h-[260px] flex items-center justify-center">
+                            <div className="relative w-[360px] h-[180px] rounded-[50%] overflow-hidden">
+                                <Image
+                                    src={boerbert2}
+                                    alt="Boer Bert"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-              <div className="bg-[#FDF5D8] ml-10 max-width-[600px] rounded-[50%] h-108 w-180">
-                <div>
-                  <Image alt='boerbert' className="shadow-xl/30 max-width-[700px] pt-8 rounded-[50%]" src={boerbert2} width={700} height={700}/>
+                    <div className="max-w-xl text-center md:text-left">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                            Wie zijn wij?
+                        </h2>
+                        <p className="md:text-xl leading-relaxed">
+                            Wij hebben onze boerderij omgetoverd tot een camping.
+                            Op dit moment is dit een groot grasveld met allen plaatsen
+                            voor het opzetten van tenten. In de toekomst willen we de
+                            camping misschien ook toegankelijk maken voor campers en caravans.
+                        </p>
+                    </div>
+
                 </div>
-              </div>
-              {/*leuk plaatje van een random boer */}
-              
-            </div>
-            <div className="md:mt-42 md:w-160 mt-auto mb-auto" content="width=device-width">
-              <h2 className="font-bold mb-4 md:text-4xl text-3xl text-center">Wie zijn wij?</h2>
-              <p className="md:text-2xl text-justify w-auto place-self-strech">
-              Wij hebben onze boerderij omgetoverd tot een camping.
-              Op dit moment is dit een groot grasveld met allen plaatsen voor het opzetten van tenten.
-              In de toekomst willen we de camping misschien ook toegankelijk maken voor campers en caravans.
-              </p>
-            </div>
-            {/*stukje text met simpele info over de camping */}
+            </section>
+        </section>
+        {/*stukje text met simpele info over de camping */}
+        {/*section met leuk verhaal van boer bert over de camping */}
 
-          </section>
-        </div>
-      </div> {/*section met leuk verhaal van boer bert over de camping */}
-
-      <div className="bg-[#007248]">
-        <div className="md:rounded-tr-[500px] rounded-tr-[125px] md:h-150 h-75 bg-cover bg-center bg-fixed bg-black/60 bg-blend-multiply" content="width=device-width, initial-scale=1.0"
-             style={{ backgroundImage: `url(${campinggestolen.src})` }}>
-          <div className=" rounded-tr-[500px] rounded-bl-[500px] overflow-hidden">
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 h-150 gap-6 p-6 bg-[#FDF5D8]">
-
-              <div className="w-80 h-80 mx-auto w-160 mt-20">
-                <h2 className="font-bold mb-4 text-4xl text-center text-[#007248]">Onze geschiedenis</h2>
-                <p className="text-justify md:text-2xl w-auto">
+    <section style={{ backgroundImage: `url(${campinggestolen.src})` }} className="bg-cover bg-center bg-fixed bg-black/60 bg-blend-multiply">
+        {/*<div className="bg-[#007248]"></div> is WIP voor top right van onze geschiedenis section*/}
+        <section className="bg-[#FDF5D8] py-16 px-6 rounded-bl-[180px] md:rounded-bl-[500px] overflow-hidden md:rounded-tr-[500px] rounded-tr-[180px]">
+            <div className="max-w-6xl mx-auto flex flex-col-reverse md:flex-row items-center gap-10">
+                <div className="max-w-xl text-center md:text-left">
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#007248]">
+                        Onze geschiedenis
+                    </h2>
+                <p className="md:text-xl leading-relaxed">
                 De camping van boer Bert is gebouwd in het jaar 1815 en word al sinds het begin van generatie tot generatie beheert en onderhouden door de familie van boer Bert.
                 Ooit was het een groothandelaar in koeienmelk, maar nu is het doeleind van de boerderij dus veranderd naar een camping vanwege de strenge stikstof wetgevingen.
                 </p>
-              </div>
-              <div className="overflow-hidden ml-2 w-200 h-200 mx-auto flex-top w-160">
-              {/*stukje text van de geschiedenis van de camping/boerderij */}
-                
-                <div className="bg-[#007248] max-width-[600px] mt-15 rounded-[50%] h-108 w-190">
-                  <div>
-                    <Image alt='boerbert' className="shadow-xl/30 max-width-[700px] ml-6 pt-8 rounded-[50%]" src={boerderij} width={750} height={750}/>
-                  </div>
                 </div>
-                {/*leuk plaatje van oude boerderij in zwart wit (zo lijkt het oud enzo) */}
-
-              </div>
-            </section>
-          </div>  
-        </div>
-      </div> {/*section met informatie over de geschiedenis van de camping */}
-
-
-
-      <div className="bg-[#FDF5D8]">
-        <div className="rounded-tr-[500px] rounded-bl-[500px] overflow-hidden">
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 h-160 gap-6 p-6 items-center bg-cover bg-center bg-fixed bg-black/60 bg-blend-multiply"
-                   style={{ backgroundImage: `url(${campinggestolen.src})` }}>
-            <div className="w-80 h-80 flex gap-5 mt-10 ml-auto w-160">
-
-              <div className="bg-[#f7f0cf] w-90 rounded-xl shadow-lg overflow-hidden">
-                <div className="bg-[#0A6A3B] text-[#FDF5D8] p-4 text-xl font-bold">
-                  <p className="text-3xl">Kleine plaats</p>
-                  <div className="flex gap-3">
-                    <p className="text-4xl font-bold">€30</p>
-                    <p className="text-lg">Per nacht</p>
-                  </div>
+                    <div className="hidden md:flex justify-center">
+                        <div className="bg-[#007248] rounded-[50%] w-[460px] h-[280px] flex items-center justify-center">
+                            <div className="relative w-[380px] h-[160px] rounded-[50%] overflow-hidden">
+                                <Image
+                                src={boerderij}
+                                alt="Boerderij"
+                                fill
+                                className="object-cover"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div className="p-6">
-                  {/*leeg :p */}
-                </div>
-              </div> {/*box voor reservering info voor kleine plaatsen */}
+        </section>
+    </section>
+        {/*section met informatie over de geschiedenis van de camping */}
 
-              <div className="bg-[#f7f0cf] w-90 rounded-xl shadow-lg overflow-hidden">
-                <div className="bg-[#0A6A3B] text-[#FDF5D8] p-4 text-xl font-bold">
-                  <p className="text-3xl">Grote plaats</p>
-                  <div className="flex gap-3">
-                    <p className="text-4xl font-bold">€45</p>
-                    <p className="text-lg" >Per nacht</p>
-                  </div>
-                </div>
-                <div className="p-6">
-                  {/*emptyyyyyy */}
-                </div>
-              </div> {/*box voor reservering info voor grote plaatsen */}
+        <div className="bg-[#FDF5D8]">
+            <div className="md:rounded-tr-[500px] md:rounded-bl-[500px] rounded-bl-[180px] rounded-tr-[180px] overflow-hidden">
+                <section
+                    className="grid grid-cols-1 md:grid-cols-2 gap-6 px-20 py-16 items-center bg-cover bg-center bg-fixed bg-black/60 bg-blend-multiply"
+                    style={{ backgroundImage: `url(${campinggestolen.src})` }}
+                >
+                    <div className="flex flex-col md:flex-row px-12 gap-6 justify-center">
+                        <div className="bg-[#f7f0cf] w-full max-w-sm rounded-xl shadow-lg overflow-hidden">
+                            <div className="bg-[#0A6A3B] text-[#FDF5D8] p-4 font-bold">
+                                <p className="text-2xl md:text-3xl">Kleine plaats</p>
+                                <div className="flex items-end gap-2">
+                                    <p className="text-3xl md:text-4xl font-bold">€30</p>
+                                    <p className="text-lg">per nacht</p>
+                                </div>
+                            </div>
+                            <div className="p-6" />
+                        </div>
+                {/*box voor reservering info voor kleine plaatsen */}
 
-            </div> {/*div voor de info boxen */}
-            
-            <div className="text-center flex flex-col items-center gap-10 mr-auto">
-              <h2 className="text-[#FDF5D8] text-3xl md:text-4xl font-bold leading-snug">
-                KAMPEER OP JOUW MANIER – ALLEEN <br/> OF SAMEN</h2>
-              <a href="/reservering1"
-                title="knop naar reserverings pagina">
-              <button className="px-10 py-5 bg-[#FDF5D8] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] rounded-xl">Reserveer nu</button>
-              </a>
+                        <div className="bg-[#f7f0cf] w-full max-w-sm rounded-xl shadow-lg overflow-hidden">
+                            <div className="bg-[#0A6A3B] text-[#FDF5D8] p-4 font-bold">
+                                <p className="text-2xl md:text-3xl">Grote plaats</p>
+                                <div className="flex items-end gap-2">
+                                    <p className="text-3xl md:text-4xl font-bold">€45</p>
+                                    <p className="text-lg">per nacht</p>
+                                </div>
+                            </div>
+                            <div className="p-6" />
+                        </div>
+                    </div>
+                {/*box voor reservering info voor grote plaatsen */}
+
+                    <div className="text-center flex flex-col items-center gap-8">
+                        <h2 className="text-[#FDF5D8] text-3xl md:text-4xl font-bold leading-snug">
+                            KAMPEER OP JOUW MANIER – ALLEEN <br className="hidden md:block" /> OF SAMEN
+                        </h2>
+                        <a href="/reservering1">
+                            <button className="px-10 py-5 bg-[#FDF5D8] hover:bg-[#a4debc] transition text-2xl md:text-3xl font-semibold text-[#007248] rounded-xl">
+                                Reserveer nu
+                            </button>
+                        </a>
               {/*button om naar de pagina reserveringen te gaan */}
             </div>
-  
           </section>
-        </div>  
+        </div>
       </div> {/*section voor reservering info en knop naar reservering */}
 
-      <div className="bg-[#FDF5D8]">
-        <div className="h-250 items-center bg-cover bg-center bg-fixed bg-black/60 bg-blend-multiply"
-             style={{ backgroundImage: `url(${campinggestolen.src})` }}>
-          <div className="rounded-tr-[500px] overflow-hidden">
-            <section className=" gap-6 p-6 h-270 gap-6 p-6 items-center bg-[#FDF5D8]">
-              <div className="justify-items-stretch gap-4 items-center">
+        <div className="bg-[#FDF5D8]">
+            <div
+                className="bg-cover bg-center bg-fixed bg-black/60 bg-blend-multiply"
+                style={{ backgroundImage: `url(${campinggestolen.src})` }}
+            >
+                <div className="rounded-tr-[500px] overflow-hidden bg-[#FDF5D8]">
+                    <section className="px-6 py-20 max-w-7xl mx-auto">
 
-                <div className=" text-center h-50 text-6xl text-[#007248] font-bold mt-20 mr-25">Nieuws</div>
-                {/*text: 'Nieuws'.... woah */}
+                        <h2 className="text-center text-4xl md:text-6xl text-[#007248] font-bold mb-16">
+                            Nieuws
+                        </h2>
+                        {/*text: 'Nieuws'.... woah */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
 
-                <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-0 mr-25">
 
-                  <div className="bg-[#007248] w-115 h-100 text-center rounded-xl shadow-xl overflow-hidden flex flex-col items-center justify-center">
-                    <p className="text-3xl text-[#FDF5D8] w-auto m-10"> “Ons ultieme doel is om iedereen het boerenleven te laten proeven”</p>
-                    <p className="text-4xl text-[#FDF5D8] font-bold w-auto m-5">- Boer bert</p>
-                  </div> {/*groene box met text */}
+                            <div className="bg-[#007248] text-[#FDF5D8] rounded-xl shadow-xl p-10 flex flex-col justify-center text-center">
+                                <p className="text-2xl md:text-3xl mb-6">
+                                    “Ons ultieme doel is om iedereen het boerenleven te laten proeven”
+                                </p>
+                                <p className="text-3xl md:text-4xl font-bold">– Boer Bert</p>
+                            </div> {/*groene box met text */}
 
-                  <div className="">
-                    <div className="relative bg-white h-150 w-120 rounded-xl shadow-xl overflow-hidden">
-                      <div className="bg-[#0A6A3B] h-50 text-[#FDF5D8] p-4 text-xl font-bold bg-black/30 bg-blend-multiply"
-                           style={{ backgroundImage: `url(${camping6.src})` }}>
-                        <p className="text-3xl mt-5">Evenementen</p>
-                      </div>
-                      <div className="p-6">
-                        <p className="text-xl text-justify m-2">Evenementen op onze boeren camping</p>
-                      </div>
-                      <a href="https://tailwindcss.com/docs/top-right-bottom-left"
-                        target="_blank"
-                        title="knop om meer te lezen over evenemnten">
-                        <button className="absolute left-4 bottom-4 px-6 py-2 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-2xl font-semibold text-[#FDF5D8] rounded-xl">Lees meer</button>
-                      </a>
-                    </div>
-                  </div> {/*middelste mox met evenementen */}
+                            <div className="relative bg-white rounded-xl shadow-xl overflow-hidden">
+                                <div
+                                    className="h-48 bg-cover bg-center bg-black/30 bg-blend-multiply p-6 text-[#FDF5D8] font-bold"
+                                    style={{ backgroundImage: `url(${camping6.src})` }}
+                                >
+                                    <p className="text-3xl">Evenementen</p>
+                                </div>
+                                <div className="p-6">
+                                    <p className="text-lg">
+                                        Evenementen op onze boeren camping
+                                    </p>
+                                </div>
+                                <button className="flex mx-6 my-6 px-6 py-2 bg-[#007248] hover:bg-[#008f58] text-xl font-semibold text-[#FDF5D8] rounded-xl">
+                                    Lees meer
+                                </button>
+                            </div> {/*middelste mox met evenementen */}
 
-                  <div className="">
-                    <div className="relative bg-white h-150 w-120 rounded-xl shadow-xl overflow-hidden">
-                      <div className=" bg-[#0A6A3B] h-50 text-[#FDF5D8] p-4 text-xl font-bold bg-black/30 bg-blend-multiply"
-                           style={{ backgroundImage: `url(${camping5.src})` }}>
-                        <p className="text-3xl mt-5">Ervaringen</p>
-                      </div>
-                      <div className="p-6">
-                        <p className="text-xl text-justify m-2">Ervaringen op onze boeren camping</p>
-                      </div>
-                      <a href="https://tailwindcss.com/docs/top-right-bottom-left"
-                        target="_blank"
-                        title='knop meer lezen over ervaringen'>
-                        <button className="absolute left-4 bottom-4 px-6 py-2 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-2xl font-semibold text-[#FDF5D8] rounded-xl">Lees meer</button>
-                      </a>
-                    </div>
-                  </div> {/*box met ervaringen */}
+                            <div className="relative bg-white rounded-xl shadow-xl overflow-hidden">
+                                <div
+                                    className="h-48 bg-cover bg-center bg-black/30 bg-blend-multiply p-6 text-[#FDF5D8] font-bold"
+                                    style={{ backgroundImage: `url(${camping5.src})` }}
+                                >
+                                    <p className="text-3xl">Ervaringen</p>
+                                </div>
+                                <div className="p-6">
+                                    <p className="text-lg">
+                                        Ervaringen op onze boeren camping
+                                    </p>
+                                </div>
+                                <button className="flex mx-6 my-6 px-6 py-2 bg-[#007248] hover:bg-[#008f58] text-xl font-semibold text-[#FDF5D8] rounded-xl">
+                                    Lees meer
+                                </button>
+                            </div> {/*box met ervaringen */}
 
                 </div> {/*div voor alle boxen met info in een column */}
-              </div>
             </section> 
           </div> 
         </div>
       </div> {/*section met nieuws en andere onzin */}
 
-      <footer className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between flex flex-row items-center">
-
-        <div className="p-4 px-10 my-4 gap-40 bg-[#93DAB8] font-bold text-[25px] justify-between flex flex-row items-center">
-          <a title="link naar telefoon nummer camping boer bert"
-            className="hover:text-[#55876a]"
-            href="tel:+31642741016" 
-            >📞 +31 123456789</a>
-            {/*knop voor telefoon nmmer */}
-
-          <a title="link naar email info@campingboerbert.nl"
-            className="hover:text-[#55876a]"
-            href="mailto:info@campingboerbert.nl"
-            >📧 info@campingboerbert.nl</a>
-            {/*knop voor email */}
-
-          <a title="link naar google maps locatie camping boer bert"
-            className="hover:text-[#55876a]"
-            href="https://www.google.com/maps/place/UMC+Utrecht/@52.0858554,5.1795793,17z/data=!3m1!4b1!4m6!3m5!1s0x47c66885c1ad3c53:0x5778bacf22762084!8m2!3d52.0858554!4d5.1795793!16s%2Fm%2F02qkwv4?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D"
-            target="_blank"
-            rel="noopener noreferer"
-            >📍 Heidelberglaan 15, 3584 CS</a>
-            {/*knop voor google maps locatie */}
-
-          <p title="fax nummer camping boer bert"
-            className="px-auto hover:text-[#55876a]">Fax: 214-785-2447</p>
-            {/*hoe de fuck ga ik een knop voor fax maken?? */}
-        </div>
-
-      </footer> {/*dikke footer met links voor contact. zei iemand voeten??? :p */}
+        <footer className="bg-[#93DAB8] py-8 px-6">
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-6 justify-between text-lg">
+                <a href="tel:+31642741016">📞 +31 123456789</a>
+                <a href="mailto:info@campingboerbert.nl">📧 info@campingboerbert.nl</a>
+                <a
+                    href="https://maps.google.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    📍 Heidelberglaan 15
+                </a>
+            </div>
+        </footer>
     </div>
-
     </>
   );
 }
