@@ -1,6 +1,7 @@
 import getDB from "@/app/api/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader, Connection, RowDataPacket } from "mysql2/promise";
+import { sendReservationEmail } from "@/app/api/lib/mailer";
 
 const allowedColumnsUserData = [
     "Woonplaats",
@@ -143,6 +144,23 @@ export async function POST(req: NextRequest) {
 
         //commit database changes if both executed correctly
         await db.commit();
+
+        // Send confirmation email to the guest
+        try {
+            await sendReservationEmail({
+                to: UserData.Email,
+                name: `${UserData.Voornaam} ${UserData.Achternaam}`,
+                spot: plekNummer,
+                peopleCount: Reservatie.AantalMensen,
+                arrivalDate: Reservatie.DatumAankomst,
+                departureDate: Reservatie.DatumVertrek,
+                reservationNumber: Reservatie.ReseveringsNr,
+                reservationToken: Reservatie.ReseveringsNr,
+            });
+        } catch (emailError) {
+            console.error("Failed to send confirmation email:", emailError);
+            // Don't fail the reservation if email fails
+        }
 
         return NextResponse.json({
             success: true,
