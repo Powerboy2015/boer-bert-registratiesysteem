@@ -4,7 +4,7 @@ import { RowDataPacket } from "mysql2";
 
 interface AvailablePlace extends RowDataPacket {
     ID: number;
-    Pleknummer: number;
+    PlekNummer: number;
     Grootte: string;
 }
 
@@ -24,6 +24,36 @@ export async function GET(req: NextRequest) {
         if (!datumAankomst || !datumVertrek) {
             return NextResponse.json(
                 { error: "Aankomst datum en vertrek datum zijn verplicht" },
+                { status: 400 }
+            );
+        }
+
+        const regdatum = /^\d{4}-\d{2}-\d{2}$/;
+        //checkt als gegeven datum correcte formaat gebruikt
+        if (!regdatum.test(datumAankomst) || !regdatum.test(datumVertrek)) {
+            return NextResponse.json(
+                { error: "Ongeldig datum formaat. Gebruik YYYY-MM-DD." },
+                { status: 400 }
+            );
+        }
+        
+        //ik zet ze voor de veiligheid om naar datumtijd formaat
+        const aankomst = new Date(datumAankomst);
+        const vertrek = new Date(datumVertrek);
+
+        //checkt als aankomst groter is dan vertrek of zelfde dag is
+        if (aankomst >= vertrek) {
+            return NextResponse.json(
+                { error: "Aankomst datum moet voor vertrek datum zijn. Mag ook niet op zelfde dag." },
+                { status: 400 }
+            );
+        }
+
+        //Checkt als de aankomst datum niet dezelfde dag is en al geweest is.
+        const vandaag = new Date();
+        if (aankomst < vandaag) {
+            return NextResponse.json(
+                { error: "Je kan niet meer boeken op deze datum (datum is al geweest/ je kan niet nog voor vandaag boeken)" }, //uh idk dit leest raar
                 { status: 400 }
             );
         }
