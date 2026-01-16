@@ -6,6 +6,7 @@ import de from "@/app/Images/de.jpg";
 import eng from "@/app/Images/eng.jpg";
 import nl from "@/app/Images/nl.jpg";
 import w3c from "@/app/Images/w3c.jpg";
+import home from "@/app/Images/house-door-fill.svg"
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
 
 {
@@ -37,16 +38,15 @@ export default function Reservering1() {
 
   return (
     <>
-      <div className="min-h-screen w-full text-[#2c2c2c] font-sans">
+      <div className="min-h-screen w-full text-[#2c2c2c] font-sans bg-[#FDF5D8]">
         <header className="shadow-xl w-full flex items-center h-auto justify-between p-4 bg-[#93DAB8] relative sticky top-0 z-50">
           <div className="flex items-center gap-3">
             <a href="http://localhost:3000/" title="knop naar home page">
               <div
-                className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50
+                className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50 md:block hidden
                transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${
-                  shrink ? "scale-60" : "scale-100"
-                }`}
+              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"
+                  }`}
               >
                 <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130">
                   <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125">
@@ -64,9 +64,13 @@ export default function Reservering1() {
             {/*big ahhhhh logo met gare ovalen enzo waar je op kan klikken om naar main page te gaan*/}
           </div>
           <div className="flex items-center pr-8 gap-6">
+            <a className="md:hidden" href="/">
+              <button><Image width={65}
+                height={65} src={home} alt="home" /></button>
+            </a>
             <button>
               <Image
-                alt="Dutch language"
+                alt="Nederlandse taal"
                 src={nl}
                 width={57}
                 height={57}
@@ -77,7 +81,7 @@ export default function Reservering1() {
 
             <button>
               <Image
-                alt="German language"
+                alt="deutsche sprache"
                 src={de}
                 width={57}
                 height={57}
@@ -101,19 +105,19 @@ export default function Reservering1() {
         </header>{" "}
         {/*header met wat dingen er in */}
         <div className="bg-[#FDF5D8]">
-          <div className="rounded-bl-[125px] overflow-hidden bg-[#FDF5D8]">
+          <div className="overflow-hidden bg-[#FDF5D8]">
             <section
-              className=" gap-6 p-6 items-center w-full h-100 bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply" /*yuhh de background staat stil hehe */
+              className=" gap-6 p-6 items-center w-full h-full bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply " /*yuhh de background staat stil hehe */
               style={{ backgroundImage: `url(${campinggestolen.src})` }}
             >
               <div>
-                <div className="mt-50 flex flex-row justify-center">
+                <div className="md:mt-50 flex md:flex-row flex-col justify-center ">
                   <select
                     onChange={(e) => {
                       localStorage.setItem("Plaats", e.target.value),
                         setPlaats(e.currentTarget.value);
                     }}
-                    className="text-center px-10 py-7 my-auto bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border rounded-l-[50]"
+                    className="text-center px-10 py-7 my-auto  bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border md:rounded-l-[50] block md:inline-block"
                   >
                     <option value="">Kies een plek</option>
                     <option value="Groot">Groot</option>
@@ -125,7 +129,7 @@ export default function Reservering1() {
                       localStorage.setItem("Personen", e.target.value),
                         setPersonen(e.currentTarget.value);
                     }}
-                    className="text-center px-10 py-7 my-auto bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border"
+                    className="text-center px-10 py-7 md:my-auto my-5 bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border"
                   >
                     <option value="">Aantal personen</option>
                     <option value="1">1</option>
@@ -138,7 +142,7 @@ export default function Reservering1() {
                     <option value="8">8</option>
                   </select>
 
-                  <div className="flex flex-row text-center px-10 py-7 bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border my-auto">
+                  <div className="md:flex md:flex-row text-center px-10 py-7 bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border my-auto">
                     <input
                       onChange={(e) => {
                         localStorage.setItem(
@@ -172,12 +176,12 @@ export default function Reservering1() {
                       rel="noopener noreferer"
                       href="/klanten/2"
                     >
-                      <button className="text-center px-15 py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] rounded-r-[50]">
+                      <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
                         Boeken
                       </button>
                     </a>
                   ) : (
-                    <button className="text-center px-15 py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] rounded-r-[50]">
+                    <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
                       Boeken
                     </button>
                   )}
@@ -189,7 +193,7 @@ export default function Reservering1() {
           </div>
         </div>{" "}
         {/*sectie met knopppen voor voorkeuren boekingen */}
-        <div className="bg-[#FDF5D8]">
+        <div className="bg-[#FDF5D8] md:block hidden">
           <section className="gap-6 p-2 h-130 items-center bg-[#FDF5D8] text-[#007248]">
             <div className="justify-items-stretch gap-4 items-center">
               <div className="grid grid-cols-1 md:grid-cols-3 justify-items-center gap-1 mt-20">
@@ -252,7 +256,7 @@ export default function Reservering1() {
         </div>{" "}
         {/*section met random info*/}
         <footer
-          className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between flex flex-row items-center"
+          className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between flex-row items-center md:flex hidden"
           style={{ fontFamily: "Roboto mono" }}
         >
           <a
