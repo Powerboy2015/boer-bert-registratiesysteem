@@ -57,8 +57,8 @@ export async function sendReservationEmail(params: {
     const encryptedToken = reservationToken
         ? encryptReservationToken(reservationToken)
         : encryptReservationToken(reservationNumber || to);
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const reservationLink = `${baseUrl}/annuleren?token=${encryptedToken}`;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost/annuleren";
+    const reservationLink = `${baseUrl}/?token=${encryptedToken}`;
 
     const lines = [
         "Hartelijk dank voor uw boeking.",

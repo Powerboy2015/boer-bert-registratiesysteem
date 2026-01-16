@@ -2,22 +2,12 @@
 import Image from "next/image";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 {/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */}
 export default function Reservering2() {
   const [shrink, setShrink] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [text, setText] = useState("");
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Get the token from URL parameters
-    const urlToken = searchParams.get('token');
-    if (urlToken) {
-      setToken(urlToken);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     let ticking = false;
