@@ -162,7 +162,11 @@ export default function Reservering1() {
                     ></input>
                   </div>
 
-                  {Plaats && Personen && DatumAankomst && DatumVertrek ? (
+                  {Plaats &&
+                  Personen &&
+                  DatumAankomst &&
+                  DatumVertrek &&
+                  DatumVertrek > DatumAankomst ? (
                     <a
                       title="klik her om datum en dagen te wijzigen"
                       rel="noopener noreferer"
