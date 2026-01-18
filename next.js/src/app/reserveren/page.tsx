@@ -170,7 +170,7 @@ export default function Reservering1() {
                     <a
                       title="klik her om datum en dagen te wijzigen"
                       rel="noopener noreferer"
-                      href="/klanten/2"
+                      href="/reserveren/plaats"
                     >
                       <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
                         Boeken

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { createPortal } from "react-dom";
-import { Reservering } from "../reserveringen/Widgets/Reserveringen";
+import { Reservering } from "../admin/reserveringen/Widgets/Reserveringen";
 import ReservationButtonComponent from "./ReservationButtonComponent";
 import { useRouter } from "next/navigation";
 import { Roboto, Roboto_Mono } from "next/font/google";

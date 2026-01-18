@@ -1,7 +1,7 @@
 "use client";
 import { FormEvent, useState } from "react";
 import { createPortal } from "react-dom";
-import { Reservering } from "../reserveringen/Widgets/Reserveringen";
+import { Reservering } from "../admin/reserveringen/Widgets/Reserveringen";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import EditFieldComponent from "./EditFieldComponent";
 import EditReservationButton from "./EditReservationButton";
