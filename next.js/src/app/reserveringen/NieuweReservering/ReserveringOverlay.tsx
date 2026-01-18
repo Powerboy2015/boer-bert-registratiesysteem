@@ -13,6 +13,7 @@ export default function ReserveringOverlay({
     const [telNr, setTelnr] = useState("");
     const [adres, setAdres] = useState("");
     const [email, setEmail] = useState("");
+    const [aantalPers,setAantalPers] = useState(0);
 
     const [DatumVertrek, setDatumVertrek] = useState("");
     const [DatumAankomst, setDatumAankomst] = useState("");
@@ -31,6 +32,7 @@ export default function ReserveringOverlay({
             DatumAankomst &&
             DatumVertrek &&
             plaats &&
+            aantalPers &&
             new Date(DatumAankomst) < new Date(DatumVertrek)
         ) {
             setErrorMessage(false);
@@ -49,7 +51,7 @@ export default function ReserveringOverlay({
                         DatumAankomst: DatumAankomst,
                         DatumVertrek: DatumVertrek,
                         ReserveringsDatum: "2025-12-14",
-                        AantalMensen: 0,
+                        AantalMensen: aantalPers,
                     },
                     Plek: {
                         PlekNummer: plaats,
@@ -73,6 +75,7 @@ export default function ReserveringOverlay({
                     setDatumAankomst("");
                     setPlaats(0);
                     setGereserveerdDatum("");
+                    setAantalPers(0)
                 })
                 .then(() => {
                     toggle();
@@ -204,6 +207,21 @@ export default function ReserveringOverlay({
                             <input
                                 onChange={(e) => setEmail(e.target.value)}
                                 type="text"
+                                className="bg-[#556483]"
+                            />
+                        </div>
+                                                <div className="flex flex-col m-2 ">
+                            <label
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                htmlFor="Naam"
+                            >
+                                Aanral personen:
+                            </label>
+                            <input
+                                onChange={(e) => setAantalPers(Number(e.target.value))}
+                                type="number"
+                                min={1}
+                                max={8}
                                 className="bg-[#556483]"
                             />
                         </div>
