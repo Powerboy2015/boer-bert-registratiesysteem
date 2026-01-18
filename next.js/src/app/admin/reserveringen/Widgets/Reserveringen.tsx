@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import Searchbar from "../Widgets/searchbar";
+import Searchbar from "./searchbar";
 import EditReservationModal from "@/app/ui/EditReservationModal";
 import ReserveringOverlay from "../NieuweReservering/ReserveringOverlay";
 import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
@@ -39,7 +39,7 @@ export default function Reserveringen() {
     >("ascending");
 
     const router = useRouter();
-    const goToReservation = (id: string) => router.push(`/reserveringen/${id}`);
+    const goToReservation = (id: string) => router.push(`/admin/reserveringen/${id}`);
 
     async function getAPI() {
         try {

@@ -1,11 +1,11 @@
 "use client";
 
-import SideBar from "../Sidebar/sidebar";
+import SideBar from "../../Sidebar/sidebar";
 import NieuweReserveringen from "./Widgets/NieuweReserveringen";
 import OpenstaandeReserveringen from "./Widgets/OpenstaandeReserveringen";
 import Capaciteit from "./Widgets/Capaciteit";
 import Reserveringen from "./Widgets/Reserveringen";
-import Searchbar from "@/app/reserveringen/Widgets/searchbar";
+import Searchbar from "@/app/admin/reserveringen/Widgets/searchbar";
 
 export default function reserveringen() {
     return (

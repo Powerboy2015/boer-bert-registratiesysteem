@@ -206,7 +206,7 @@ export default function Reservering2() {
                       <div></div>
                       <div className="my-auto mx-auto items-center text-center p-3 mr-10">
                         <a
-                          href="/reservering1"
+                          href="/reserveren"
                           title="knop naar reserverings pagina"
                         >
                           <button className="text-center px-15 py-7 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-xl font-semibold text-[#FDF5D8] rounded-xl">
@@ -306,7 +306,7 @@ export default function Reservering2() {
                           <button>
                             <a
                               className="shadow-xl px-10 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
-                              href="/klanten/afrekenen"
+                              href="/reserveren/afrekenen"
                               rel="noopener noreferer"
                             >
                               Boeken
