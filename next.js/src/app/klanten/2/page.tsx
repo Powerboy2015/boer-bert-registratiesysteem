@@ -197,7 +197,6 @@ export default function Reservering2() {
                                   {item.PlekNummer}
                                 </option>
                               ))}
-                              <option value="test">test</option>
                             </select>
                           </div>
                         </div>
