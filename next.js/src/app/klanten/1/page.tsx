@@ -18,6 +18,7 @@ export default function Reservering1() {
   const [DatumVertrek, setDatumVertrek] = useState<string>("");
   const [Plaats, setPlaats] = useState<string>("");
   const [Personen, setPersonen] = useState<string>("");
+  const [startDateError,setStartDateError] = useState<boolean>(false);
 
   useEffect(() => {
     let ticking = false;
@@ -148,12 +149,20 @@ export default function Reservering1() {
                         localStorage.setItem(
                           "DatumAankomst",
                           e.currentTarget.value
-                        ),
+                        );
+                          const inputDate = new Date(e.currentTarget.value);
+                          const today = new Date();
+                          if (today.getTime() > inputDate.getTime()) {
+                            setStartDateError(true);
+                          } else {
+                            setStartDateError(false);
+                          }
                           setDatumAankomst(e.currentTarget.value);
                       }}
                       type="date"
+                      className={startDateError ? "text-red-500" : ""}
                     ></input>
-                    <p className="mx-7 font-bold">tot</p>
+                    <p className="mx-7 font-bold ">tot</p>
                     <input
                       onChange={(e) => {
                         localStorage.setItem(
@@ -163,10 +172,10 @@ export default function Reservering1() {
                           setDatumVertrek(e.currentTarget.value);
                       }}
                       type="date"
-                    ></input>
+                ></input   >
                   </div>
 
-                  {Plaats && Personen && DatumAankomst && DatumVertrek ? (
+                  {Plaats && Personen && DatumAankomst && DatumVertrek && !startDateError ? (
                     <a
                       title="klik her om datum en dagen te wijzigen"
                       rel="noopener noreferer"
