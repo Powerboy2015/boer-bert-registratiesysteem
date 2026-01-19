@@ -45,33 +45,42 @@ export default function Reservering2() {
   async function sendData() {
     const url = "http://localhost/api/public/reserveren";
 
-    try {
-      fetch(url, {
-        method: "POST",
-        body: JSON.stringify({
-          UserData: {
-            Voornaam: voornaam,
-            Achternaam: achternaam,
-            Email: email,
-            Telefoonnummer: telNr,
-            Woonplaats: plaats,
-          },
-          Reservatie: {
-            ReseveringsNr: 2,
-            DatumAankomst: localStorage.getItem("DatumAankomst"),
-            DatumVertrek: localStorage.getItem("DatumVertrek"),
-            AantalMensen: localStorage.getItem("Personen"),
-          },
-          Plek: {
-            PlekNummer: localStorage.getItem("PlekNr"),
-          },
-        }),
-      });
-      if (voornaam && achternaam && telNr && email && plaats) {
-        window.location.href = "https://ideal.nl/";
+    if (
+      !!voornaam &&
+      !!achternaam &&
+      !!telNr &&
+      !!adres &&
+      !!email &&
+      !!plaats
+    ) {
+      try {
+        fetch(url, {
+          method: "POST",
+          body: JSON.stringify({
+            UserData: {
+              Voornaam: voornaam,
+              Achternaam: achternaam,
+              Email: email,
+              Telefoonnummer: telNr,
+              Woonplaats: plaats,
+            },
+            Reservatie: {
+              ReseveringsNr: 2,
+              DatumAankomst: localStorage.getItem("DatumAankomst"),
+              DatumVertrek: localStorage.getItem("DatumVertrek"),
+              AantalMensen: localStorage.getItem("Personen"),
+            },
+            Plek: {
+              PlekNummer: localStorage.getItem("PlekNr"),
+            },
+          }),
+        });
+        if (voornaam && achternaam && telNr && email && plaats) {
+          window.location.href = "https://ideal.nl/";
+        }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
     }
   }
 
@@ -358,6 +367,7 @@ export default function Reservering2() {
                               paddingLeft: "15px",
                               paddingRight: "15px",
                             }}
+                            type="email"
                           ></input>
                           <datalist id="ligging-in-het-park">
                             <option value="in de zon" />
