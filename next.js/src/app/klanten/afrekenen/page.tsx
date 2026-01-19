@@ -93,11 +93,10 @@ export default function Reservering2() {
               <div
                 className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50
                transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${
-                  shrink ? "scale-60" : "scale-100"
-                }`}
+              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"
+                  }`}
               >
-                <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130">
+                <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130 hidden md:block">
                   <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125">
                     <Image
                       alt="boerbert logo met gare ovalen enzo"
@@ -159,11 +158,11 @@ export default function Reservering2() {
         </div>{" "}
         {/*banner met camping foto */}
         <div className="bg-[#FDF5D8]">
-          <section className="bg-[#FDF5D8] text-black h-150 py-16">
+          <section className="bg-[#FDF5D8] text-black md:h-150 py-16">
             <div className="mx-auto w-full max-w-[1650px] px-6">
               <div className="gap-8 items-center justify-center flex flex-col lg:flex-row">
                 <div className="-translate-y-1/2 z-40">
-                  <div className=" bg-[#FFFFFF] rounded-xl shadow-xl overflow-hidden w-250 h-170">
+                  <div className=" bg-[#FFFFFF] rounded-xl shadow-xl md:overflow-hidden md:w-250 md:h-170 mt-20 md:mt-0">
                     <div
                       className="flex flex-col p-6 text-center text-justify text-lg font-medium my-auto mx-auto items-center"
                       style={{ fontFamily: "Roboto mono" }}
@@ -177,20 +176,7 @@ export default function Reservering2() {
                           <input
                             list="Naam klant"
                             onChange={(e) => setVoornaam(e.target.value)}
-                            style={{
-                              backgroundColor: "#FFFFFF",
-                              color: "#595959ff",
-                              padding: "px",
-                              borderRadius: "10px",
-                              border: "2px solid #ccc",
-                              fontSize: "22px",
-                              width: "580px",
-                              height: "50px",
-                              boxSizing: "border-box",
-                              fontFamily: "Roboto mono",
-                              paddingLeft: "15px",
-                              paddingRight: "15px",
-                            }}
+                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
                           ></input>
                           <datalist id="ligging-in-het-park">
                             <option value="in de zon" />
@@ -211,20 +197,7 @@ export default function Reservering2() {
                           <input
                             list="achternaam klant"
                             onChange={(e) => setAchternaam(e.target.value)}
-                            style={{
-                              backgroundColor: "#FFFFFF",
-                              color: "#595959ff",
-                              padding: "px",
-                              borderRadius: "10px",
-                              border: "2px solid #ccc",
-                              fontSize: "22px",
-                              width: "580px",
-                              height: "50px",
-                              boxSizing: "border-box",
-                              fontFamily: "Roboto mono",
-                              paddingLeft: "15px",
-                              paddingRight: "15px",
-                            }}
+                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
                           ></input>
                           <datalist id="ligging-in-het-park">
                             <option value="in de zon" />
@@ -245,20 +218,8 @@ export default function Reservering2() {
                           <input
                             list="Adres klant"
                             onChange={(e) => setAdres(e.target.value)}
-                            style={{
-                              backgroundColor: "#FFFFFF",
-                              color: "#595959ff",
-                              padding: "px",
-                              borderRadius: "10px",
-                              border: "2px solid #ccc",
-                              fontSize: "22px",
-                              width: "580px",
-                              height: "50px",
-                              boxSizing: "border-box",
-                              fontFamily: "Roboto mono",
-                              paddingLeft: "15px",
-                              paddingRight: "15px",
-                            }}
+                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
+
                           ></input>
                           <datalist id="ligging-in-het-park">
                             <option value="in de zon" />
@@ -272,7 +233,7 @@ export default function Reservering2() {
                       {/*adres */}
                     </div>
 
-                    <div className="flex flex-row justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
+                    <div className="flex flex-col md:flex-row justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
                       <div
                         className="text-xl"
                         style={{ fontFamily: "Roboto mono" }}
@@ -282,20 +243,7 @@ export default function Reservering2() {
                           <input
                             list="Telefoon klant"
                             onChange={(e) => setTelnr(e.target.value)}
-                            style={{
-                              backgroundColor: "#FFFFFF",
-                              color: "#595959ff",
-                              padding: "px",
-                              borderRadius: "10px",
-                              border: "2px solid #ccc",
-                              fontSize: "22px",
-                              width: "280px",
-                              height: "50px",
-                              boxSizing: "border-box",
-                              fontFamily: "Roboto mono",
-                              paddingLeft: "15px",
-                              paddingRight: "15px",
-                            }}
+                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
                           ></input>
                           <datalist id="ligging-in-het-park">
                             <option value="in de zon" />
@@ -316,20 +264,7 @@ export default function Reservering2() {
                           <input
                             list="Plaats klant"
                             onChange={(e) => setPlaats(e.target.value)}
-                            style={{
-                              backgroundColor: "#FFFFFF",
-                              color: "#595959ff",
-                              padding: "px",
-                              borderRadius: "10px",
-                              border: "2px solid #ccc",
-                              fontSize: "22px",
-                              width: "280px",
-                              height: "50px",
-                              boxSizing: "border-box",
-                              fontFamily: "Roboto mono",
-                              paddingLeft: "15px",
-                              paddingRight: "15px",
-                            }}
+                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280px] h-[50px] px-[15px]"
                           ></input>
                           <datalist id="ligging-in-het-park">
                             <option value="in de zon" />
@@ -343,7 +278,7 @@ export default function Reservering2() {
                       {/*plaats */}
                     </div>
 
-                    <div className="flex flex-row mb-7 justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
+                    <div className="flex md:flex-row flex-col mb-7 justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
                       <div
                         className="text-xl mt-5"
                         style={{ fontFamily: "Roboto mono" }}
@@ -353,20 +288,7 @@ export default function Reservering2() {
                           <input
                             list="Email klant"
                             onChange={(e) => setEmail(e.target.value)}
-                            style={{
-                              backgroundColor: "#FFFFFF",
-                              color: "#595959ff",
-                              padding: "px",
-                              borderRadius: "10px",
-                              border: "2px solid #ccc",
-                              fontSize: "22px",
-                              width: "280px",
-                              height: "50px",
-                              boxSizing: "border-box",
-                              fontFamily: "Roboto mono",
-                              paddingLeft: "15px",
-                              paddingRight: "15px",
-                            }}
+                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
                             type="email"
                           ></input>
                           <datalist id="ligging-in-het-park">
@@ -387,20 +309,7 @@ export default function Reservering2() {
                         <div className="mt-3">
                           <input
                             list="Postcode klant"
-                            style={{
-                              backgroundColor: "#FFFFFF",
-                              color: "#595959ff",
-                              padding: "px",
-                              borderRadius: "10px",
-                              border: "2px solid #ccc",
-                              fontSize: "22px",
-                              width: "280px",
-                              height: "50px",
-                              boxSizing: "border-box",
-                              fontFamily: "Roboto mono",
-                              paddingLeft: "15px",
-                              paddingRight: "15px",
-                            }}
+                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280] h-[50px] px-[15px]"
                           ></input>
                           <datalist id="ligging-in-het-park">
                             <option value="in de zon" />
@@ -434,7 +343,7 @@ export default function Reservering2() {
           </section>
         </div>
         <footer
-          className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between flex flex-row items-center"
+          className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between md:flex hidden flex-row items-center"
           style={{ fontFamily: "Roboto mono" }}
         >
           <a
