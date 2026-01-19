@@ -6,7 +6,7 @@ import de from "@/app/Images/de.jpg";
 import eng from "@/app/Images/eng.jpg";
 import nl from "@/app/Images/nl.jpg";
 import w3c from "@/app/Images/w3c.jpg";
-import home from "@/app/Images/house-door-fill.svg"
+import home from "@/app/Images/house-door-fill.svg";
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
 
 {
@@ -31,6 +31,10 @@ export default function Reservering1() {
         ticking = true;
       }
     };
+    setPlaats(localStorage.getItem("Plaats") ?? "");
+    setPersonen(localStorage.getItem("Personen") ?? "");
+    setDatumAankomst(localStorage.getItem("DatumAankomst") ?? "");
+    setDatumVertrek(localStorage.getItem("DatumVertrek") ?? "");
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -45,8 +49,9 @@ export default function Reservering1() {
               <div
                 className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50 md:block hidden
                transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"
-                  }`}
+              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${
+                  shrink ? "scale-60" : "scale-100"
+                }`}
               >
                 <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130">
                   <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125">
@@ -65,8 +70,9 @@ export default function Reservering1() {
           </div>
           <div className="flex items-center pr-8 gap-6">
             <a className="md:hidden" href="/">
-              <button><Image width={65}
-                height={65} src={home} alt="home" /></button>
+              <button>
+                <Image width={65} height={65} src={home} alt="home" />
+              </button>
             </a>
             <button>
               <Image
@@ -113,6 +119,7 @@ export default function Reservering1() {
               <div>
                 <div className="md:mt-50 flex md:flex-row flex-col justify-center ">
                   <select
+                    value={Plaats}
                     onChange={(e) => {
                       localStorage.setItem("Plaats", e.target.value),
                         setPlaats(e.currentTarget.value);
@@ -125,6 +132,7 @@ export default function Reservering1() {
                   </select>
 
                   <select
+                    value={Personen}
                     onChange={(e) => {
                       localStorage.setItem("Personen", e.target.value),
                         setPersonen(e.currentTarget.value);
@@ -144,6 +152,7 @@ export default function Reservering1() {
 
                   <div className="md:flex md:flex-row text-center px-10 py-7 bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border my-auto">
                     <input
+                      value={DatumAankomst}
                       onChange={(e) => {
                         localStorage.setItem(
                           "DatumAankomst",
@@ -155,6 +164,7 @@ export default function Reservering1() {
                     ></input>
                     <p className="mx-7 font-bold">tot</p>
                     <input
+                      value={DatumVertrek}
                       onChange={(e) => {
                         localStorage.setItem(
                           "DatumVertrek",
@@ -166,7 +176,12 @@ export default function Reservering1() {
                     ></input>
                   </div>
 
-                  {Plaats && Personen && DatumAankomst && DatumVertrek ? (
+                  {Plaats &&
+                  Personen &&
+                  DatumAankomst &&
+                  DatumVertrek &&
+                  DatumVertrek > DatumAankomst &&
+                  new Date(DatumAankomst) > new Date() ? (
                     <a
                       title="klik her om datum en dagen te wijzigen"
                       rel="noopener noreferer"
@@ -322,7 +337,7 @@ The 20 meter pacer test will begin in 30 seconds. Line up at the start.
 The running speed starts slowly but gets faster each minute after you hear this signal bodeboop.
 A sing lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible.
 The second time you fail to complete a lap before the sound, your test is over.
-The test will begin on the word start. On your mark. Get ready!… Start. ding﻿*/
+The test will begin on the word start. On your mark. Get ready!… Start. ding�*/
 }
 
 {
