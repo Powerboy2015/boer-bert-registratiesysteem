@@ -206,7 +206,7 @@ export async function DELETE(req: NextRequest) {
         const db = await getDB();
         //proper types
         const [result] = await db.execute<ResultSetHeader>(
-            "DELETE FROM Reservaties WHERE ReseveringsNr = ?",
+            "UPDATE Reservaties SET isArchived = true WHERE ReseveringsNr = ?",
             [id]
         );
 
