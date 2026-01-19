@@ -88,6 +88,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        
 
         const aankomst = new Date(Reservatie.DatumAankomst);
         const vertrek = new Date(Reservatie.DatumVertrek);
@@ -111,6 +112,23 @@ export async function POST(req: NextRequest) {
         if (Reservatie.AantalMensen < 1) {
             return NextResponse.json(
                 { error: "AantalMensen moet een positief getal zijn." },
+                { status: 400 }
+            );
+        }
+        
+        const [plaatsbezetcheck] = await db.execute<RowDataPacket[]>(
+            `
+            SELECT Plekken.PlekNummer, Reservaties.DatumAankomst, Reservaties.DatumVertrek 
+            FROM Reservaties 
+            INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID 
+            WHERE Reservaties.DatumAankomst <= ? 
+            AND Reservaties.DatumVertrek >= ?
+            AND Plekken.PlekNummer = ?
+            `, [vertrek, aankomst, Plek.PlekNummer]);
+            
+        if (plaatsbezetcheck.length != 0) {
+            return NextResponse.json(
+                { error: `Plaats is al bezet tijdens dit moment.`},
                 { status: 400 }
             );
         }

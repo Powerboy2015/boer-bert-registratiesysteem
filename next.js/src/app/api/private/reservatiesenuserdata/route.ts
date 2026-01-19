@@ -95,7 +95,7 @@ export async function GET(req: NextRequest) {
         //ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen
 
         //Sql query database execute
-        const [rows] = await db.execute(
+        const [rows]  = await db.execute(
             `select * from Reservaties 
             INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID
             INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID 
@@ -197,6 +197,23 @@ export async function POST(req: NextRequest) {
         if (Reservatie.AantalMensen < 1) {
             return NextResponse.json(
                 { error: "AantalMensen moet een positief getal zijn." },
+                { status: 400 }
+            );
+        }
+        
+        const [plaatsbezetcheck] = await db.execute<RowDataPacket[]>(
+            `
+            SELECT Plekken.PlekNummer, Reservaties.DatumAankomst, Reservaties.DatumVertrek 
+            FROM Reservaties 
+            INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID 
+            WHERE Reservaties.DatumAankomst <= ? 
+            AND Reservaties.DatumVertrek >= ?
+            AND Plekken.PlekNummer = ?
+            `, [vertrek, aankomst, Plek.PlekNummer]);
+
+        if (plaatsbezetcheck.length != 0) {
+            return NextResponse.json(
+                { error: `Plaats is al bezet tijdens dit moment.`},
                 { status: 400 }
             );
         }
