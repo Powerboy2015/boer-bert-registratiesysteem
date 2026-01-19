@@ -299,10 +299,10 @@ export default function Reserveringen() {
 
                                 <th
                                     className="text-left cursor-pointer select-none"
-                                    onClick={() => handleSort("eindDatum")}
+                                    onClick={() => handleSort("startDatum")}
                                 >
-                                    Eind datum{" "}
-                                    {sortKey === "eindDatum" &&
+                                    Start datum{" "}
+                                    {sortKey === "startDatum" &&
                                         (sortDirection === "ascending"
                                             ? "⇧"
                                             : "⇩")}
@@ -310,10 +310,10 @@ export default function Reserveringen() {
 
                                 <th
                                     className="text-left cursor-pointer select-none"
-                                    onClick={() => handleSort("startDatum")}
+                                    onClick={() => handleSort("eindDatum")}
                                 >
-                                    Start datum{" "}
-                                    {sortKey === "startDatum" &&
+                                    Eind datum{" "}
+                                    {sortKey === "eindDatum" &&
                                         (sortDirection === "ascending"
                                             ? "⇧"
                                             : "⇩")}
@@ -360,7 +360,7 @@ export default function Reserveringen() {
 
                                     <td>
                                         {new Date(
-                                            item.DatumVertrek
+                                            item.DatumAankomst
                                         ).toLocaleDateString(
                                             "nl-NL",
                                             dateSettings
@@ -369,7 +369,7 @@ export default function Reserveringen() {
 
                                     <td>
                                         {new Date(
-                                            item.DatumAankomst
+                                            item.DatumVertrek
                                         ).toLocaleDateString(
                                             "nl-NL",
                                             dateSettings
