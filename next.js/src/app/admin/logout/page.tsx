@@ -1,7 +1,7 @@
 export default function adminReserveringen() {
     return (
         <>
-            <h1 className="text-5xl">Reserveringen</h1>
+            <h1 className="text-5xl">Logout</h1>
         </>
     );
 }

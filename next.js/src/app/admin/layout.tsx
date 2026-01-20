@@ -1,19 +1,17 @@
 import "./whatthefuck.css";
-import MobileNavBar from "./components/mobileNavBar";
+import NavBar from "./components/NavBar";
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <>
-    <div id="content" className="bg-[#EDEBDE] w-full h-full flex flex-col md:flex-row">
-    <MobileNavBar/>
-    <main className="text-black">
-    {children}
-    </main>
-    </div>
-    </>
-  );
+    return (
+        <>
+            <div id="content" className="bg-[#EDEBDE] w-full h-full flex flex-col md:flex-row">
+                <NavBar />
+                <main className="text-black py-4">{children}</main>
+            </div>
+        </>
+    );
 }
