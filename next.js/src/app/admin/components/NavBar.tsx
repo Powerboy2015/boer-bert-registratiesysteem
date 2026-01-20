@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 import Separator from "./Separator";
 import { CalendarMonth, Logout } from "@mui/icons-material";
 
@@ -44,9 +45,8 @@ interface NavBarRouteProps {
 
 //Added here because it's only used in here like that.
 function NavBarRoute({ route, children }: NavBarRouteProps) {
-    const Currentroute = window.location.pathname;
-
-    const showSelected = Currentroute == route;
+    const pathname = usePathname();
+    const showSelected = pathname === route;
     return (
         <span id="Reservation-Icon" className="w-full flex justify-center relative">
             <span
