@@ -207,7 +207,7 @@ export default function Reservering2() {
                                 if (Plaats === "Groot")
                                   return item.Grootte === "G";
                                 if (Plaats === "Klein")
-                                  return item.Grootte === "N";
+                                  return item.Grootte === "K";
                                 return false; // niks tonen als Plaats leeg of onbekend
                               }).map((item) => (
                                 <option key={item.ID} value={item.ID}>
@@ -301,7 +301,6 @@ export default function Reservering2() {
                             </div>
                           </div>
                         </div>
-
 
 
                         <div title="box met totaal prijs" className="flex">
