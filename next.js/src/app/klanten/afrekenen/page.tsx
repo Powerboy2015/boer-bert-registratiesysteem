@@ -65,10 +65,10 @@ export default function Reservering2() {
               Woonplaats: plaats,
             },
             Reservatie: {
-              ReseveringsNr: 2,
               DatumAankomst: localStorage.getItem("DatumAankomst"),
               DatumVertrek: localStorage.getItem("DatumVertrek"),
               AantalMensen: localStorage.getItem("Personen"),
+              Prijs: localStorage.getItem("price")
             },
             Plek: {
               PlekNummer: localStorage.getItem("PlekNr"),
