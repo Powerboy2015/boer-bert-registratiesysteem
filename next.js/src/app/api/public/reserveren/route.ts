@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
             { status: 400 }
             );
         }
-        if (!Reservatie.ReseveringsNr ||!Reservatie.DatumAankomst ||!Reservatie.DatumVertrek ||!Reservatie.ReserveringsDatum ||!Reservatie.AantalMensen) {
+        if (!Reservatie.DatumAankomst ||!Reservatie.DatumVertrek ||!Reservatie.AantalMensen) {
             return NextResponse.json(
             { error: "Je mist een iets in reservatie body" },
             { status: 400 }
