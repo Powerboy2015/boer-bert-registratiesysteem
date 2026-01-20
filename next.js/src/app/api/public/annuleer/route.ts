@@ -7,6 +7,7 @@ import { ResultSetHeader } from "mysql2/promise";
  * POST endpoint to cancel a reservation using an encrypted token
  * The token should contain the reservation number
  * This ensures only the person with the link can cancel the reservation
+ * Archives the reservation by setting isArchived=true instead of deleting
  */
 export async function POST(req: NextRequest) {
     try {
@@ -33,9 +34,9 @@ export async function POST(req: NextRequest) {
 
         const db = await getDB();
 
-        // Verify the reservation exists and get its details
+        // Verify the reservation exists and is not already archived
         const [reservation] = await db.execute(
-            `SELECT ID, ReseveringsNr, UserData_ID FROM Reservaties WHERE ReseveringsNr = ?`,
+            `SELECT ID, ReseveringsNr, isArchived FROM Reservaties WHERE ReseveringsNr = ?`,
             [reservationNumber]
         );
 
@@ -46,44 +47,32 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const reservatieId = reservation[0].ID;
-        const userDataId = reservation[0].UserData_ID;
-
-        // Begin transaction for safe deletion
-        await db.beginTransaction();
-
-        try {
-            // Delete the reservation
-            const [deleteReservationResult] = await db.execute<ResultSetHeader>(
-                `DELETE FROM Reservaties WHERE ID = ?`,
-                [reservatieId]
+        // Check if already archived
+        if (reservation[0].isArchived) {
+            return NextResponse.json(
+                { error: "Deze reservering is al geannuleerd" },
+                { status: 400 }
             );
-
-            if (deleteReservationResult.affectedRows === 0) {
-                await db.rollback();
-                return NextResponse.json(
-                    { error: "Fout bij verwijderen reservatie" },
-                    { status: 500 }
-                );
-            }
-
-            // Delete the associated user data
-            const [deleteUserDataResult] = await db.execute<ResultSetHeader>(
-                `DELETE FROM UserData WHERE ID = ?`,
-                [userDataId]
-            );
-
-            await db.commit();
-
-            return NextResponse.json({
-                success: true,
-                message: "Uw reservering is succesvol geannuleerd",
-                reservationNumber,
-            });
-        } catch (transactionError) {
-            await db.rollback();
-            throw transactionError;
         }
+
+        // Archive the reservation instead of deleting it
+        const [archiveResult] = await db.execute<ResultSetHeader>(
+            `UPDATE Reservaties SET isArchived = true WHERE ReseveringsNr = ?`,
+            [reservationNumber]
+        );
+
+        if (archiveResult.affectedRows === 0) {
+            return NextResponse.json(
+                { error: "Fout bij annuleren reservatie" },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json({
+            success: true,
+            message: "Uw reservering is succesvol geannuleerd",
+            reservationNumber,
+        });
     } catch (err) {
         return NextResponse.json(
             {
