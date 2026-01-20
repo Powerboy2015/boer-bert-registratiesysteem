@@ -34,6 +34,8 @@ export default function Reservering2() {
   const [Personen, setPersonen] = useState<string>("");
   const [ApiResult, setApiResult] = useState<Accomodatie[]>([]);
   const [PlekNr, setPlekNr] = useState<string>("");
+  const [jaarAankomst, maandAankomst, dagAankomst] = DatumAankomst.split("-");
+  const [jaarVertrek, maandVertrek, dagVertrek] = DatumVertrek.split("-");
 
   useEffect(() => {
     let ticking = false;
@@ -271,9 +273,11 @@ export default function Reservering2() {
                             className="text-[18px] text-[#909090ff] text-justify mt-3 border-l-3 border-[#ccc] p-2"
                             style={{ fontFamily: "Roboto mono" }}
                           >
-                            Aankomstdatum: {DatumAankomst}
+                            Aankomstdatum:{" "}
+                            {`${dagAankomst}-${maandAankomst}-${jaarAankomst}`}
                             <br />
-                            Vertrekdatum: {DatumVertrek}
+                            Vertrekdatum:{" "}
+                            {`${dagVertrek}-${maandVertrek}-${jaarVertrek}`}
                           </p>
                           <a
                             title="klik her om datum en dagen te wijzigen"
