@@ -1,7 +1,7 @@
 import getDB from "@/app/api/lib/db";
 import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
-import { NextRequest, NextResponse } from "next/server";
-import { ResultSetHeader } from "mysql2/promise";
+import { NextRequest, NextResponse} from "next/server";
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 //allowed columns that can be given from the front end
 const allowedColumnsUserData = [
@@ -297,7 +297,7 @@ export async function PUT(req: NextRequest) {
         const db = await getDB();
 
         const plekNummer = Plek.PlekNummer;
-        const [plek] = await db.execute(
+        const [plek] = await db.execute<RowDataPacket[]>(
             `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
             [plekNummer]
         );
