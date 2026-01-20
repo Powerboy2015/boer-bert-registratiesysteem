@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { encryptReservationToken } from "./encryption";
 
 function getTransporter() {
     const user = process.env.GMAIL_USER || "testboerbert@gmail.com";
@@ -28,6 +29,7 @@ export async function sendReservationEmail(params: {
     arrivalDate: string;
     departureDate: string;
     reservationNumber?: string;
+    reservationToken?: string;
 }) {
     const {
         to,
@@ -38,6 +40,7 @@ export async function sendReservationEmail(params: {
         arrivalDate,
         departureDate,
         reservationNumber,
+        reservationToken,
     } = params;
     if (!to) throw new Error("Recipient email (to) is required");
     const transporter = getTransporter();
@@ -50,6 +53,12 @@ export async function sendReservationEmail(params: {
     const reservationText = reservationNumber
         ? `Reserveringsnummer: ${reservationNumber}`
         : "Reserveringsnummer: ";
+
+    const encryptedToken = reservationToken
+        ? encryptReservationToken(reservationToken)
+        : encryptReservationToken(reservationNumber || to);
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost/annuleren";
+    const reservationLink = `${baseUrl}/?token=${encryptedToken}`;
 
     const lines = [
         "Hartelijk dank voor uw boeking.",
@@ -64,6 +73,8 @@ export async function sendReservationEmail(params: {
         "",
         "U dient zich bij aankomst te melden bij de receptie tussen 8:00 en 12:00.",
         "📍 Heidelberglaan 15, 3584 CS",
+        "",
+        `Uw reservering bekijken: ${reservationLink}`,
         "",
         "Mocht er iets niet kloppen en/of wilt u iets wijzigen, neem dan contact met ons op door te antwoorden op deze E-mail.",
         "Met vriendelijke groet,",
