@@ -1,69 +1,19 @@
 "use client";
 import Image from "next/image";
-import logo from "@/app/Images/logo.jpg";
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
 import boerbert2 from "@/app/Images/boerbert2.jpg";
 import camping6 from "@/app/Images/camping6.jpg";
 import camping5 from "@/app/Images/camping5.jpg";
 import boerderij from "@/app/Images/boerderij.jpeg";
 import React from 'react';
-import { useState, useEffect } from "react";
+import Header from "@/app/ui/Header"
+import Footer from "@/app/ui/Footer"
 {/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */}
 export default function Home() {
-    const [shrink, setShrink] = useState(false);
-
-  useEffect(() => {
-  let ticking = false;
-
-  const handleScroll = () => {
-    if (!ticking) {
-      window.requestAnimationFrame(() => {
-        setShrink(window.scrollY > 20);
-        ticking = false;
-      });
-      ticking = true;
-    }
-  };
-
-  window.addEventListener("scroll", handleScroll);
-  return () => window.removeEventListener("scroll", handleScroll);
-}, []);
-
   return (
     <>
     <div className="font-sans text-[#2c2c2c]">
-        <header
-            className="sticky top-0 z-50 relative bg-[#93DAB8] shadow-lg justify-start flex items-center sm:px-4 min-h-[70px] sm:min-h-[100px] md:min-h-[130px]">
-            <div
-                className={`relative transition-all duration-300
-                ${shrink ? "scale-[1.4] sm:scale-[1.7] md:scale-[2.1]" : "scale-[1.6] sm:scale-[2] md:scale-[2.6]"}
-                `}
-            >
-                <div className="bg-[#007248] rounded-[50%] w-[130px] h-[75px] items-center justify-center shadow-lg block">
-                    <div className="bg-[#FDF5D8] rounded-[50%] w-[125px] h-[67px] mt-2 mr-1 flex items-center justify-center">
-                        <div className="relative w-[60px] h-[60px]">
-                            <Image
-                                src={logo}
-                                alt="Boer Bert Logo"
-                                fill
-                                className="object-cover rounded-full"
-                                priority
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex gap-3 sm:gap-6 pl-16 sm:pl-26 md:pl-32">
-                <a href="homepage.tsx">
-                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">Home</button>
-                </a>
-                <a href="reservering1.tsx">
-                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">Reserveren</button>
-                </a>
-            </div>
-        </header>
-
+        <Header/>
     <section className="bg-[#007248]">
         <div
             className="min-h-screen flex flex-col justify-center items-center text-center
@@ -84,7 +34,7 @@ export default function Home() {
     </section>
 
     <section className="bg-[#FDF5D8]">
-            <div className="bg-[#007248] text-[#FDF5D8] py-16 px-6 rounded-bl-[180px] xl:rounded-bl-[240px] 2xl:rounded-bl-[500px] overflow-hidden">
+            <div className="bg-[#007248] text-[#FDF5D8] py-20 px-6 rounded-bl-[180px] xl:rounded-bl-[240px] 2xl:rounded-bl-[500px] overflow-hidden">
                 <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-14">
                     <div className="hidden lg:flex justify-center shrink-0">
                         <div className="bg-[#FDF5D8] rounded-[50%] w-[420px] h-[260px] flex items-center justify-center"> {/*Beige Ovaal, is nu even groot als de foto*/}
@@ -117,7 +67,7 @@ export default function Home() {
         {/*section met leuk verhaal van boer bert over de camping */}
 <section className="bg-[#007248]">
     <div style={{ backgroundImage: `url(${campinggestolen.src})` }} className="bg-cover bg-center bg-fixed bg-black/60 bg-blend-multiply rounded-tr-[180px] xl:rounded-tr-[240px] 2xl:rounded-tr-[500px] overflow-hidden">
-        <div className="bg-[#FDF5D8] py-16 px-6 rounded-bl-[180px] xl:rounded-bl-[240px] 2xl:rounded-bl-[500px] overflow-hidden rounded-tr-[180px] xl:rounded-tr-[240px] 2xl:rounded-tr-[500px]">
+        <div className="bg-[#FDF5D8] py-20 px-6 rounded-bl-[180px] xl:rounded-bl-[240px] 2xl:rounded-bl-[500px] overflow-hidden rounded-tr-[180px] xl:rounded-tr-[240px] 2xl:rounded-tr-[500px]">
             <div className="max-w-6xl mx-auto flex flex-col-reverse lg:flex-row items-center gap-10">
                 <div className="max-w-xl text-center lg:text-left">
                     <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#007248]">
@@ -254,20 +204,7 @@ export default function Home() {
           </div> 
         </div>
       </div> {/*section met nieuws en andere onzin */}
-
-        <footer className="bg-[#93DAB8] py-8 px-6">
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-6 justify-between text-lg">
-                <a href="tel:+31642741016">📞 +31 123456789</a>
-                <a href="mailto:info@campingboerbert.nl">📧 info@campingboerbert.nl</a>
-                <a
-                    href="https://maps.google.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    📍 Heidelberglaan 15
-                </a>
-            </div>
-        </footer>
+        <Footer/>
     </div>
     </>
   );
