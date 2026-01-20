@@ -69,6 +69,19 @@ export default function Reservering2() {
     fetchAPI();
   }, []);
 
+  let date1 = new Date(DatumAankomst);
+  let date2 = new Date(DatumVertrek);
+
+  // Convert dates to UTC timestamps
+  let utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+  let utc2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+
+  // Calculate the time difference in milliseconds
+  let timeDiff = Math.abs(utc2 - utc1);
+
+  // Convert milliseconds to days
+  let daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
   return (
     <>
       <div className="min-h-screen w-full text-[#2c2c2c] font-sans">
@@ -164,23 +177,35 @@ export default function Reservering2() {
                         />
                       </a>
                       <p
-                        className="text-lg mt-5 place-content-center"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        Je kunt je gewenste accommodatienummer selecteren.
+                        className="text-lg p-8 mt-5 place-content-center"
+                        style={{ fontFamily: "Roboto mono" }}>
+                        Je kunt je gewenste ligging in het park selecteren.
                       </p>
                     </div>
 
                     <div className="flex flex-row mx-auto my-auto items-center justify-center">
                       <div className="p-3 mx-auto my-auto">
+
                         <div
                           className="text-xl text-justify m-10 mt-3"
                           style={{ fontFamily: "Roboto mono" }}
                         >
                           Accomodatienummer:
-                          <div className="mt-3 h-50">
+                          <div className="mt-3 h-auto">
                             <select
-                              className="w-100 border-2 "
+                              style={{
+                                backgroundColor: "#FFFFFF",
+                                color: "#595959ff",
+                                borderRadius: "10px",
+                                border: "2px solid #ccc",
+                                fontSize: "22px",
+                                width: "600px",
+                                height: "50px",
+                                boxSizing: "border-box",
+                                fontFamily: "Roboto mono",
+                                paddingLeft: "15px",
+                                paddingRight: "15px",
+                              }}
                               size={6}
                               id="accomodatie-nummers"
                               onChange={(e) => {
@@ -203,18 +228,7 @@ export default function Reservering2() {
                         </div>
                       </div>{" "}
                       {/*input velden voor ligging en accomodatie nummer*/}
-                      <div></div>
-                      <div className="my-auto mx-auto items-center text-center p-3 mr-10">
-                        <a
-                          href="/reservering1"
-                          title="knop naar reserverings pagina"
-                        >
-                          <button className="text-center px-15 py-7 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-xl font-semibold text-[#FDF5D8] rounded-xl">
-                            Terug naar reservering bewerken
-                          </button>
-                        </a>
-                      </div>{" "}
-                      {/*knop om terug naar reservering bewerken te gaan*/}
+            
                     </div>
                   </div>
                 </div>{" "}
@@ -276,10 +290,26 @@ export default function Reservering2() {
                         <div title="box met soort plaats en prijs">
                           <div title="soort plaats">
                             <p className="text-[18px] font-bold mt-5">
+                              Selecteer plek nummer
+                            </p>
+                            <div className="flex">
+                              <div className="text-[18px] text-left ml auto">
+                                <p>{Plaats || "Plek nummer :"}</p>
+                              </div>
+                              <p className="text-[18px] text-right ml-auto font-bold">
+                                <strong>{PlekNr || "—"}</strong>
+                              </p>
+                            </div>
+                          </div>
+                        </div> {/*box met soort plaats en prijs */}
+
+                        <div title="box met soort plaats en prijs">
+                          <div title="soort plaats">
+                            <p className="text-[18px] font-bold mt-5">
                               {Plaats}
                             </p>
                             <div className="flex">
-                              <p className="text-[18px] text-left ml auto">
+                              <p className="text-[18px] font-bold text-left ml auto">
                                 Accomodatie
                               </p>
                               <p className="text-[18px] text-right ml-auto font-bold">
@@ -290,12 +320,27 @@ export default function Reservering2() {
                             </div>
                           </div>
                         </div>
+
+                        <div title="box met info en prijs extra kosten"
+                          className="border-b-1 pb-4">
+                          <div>
+                            <p className="text-[18px] font-bold mt-3">
+                              Extra kosten
+                            </p>
+                            <div className="flex">
+                              <p className="text-[18px] text-left ml auto">gekozen ligging</p>
+                              <p className="text-[18px] text-right ml-auto font-bold">€300</p>
+                            </div>
+                          </div>
+                        </div>
+
                         <div title="box met totaal prijs" className="flex">
                           <p className="text-[20px] text-left font-bold mt-5">
                             Totaal
                           </p>
                           <p className="text-[18px] text-right font-bold mt-5 ml-auto">
-                            € --
+                            €
+                            {Plaats === "Groot" ? 30 * daysDiff : 20 * daysDiff}
                           </p>
                         </div>
 
