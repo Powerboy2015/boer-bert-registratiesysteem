@@ -34,8 +34,6 @@ export default function Reservering2() {
   const [Personen, setPersonen] = useState<string>("");
   const [ApiResult, setApiResult] = useState<Accomodatie[]>([]);
   const [PlekNr, setPlekNr] = useState<string>("");
-  const [jaarAankomst, maandAankomst, dagAankomst] = DatumAankomst.split("-");
-  const [jaarVertrek, maandVertrek, dagVertrek] = DatumVertrek.split("-");
 
   useEffect(() => {
     let ticking = false;
@@ -179,14 +177,44 @@ export default function Reservering2() {
                         />
                       </a>
                       <p
-                        className="text-lg p-8 mt-5 place-content-center"
+                        className="text-lg mt-5 place-content-center"
                         style={{ fontFamily: "Roboto mono" }}>
-                        Je kunt je gewenste ligging in het park selecteren.
+                        Je kunt je gewenste ligging in het park of een accommodatienummer selecteren.
                       </p>
                     </div>
 
                     <div className="flex flex-row mx-auto my-auto items-center justify-center">
                       <div className="p-3 mx-auto my-auto">
+
+                        <div className="text-xl text-justify m-10 mt-6" style={{ fontFamily: "Roboto mono" }}>
+                          Gewenste ligging in het park:
+                          <div className="mt-3">
+                            <input
+                              list="ligging-in-het-park"
+                              placeholder="kies hier uw gewenste ligging"
+                              style={{
+                              backgroundColor: "#FFFFFF",   
+                              color: "#595959ff",
+                              padding: "px",
+                              borderRadius: "10px",
+                              border: "2px solid #ccc",
+                              fontSize: "22px",
+                              width: "600px",
+                              height: "50px",
+                              boxSizing: "border-box",
+                              fontFamily: "Roboto mono",
+                              paddingLeft: "15px",
+                              paddingRight: "15px",
+                            }}></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon"/>
+                              <option value="in de schaduw"/>
+                              <option value="bij het water"/>
+                              <option value="vlakbij de ingang"/>
+                              <option value="langs de hoodfweg"/>
+                            </datalist> 
+                          </div>
+                        </div> {/*input veld voor ligging in het park*/}
 
                         <div
                           className="text-xl text-justify m-10 mt-3"
@@ -230,7 +258,16 @@ export default function Reservering2() {
                         </div>
                       </div>{" "}
                       {/*input velden voor ligging en accomodatie nummer*/}
-            
+                      <div></div>
+                      <div className="my-auto mx-auto items-center text-center p-3 mr-10">
+                        <a
+                          href="/reservering1"
+                          title="knop naar reserverings pagina"
+                        >
+                    
+                        </a>
+                      </div>{" "}
+                      {/*knop om terug naar reservering bewerken te gaan*/}
                     </div>
                   </div>
                 </div>{" "}
@@ -274,11 +311,9 @@ export default function Reservering2() {
                             className="text-[18px] text-[#909090ff] text-justify mt-3 border-l-3 border-[#ccc] p-2"
                             style={{ fontFamily: "Roboto mono" }}
                           >
-                            Aankomstdatum:{" "}
-                            {`${dagAankomst}-${maandAankomst}-${jaarAankomst}`}
+                            Aankomstdatum: {DatumAankomst}
                             <br />
-                            Vertrekdatum:{" "}
-                            {`${dagVertrek}-${maandVertrek}-${jaarVertrek}`}
+                            Vertrekdatum: {DatumVertrek}
                           </p>
                           <a
                             title="klik her om datum en dagen te wijzigen"
@@ -297,11 +332,11 @@ export default function Reservering2() {
                               Selecteer plek nummer
                             </p>
                             <div className="flex">
-                              <div className="text-[18px] text-left ml auto">
-                                <p>{Plaats || "Plek nummer :"}</p>
-                              </div>
+                              <p className="text-[18px] text-left ml auto">
+                                Plek nummer : 
+                              </p>
                               <p className="text-[18px] text-right ml-auto font-bold">
-                                <strong>{PlekNr || "—"}</strong>
+                                
                               </p>
                             </div>
                           </div>
