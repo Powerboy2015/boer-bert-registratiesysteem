@@ -13,6 +13,7 @@ export default function ReserveringOverlay({
     const [telNr, setTelnr] = useState("");
     const [adres, setAdres] = useState("");
     const [email, setEmail] = useState("");
+    const [aantalPers,setAantalPers] = useState(0);
 
     const [DatumVertrek, setDatumVertrek] = useState("");
     const [DatumAankomst, setDatumAankomst] = useState("");
@@ -31,6 +32,7 @@ export default function ReserveringOverlay({
             DatumAankomst &&
             DatumVertrek &&
             plaats &&
+            aantalPers &&
             new Date(DatumAankomst) < new Date(DatumVertrek)
         ) {
             setErrorMessage(false);
@@ -45,11 +47,11 @@ export default function ReserveringOverlay({
                         Woonplaats: adres,
                     },
                     Reservatie: {
-                        ReseveringsNr: "2025-1", //FIXME dynamic reserverings nummer
+                        ReseveringsNr: "2025-1",
                         DatumAankomst: DatumAankomst,
                         DatumVertrek: DatumVertrek,
                         ReserveringsDatum: "2025-12-14",
-                        AantalMensen: 0,
+                        AantalMensen: aantalPers,
                     },
                     Plek: {
                         PlekNummer: plaats,
@@ -73,6 +75,7 @@ export default function ReserveringOverlay({
                     setDatumAankomst("");
                     setPlaats(0);
                     setGereserveerdDatum("");
+                    setAantalPers(0)
                 })
                 .then(() => {
                     toggle();
@@ -86,7 +89,7 @@ export default function ReserveringOverlay({
     return (
         <>
             <div className="fixed flex h-full w-full left-0 justify-center items-center bg-gray-500/90">
-                <div className="bg-[#2E3038] h-1/2 w-1/2 grid relative min-w-fit min-h-fit p-10">
+                <div className="bg-[#2E3038] h-3/4 w-3/4 grid relative min-w-fit min-h-fit p-10">
                     <button
                         className="absolute top-4 right-4"
                         onClick={() => toggle()}
@@ -96,7 +99,7 @@ export default function ReserveringOverlay({
                     <div className="grid justify-center grid-cols-2 text-white">
                         <div className="flex flex-col m-2 ">
                             <label
-                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[16px]"
                                 htmlFor="Start datum"
                             >
                                 Aankomst datum
@@ -106,12 +109,12 @@ export default function ReserveringOverlay({
                                     setDatumAankomst(e.target.value)
                                 }
                                 type="date"
-                                className="bg-[#556483] "
+                                className="bg-[#556483] text-2xl"
                             />
                         </div>
                         <div className="flex flex-col m-2 ">
                             <label
-                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[16px]"
                                 htmlFor="Plaats"
                             >
                                 Plaats
@@ -121,12 +124,12 @@ export default function ReserveringOverlay({
                                     setPlaats(Number(e.target.value))
                                 }
                                 type="number"
-                                className="bg-[#556483]"
+                                className="bg-[#556483] text-2xl"
                             />
                         </div>
                         <div className="flex flex-col m-2 ">
                             <label
-                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[16px]"
                                 htmlFor="Eind datum"
                             >
                                 Vertrek datum
@@ -136,14 +139,14 @@ export default function ReserveringOverlay({
                                     setDatumVertrek(e.target.value)
                                 }
                                 type="date"
-                                className="bg-[#556483]"
+                                className="bg-[#556483] text-2xl"
                             />
                         </div>
                     </div>
                     <div className="grid justify-center grid-cols-2 text-white">
                         <div className="flex flex-col m-2 ">
                             <label
-                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[16px]"
                                 htmlFor="Naam"
                             >
                                 Voornaam:
@@ -151,12 +154,12 @@ export default function ReserveringOverlay({
                             <input
                                 onChange={(e) => setVoornaam(e.target.value)}
                                 type="text"
-                                className="bg-[#556483]"
+                                className="bg-[#556483] text-2xl"
                             />
                         </div>
                         <div className="flex flex-col m-2 ">
                             <label
-                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[16px]"
                                 htmlFor="Naam"
                             >
                                 Achternaam:
@@ -164,13 +167,13 @@ export default function ReserveringOverlay({
                             <input
                                 onChange={(e) => setAchternaam(e.target.value)}
                                 type="text"
-                                className="bg-[#556483]"
+                                className="bg-[#556483] text-2xl"
                             />
                         </div>
 
                         <div className="flex flex-col m-2 ">
                             <label
-                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[16px]"
                                 htmlFor="Naam"
                             >
                                 TelNr:
@@ -178,12 +181,12 @@ export default function ReserveringOverlay({
                             <input
                                 onChange={(e) => setTelnr(e.target.value)}
                                 type="text"
-                                className="bg-[#556483]"
+                                className="bg-[#556483] text-2xl"
                             />
                         </div>
                         <div className="flex flex-col m-2 ">
                             <label
-                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[16px]"
                                 htmlFor="Naam"
                             >
                                 Adres:
@@ -191,12 +194,12 @@ export default function ReserveringOverlay({
                             <input
                                 onChange={(e) => setAdres(e.target.value)}
                                 type="text"
-                                className="bg-[#556483]"
+                                className="bg-[#556483] text-2xl"
                             />
                         </div>
                         <div className="flex flex-col m-2 ">
                             <label
-                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[16px]"
                                 htmlFor="Naam"
                             >
                                 email:
@@ -204,6 +207,21 @@ export default function ReserveringOverlay({
                             <input
                                 onChange={(e) => setEmail(e.target.value)}
                                 type="text"
+                                className="bg-[#556483] text-2xl"
+                            />
+                        </div>
+                                                <div className="flex flex-col m-2 ">
+                            <label
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
+                                htmlFor="Naam"
+                            >
+                                Aanral personen:
+                            </label>
+                            <input
+                                onChange={(e) => setAantalPers(Number(e.target.value))}
+                                type="number"
+                                min={1}
+                                max={8}
                                 className="bg-[#556483]"
                             />
                         </div>

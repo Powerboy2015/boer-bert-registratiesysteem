@@ -1,7 +1,7 @@
 import getDB from "@/app/api/lib/db";
 import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
-import { NextRequest, NextResponse } from "next/server";
-import { ResultSetHeader } from "mysql2/promise";
+import { NextRequest, NextResponse} from "next/server";
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 //allowed columns that can be given from the front end
 const allowedColumnsUserData = [
@@ -206,7 +206,7 @@ export async function DELETE(req: NextRequest) {
         const db = await getDB();
         //proper types
         const [result] = await db.execute<ResultSetHeader>(
-            "DELETE FROM Reservaties WHERE ReseveringsNr = ?",
+            "UPDATE Reservaties SET isArchived = true WHERE ReseveringsNr = ?",
             [id]
         );
 
@@ -235,16 +235,30 @@ export async function PUT(req: NextRequest) {
     try {
         const searchParams = req.nextUrl.searchParams;
         const id = searchParams.get("id");
-        //checks if ID is a number and is also vaild, else give error
-        // if (!id || isNaN(Number(id))) {
-        //     return NextResponse.json(
-        //         { error: "Geen geldige ID opgegeven" },
-        //         { status: 400 }
-        //     );
-        // }
 
         const body: ReservatieAndPlekBody = await req.json();
         const { Reservatie, Plek } = body;
+
+        if (!id) {
+            return NextResponse.json(
+                { error: "Reserverings ID ontbreekt" },
+                { status: 400 }
+            );
+        }
+
+        if (!Reservatie.ReseveringsNr ||!Reservatie.DatumAankomst ||!Reservatie.DatumVertrek ||!Reservatie.ReserveringsDatum) {
+            return NextResponse.json(
+            { error: "Je mist een iets in reservatie body" },
+            { status: 400 }
+            );
+        }
+
+        if (!Plek.PlekNummer) {
+            return NextResponse.json(
+            { error: "Je mist een iets in plek body" },
+            { status: 400 }
+            );
+        }
 
         //gets the keys and values from the body
         const keys = Object.keys(Reservatie);
@@ -262,10 +276,28 @@ export async function PUT(req: NextRequest) {
             );
         }
 
+        const aankomst = new Date(Reservatie.DatumAankomst);
+        const vertrek = new Date(Reservatie.DatumVertrek);
+
+        const regdatum = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regdatum.test(Reservatie.DatumAankomst) || !regdatum.test(Reservatie.DatumVertrek)) {
+            return NextResponse.json(
+                { error: "Datums moeten in formaat YYYY-MM-DD zijn." },
+                { status: 400 }
+            );
+        }
+
+        if (aankomst >= vertrek) {
+            return NextResponse.json(
+                { error: "Aankomst datum moet voor vertrek datum zijn. Mag ook niet op zelfde dag." },
+                { status: 400 }
+            );
+        }
+
         const db = await getDB();
 
         const plekNummer = Plek.PlekNummer;
-        const [plek] = await db.execute(
+        const [plek] = await db.execute<RowDataPacket[]>(
             `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
             [plekNummer]
         );
