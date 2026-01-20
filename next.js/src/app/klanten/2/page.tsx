@@ -212,6 +212,7 @@ export default function Reservering2() {
                               id="accomodatie-nummers"
                               onChange={(e) => {
                                 localStorage.setItem("PlekNr", e.target.value);
+                                setPlekNr(e.target.value);
                               }}
                             >
                               {ApiResult.filter((item) => {
@@ -228,12 +229,10 @@ export default function Reservering2() {
                             </select>
                           </div>
                         </div>
-                      </div>{" "}
-                      {/*input velden voor ligging en accomodatie nummer*/}
-            
+                      </div>
                     </div>
                   </div>
-                </div>{" "}
+                </div>
                 {/*linker box */}
                 <div className="justify-self-end w-full -translate-y-3/7 z-40">
                   <div className="relative bg-[#FFFFFF] rounded-xl shadow-xl overflow-hidden w-full md:w-[460px] min-h-[680px]">
@@ -258,15 +257,6 @@ export default function Reservering2() {
                             <div></div>
                             <div>{Personen} personen</div>
                           </div>
-                          <button>
-                            <a
-                              className="justify-self-end text-[#007248] font-bold text-[18px] place-content-center"
-                              rel="noopener noreferer"
-                              href="https://www.google.com/maps/place/UMC+Utrecht/@52.0858554,5.1795793,17z/data=!3m1!4b1!4m6!3m5!1s0x47c66885c1ad3c53:0x5778bacf22762084!8m2!3d52.0858554!4d5.1795793!16s%2Fm%2F02qkwv4?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D"
-                            >
-                              Meer info
-                            </a>
-                          </button>
                         </div>
 
                         <div title="box met info aantal dagen en datum">
@@ -293,25 +283,23 @@ export default function Reservering2() {
 
                         <div title="box met soort plaats en prijs">
                           <div title="soort plaats">
-                            <p className="text-[18px] font-bold mt-5">
-                              Selecteer plek nummer
-                            </p>
-                            <div className="flex">
-                              <div className="text-[18px] text-left ml auto">
-                                <p>{Plaats || "Plek nummer :"}</p>
-                              </div>
-                              <p className="text-[18px] text-right ml-auto font-bold">
-                                <strong>{PlekNr || "—"}</strong>
+                            <div
+                              title="box met totaal prijs"
+                              className="flex mb-3"
+                            >
+                              <p className="text-[20px] text-left font-bold mt-5">
+                                Plek
+                              </p>
+                              <p className="text-[18px] text-right font-bold mt-5 ml-auto">
+                                {PlekNr ? (
+                                  <div className="inline-block">
+                                    {PlekNr} ({Plaats})
+                                  </div>
+                                ) : (
+                                  <div className="inline-block">-</div>
+                                )}
                               </p>
                             </div>
-                          </div>
-                        </div> {/*box met soort plaats en prijs */}
-
-                        <div title="box met soort plaats en prijs">
-                          <div title="soort plaats">
-                            <p className="text-[18px] font-bold mt-5">
-                              {Plaats}
-                            </p>
                             <div className="flex">
                               <p className="text-[18px] font-bold text-left ml auto">
                                 Accomodatie
@@ -353,13 +341,22 @@ export default function Reservering2() {
                           className="mt-8 text-center"
                         >
                           <button>
-                            <a
-                              className="shadow-xl px-10 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
-                              href="/klanten/afrekenen"
-                              rel="noopener noreferer"
-                            >
-                              Boeken
-                            </a>
+                            {PlekNr ? (
+                              <a
+                                className="shadow-xl px-10 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
+                                href="/klanten/afrekenen"
+                                rel="noopener noreferer"
+                              >
+                                Boeken
+                              </a>
+                            ) : (
+                              <a
+                                className="shadow-xl px-10 py-3 bg-[#747474] hover:bg-[#747474] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
+                                rel="noopener noreferer"
+                              >
+                                Boeken
+                              </a>
+                            )}
                           </button>
                         </div>
 
