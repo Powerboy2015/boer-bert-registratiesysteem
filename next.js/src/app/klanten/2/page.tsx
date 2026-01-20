@@ -93,11 +93,10 @@ export default function Reservering2() {
               <div
                 className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50
                transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${
-                  shrink ? "scale-60" : "scale-100"
-                }`}
+              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"
+                  }`}
               >
-                <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130">
+                <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130 hidden md:block">
                   <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125">
                     <Image
                       alt="boerbert logo met gare ovalen enzo"
@@ -152,19 +151,19 @@ export default function Reservering2() {
         <div className="bg-[#FDF5D8]">
           <div className="rounded-bl-[125px] overflow-hidden bg-[#FDF5D8]">
             <section
-              className=" gap-6 p-6 items-center w-full h-100 bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply" /*yuhh de background staat stil hehe */
+              className=" gap-6 p-6 items-center w-full mt-30 md:h-100 md:mt-0 bg-cover bg-center bg-fixed bg-black/50 bg-blend-multiply" /*yuhh de background staat stil hehe */
               style={{ backgroundImage: `url(${campinggestolen.src})` }}
             ></section>
           </div>
         </div>{" "}
         {/*sectie met knopppen voor voorkeuren boekingen */}
         <div className="bg-[#FDF5D8]">
-          <section className="bg-[#FDF5D8] text-black h-150 py-16">
+          <section className="bg-[#FDF5D8] text-black h-full py-16">
             <div className="mx-auto w-full max-w-[1650px] px-6">
               <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_360px] gap-8 items-start ">
                 <div className="justify-self-start w-full -translate-y-2/5 z-40">
-                  <div className="relative bg-[#FFFFFF] rounded-xl shadow-xl overflow-hidden w-250 min-h-[240px]">
-                    <div className="bg-[#FFFFFF] text-[#007248] flex text-center p-4 mt-5 text-xl font-bold">
+                  <div className="relative bg-[#FFFFFF] rounded-xl shadow-xl overflow-hidden md:w-250 md:min-h-[240px] md:block flex flex-col">
+                    <div className="bg-[#FFFFFF] text-[#007248] text-center align-middle justify-center items-center flex flex-col md:p-4 md:mt-5 text-xl font-bold">
                       <a
                         title="link naar plattegrond camping boer bert"
                         rel="noopener noreferer"
@@ -175,7 +174,7 @@ export default function Reservering2() {
                           src={map}
                           width={300}
                           height={70}
-                          className="rounded-[1] px-auto opacity-100 object-contain mt-5 ml-10"
+                          className="rounded-[1] px-auto opacity-100 object-contain mt-5 md:ml-10 "
                         />
                       </a>
                       <p
@@ -185,7 +184,7 @@ export default function Reservering2() {
                       </p>
                     </div>
 
-                    <div className="flex flex-row mx-auto my-auto items-center justify-center">
+                    <div className="flex flex-row mx-auto my-auto items-center justify-center mb-10 md:mb-0">
                       <div className="p-3 mx-auto my-auto">
 
                         <div
@@ -193,21 +192,9 @@ export default function Reservering2() {
                           style={{ fontFamily: "Roboto mono" }}
                         >
                           Accomodatienummer:
-                          <div className="mt-3 h-auto">
+                          <div className="md:mt-3 md:h-50">
                             <select
-                              style={{
-                                backgroundColor: "#FFFFFF",
-                                color: "#595959ff",
-                                borderRadius: "10px",
-                                border: "2px solid #ccc",
-                                fontSize: "22px",
-                                width: "600px",
-                                height: "50px",
-                                boxSizing: "border-box",
-                                fontFamily: "Roboto mono",
-                                paddingLeft: "15px",
-                                paddingRight: "15px",
-                              }}
+                              className="w-full border-2 "
                               size={6}
                               id="accomodatie-nummers"
                               onChange={(e) => {
@@ -229,7 +216,20 @@ export default function Reservering2() {
                             </select>
                           </div>
                         </div>
-                      </div>
+                      </div>{" "}
+                      {/*input velden voor ligging en accomodatie nummer*/}
+                      <div></div>
+                      <div className="my-auto mx-auto items-center text-center p-3 mr-10">
+                        <a
+                          href="/reservering1"
+                          title="knop naar reserverings pagina"
+                        >
+                          <button className="hidden md:block text-center px-15 py-7 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-xl font-semibold text-[#FDF5D8] rounded-xl">
+                            Terug naar reservering bewerken
+                          </button>
+                        </a>
+                      </div>{" "}
+                      {/*knop om terug naar reservering bewerken te gaan*/}
                     </div>
                   </div>
                 </div>
@@ -416,7 +416,7 @@ export default function Reservering2() {
         </div>{" "}
         {/*section met random info*/}
         <footer
-          className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between flex flex-row items-center"
+          className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between md:flex flex-row items-center hidden"
           style={{ fontFamily: "Roboto mono" }}
         >
           <a
