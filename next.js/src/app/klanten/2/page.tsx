@@ -34,6 +34,8 @@ export default function Reservering2() {
   const [Personen, setPersonen] = useState<string>("");
   const [ApiResult, setApiResult] = useState<Accomodatie[]>([]);
   const [PlekNr, setPlekNr] = useState<string>("");
+  const [jaarAankomst, maandAankomst, dagAankomst] = DatumAankomst.split("-");
+  const [jaarVertrek, maandVertrek, dagVertrek] = DatumVertrek.split("-");
 
   useEffect(() => {
     let ticking = false;
@@ -68,6 +70,19 @@ export default function Reservering2() {
     setPlaats(localStorage.getItem("Plaats") ?? "");
     fetchAPI();
   }, []);
+
+  let date1 = new Date(DatumAankomst);
+  let date2 = new Date(DatumVertrek);
+
+  // Convert dates to UTC timestamps
+  let utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+  let utc2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+
+  // Calculate the time difference in milliseconds
+  let timeDiff = Math.abs(utc2 - utc1);
+
+  // Convert milliseconds to days
+  let daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
   return (
     <>
@@ -258,9 +273,11 @@ export default function Reservering2() {
                             className="text-[18px] text-[#909090ff] text-justify mt-3 border-l-3 border-[#ccc] p-2"
                             style={{ fontFamily: "Roboto mono" }}
                           >
-                            Aankomstdatum: {DatumAankomst}
+                            Aankomstdatum:{" "}
+                            {`${dagAankomst}-${maandAankomst}-${jaarAankomst}`}
                             <br />
-                            Vertrekdatum: {DatumVertrek}
+                            Vertrekdatum:{" "}
+                            {`${dagVertrek}-${maandVertrek}-${jaarVertrek}`}
                           </p>
                           <a
                             title="klik her om datum en dagen te wijzigen"
@@ -295,7 +312,8 @@ export default function Reservering2() {
                             Totaal
                           </p>
                           <p className="text-[18px] text-right font-bold mt-5 ml-auto">
-                            € --
+                            €
+                            {Plaats === "Groot" ? 30 * daysDiff : 20 * daysDiff}
                           </p>
                         </div>
 

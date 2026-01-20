@@ -99,7 +99,8 @@ export async function GET(req: NextRequest) {
             `select * from Reservaties 
             INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID
             INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID 
-            ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
+            ${whereSQLquery} AND isArchived = false 
+            ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
             [...likeInput, limit, pagestart]
         );
 
