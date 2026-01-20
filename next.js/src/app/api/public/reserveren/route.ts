@@ -158,6 +158,16 @@ export async function POST(req: NextRequest) {
             });
         } catch (emailError) {
             console.error("Failed to send confirmation email:", emailError);
+            return NextResponse.json(
+                {
+                    success: true,
+                    message:
+                        "Reservering opgeslagen, maar het versturen van de bevestigingsmail is mislukt.",
+                    UserDataID: userId,
+                    ReservatieID: resultReservaties.insertId,
+                },
+                { status: 500 }
+            );
         }
 
         return NextResponse.json({
