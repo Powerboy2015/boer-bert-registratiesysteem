@@ -130,7 +130,7 @@ export default function AdminReserveringen() {
                 </section>
                 <section id="reservations" className="w-full h-full pt-4">
                     {resevationList.map((reservering) => (
-                        <MobileReservation key={reservering.reserveringsNr} res={reservering} />
+                        <MobileReservation key={reservering.ReseveringsNr} res={reservering} />
                     ))}
                 </section>
             </div>
@@ -234,7 +234,7 @@ export default function AdminReserveringen() {
                         </thead>
                         <tbody className="text-2xl">
                             {resevationList.map((reservering) => (
-                                <DesktopReservation key={reservering.reserveringsNr} res={reservering} />
+                                <DesktopReservation key={reservering.ReseveringsNr} res={reservering} />
                             ))}
                         </tbody>
                     </table>

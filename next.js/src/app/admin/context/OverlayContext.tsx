@@ -19,7 +19,13 @@ export function ReservationOverlayProvider({ children }: { children: React.React
             {children}
 
             {activeReservation && (
-                <div id="overlays" className="fixed w-full h-full bg-black opacity-60 z-10 top-0 left-0">
+                <div id="overlays" className="fixed w-full h-full z-10 top-0 left-0 hidden lg:flex lg:flex-row">
+                    <span
+                        onClick={() => {
+                            setActiveReservation(null);
+                        }}
+                        className="block flex-1 left-0 top-0 h-full bg-[rgba(0,0,0,0.60)]"
+                    />
                     <DesktopReservationModal res={activeReservation} />
                 </div>
             )}

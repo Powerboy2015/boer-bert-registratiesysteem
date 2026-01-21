@@ -1,5 +1,4 @@
 "use client";
-import { Roboto } from "next/font/google";
 
 const roboto = Roboto({
     weight: "400",
@@ -30,9 +29,7 @@ export default function ReservationButtonComponent({
                     }
                 }}
             >
-                <div
-                    className={`${roboto.className} flex p-2.5 text-[24px] text-(--color-text)`}
-                >
+                <div className={`${roboto.className} flex p-2.5 text-[24px] text-(--color-text)`}>
                     <div className="flex p-2.5 text-[24px] text-(--color-text)">
                         <p className="w-full h-full m-0">{text}</p>
                     </div>

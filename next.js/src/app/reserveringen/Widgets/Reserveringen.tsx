@@ -10,7 +10,9 @@ import DeleteReservationModal from "@/app/ui/DeleteReservationModal";
 
 /* Interface voor reserveringen */
 export interface Reservering {
+    ReseveringsNr: string;
     AantalMensen: number;
+    Voornaam: string;
     Achternaam: string;
     DatumAankomst: string;
     DatumVertrek: string;
@@ -18,15 +20,12 @@ export interface Reservering {
     PlekNummer: number;
     ReserveringsDatum: string;
     reserveringBewerkDatum: string;
+    Telefoonnummer: string;
+    Woonplaats: string;
+    PlekGrootte: string;
 }
 
-type SortKey =
-    | "naam"
-    | "startDatum"
-    | "eindDatum"
-    | "plaats"
-    | "gereserveerdOp"
-    | null;
+type SortKey = "naam" | "startDatum" | "eindDatum" | "plaats" | "gereserveerdOp" | null;
 
 export default function Reserveringen() {
     const [reserveringen, setReserveringen] = useState<Reservering[]>([]);
@@ -34,9 +33,7 @@ export default function Reserveringen() {
     const [searchQuery, setSearchQuery] = useState("");
 
     const [sortKey, setSortKey] = useState<SortKey>(null);
-    const [sortDirection, setSortDirection] = useState<
-        "ascending" | "descending"
-    >("ascending");
+    const [sortDirection, setSortDirection] = useState<"ascending" | "descending">("ascending");
 
     const router = useRouter();
     const goToReservation = (id: string) => router.push(`/reserveringen/${id}`);
@@ -70,17 +67,13 @@ export default function Reserveringen() {
     /* functie voor het verwijderen van reservering, verwijderd de reservering met index nr */
     function handleDeleteReservering(RemoveIndex: number) {
         console.log(RemoveIndex);
-        const newReserveringen = reserveringen.filter(
-            (item, index) => index !== RemoveIndex
-        );
+        const newReserveringen = reserveringen.filter((item, index) => index !== RemoveIndex);
         setReserveringen(newReserveringen);
     }
 
     function handleSort(key: SortKey) {
         if (sortKey === key) {
-            setSortDirection((prev) =>
-                prev === "ascending" ? "descending" : "ascending"
-            );
+            setSortDirection((prev) => (prev === "ascending" ? "descending" : "ascending"));
         } else {
             setSortKey(key);
             setSortDirection("ascending");
@@ -179,8 +172,7 @@ export default function Reserveringen() {
             if (!query) return true;
 
             const { day, month, year } = parseDateQuery(query);
-            const hasDateParts =
-                day !== undefined || month !== undefined || year !== undefined;
+            const hasDateParts = day !== undefined || month !== undefined || year !== undefined;
             const isNumber = /^\d+$/.test(query); //Returns true als query een string die alleen is gemaakt van nummers
 
             const dates = [
@@ -194,22 +186,16 @@ export default function Reserveringen() {
                 dates.some(
                     (date) =>
                         (day === undefined || date.getDate() === day) &&
-                        (month === undefined ||
-                            date.getMonth() + 1 === month) &&
-                        (year === undefined || date.getFullYear() === year)
+                        (month === undefined || date.getMonth() + 1 === month) &&
+                        (year === undefined || date.getFullYear() === year),
                 );
 
             if (hasDateParts && !isNumber) {
                 return matchesParsedDate;
             }
-            const matchesPlekNummer =
-                isNumber && reservering.PlekNummer === Number(query);
+            const matchesPlekNummer = isNumber && reservering.PlekNummer === Number(query);
 
-            return (
-                matchesParsedDate ||
-                matchesPlekNummer ||
-                reservering.Achternaam.toLowerCase().includes(query)
-            );
+            return matchesParsedDate || matchesPlekNummer || reservering.Achternaam.toLowerCase().includes(query);
         })
         /* Sorteren van de resultaten in oplopende of aflopende volgorde (alfabetisch of numeriek, afhankelijk van waar je op sorteert */
         .sort((val1, val2) => {
@@ -262,9 +248,7 @@ export default function Reserveringen() {
 
     return (
         <>
-            {overlay && (
-                <ReserveringOverlay toggle={toggleOverlay} getAPI={getAPI} />
-            )}
+            {overlay && <ReserveringOverlay toggle={toggleOverlay} getAPI={getAPI} />}
 
             <div className="bg-[#2E3038] h-full mx-5 overflow-y-auto overflow-x-hidden">
                 <div className="flex w-full items-center">
@@ -273,10 +257,7 @@ export default function Reserveringen() {
                     <div className="flex justify-end w-full items-center gap-4">
                         <Searchbar onSearch={setSearchQuery} />
 
-                        <button
-                            onClick={toggleOverlay}
-                            className="bg-[#55835A] h-14 cursor-pointer"
-                        >
+                        <button onClick={toggleOverlay} className="bg-[#55835A] h-14 cursor-pointer">
                             + Reservering Aanmaken
                         </button>
                     </div>
@@ -290,11 +271,7 @@ export default function Reserveringen() {
                                     className="text-left cursor-pointer select-none"
                                     onClick={() => handleSort("naam")}
                                 >
-                                    Naam{" "}
-                                    {sortKey === "naam" &&
-                                        (sortDirection === "ascending"
-                                            ? "⇧"
-                                            : "⇩")}
+                                    Naam {sortKey === "naam" && (sortDirection === "ascending" ? "⇧" : "⇩")}
                                 </th>
 
                                 <th
@@ -302,10 +279,7 @@ export default function Reserveringen() {
                                     onClick={() => handleSort("startDatum")}
                                 >
                                     Start datum{" "}
-                                    {sortKey === "startDatum" &&
-                                        (sortDirection === "ascending"
-                                            ? "⇧"
-                                            : "⇩")}
+                                    {sortKey === "startDatum" && (sortDirection === "ascending" ? "⇧" : "⇩")}
                                 </th>
 
                                 <th
@@ -313,21 +287,14 @@ export default function Reserveringen() {
                                     onClick={() => handleSort("eindDatum")}
                                 >
                                     Eind datum{" "}
-                                    {sortKey === "eindDatum" &&
-                                        (sortDirection === "ascending"
-                                            ? "⇧"
-                                            : "⇩")}
+                                    {sortKey === "eindDatum" && (sortDirection === "ascending" ? "⇧" : "⇩")}
                                 </th>
 
                                 <th
                                     className="text-left cursor-pointer select-none"
                                     onClick={() => handleSort("plaats")}
                                 >
-                                    Plaats{" "}
-                                    {sortKey === "plaats" &&
-                                        (sortDirection === "ascending"
-                                            ? "⇧"
-                                            : "⇩")}
+                                    Plaats {sortKey === "plaats" && (sortDirection === "ascending" ? "⇧" : "⇩")}
                                 </th>
 
                                 <th
@@ -335,55 +302,35 @@ export default function Reserveringen() {
                                     onClick={() => handleSort("gereserveerdOp")}
                                 >
                                     Gereserveerd op{" "}
-                                    {sortKey === "gereserveerdOp" &&
-                                        (sortDirection === "ascending"
-                                            ? "⇧"
-                                            : "⇩")}
+                                    {sortKey === "gereserveerdOp" && (sortDirection === "ascending" ? "⇧" : "⇩")}
                                 </th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {filteredReserveringen.map((item, index) => (
-                                <tr
-                                    key={item.ReseveringsNr}
-                                    className="border-y-4 border-[#1F1F21] text-2xl"
-                                >
+                                <tr key={item.ReseveringsNr} className="border-y-4 border-[#1F1F21] text-2xl">
                                     <td
-                                        onClick={() =>
-                                            goToReservation(item.ReseveringsNr)
-                                        }
+                                        onClick={() => goToReservation(item.ReseveringsNr)}
                                         className="underline cursor-pointer"
                                     >
                                         {item.Achternaam}
                                     </td>
 
                                     <td>
-                                        {new Date(
-                                            item.DatumAankomst
-                                        ).toLocaleDateString(
-                                            "nl-NL",
-                                            dateSettings
-                                        )}
+                                        {new Date(item.DatumAankomst).toLocaleDateString("nl-NL", dateSettings)}
                                     </td>
 
                                     <td>
-                                        {new Date(
-                                            item.DatumVertrek
-                                        ).toLocaleDateString(
-                                            "nl-NL",
-                                            dateSettings
-                                        )}
+                                        {new Date(item.DatumVertrek).toLocaleDateString("nl-NL", dateSettings)}
                                     </td>
 
                                     <td>{item.PlekNummer}</td>
 
                                     <td>
-                                        {new Date(
-                                            item.ReserveringsDatum
-                                        ).toLocaleDateString(
+                                        {new Date(item.ReserveringsDatum).toLocaleDateString(
                                             "nl-NL",
-                                            dateSettings
+                                            dateSettings,
                                         )}
                                     </td>
                                     <td>
