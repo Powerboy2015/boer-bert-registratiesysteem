@@ -68,6 +68,7 @@ export default function Reservering2() {
               DatumAankomst: localStorage.getItem("DatumAankomst"),
               DatumVertrek: localStorage.getItem("DatumVertrek"),
               AantalMensen: localStorage.getItem("Personen"),
+              Prijs: localStorage.getItem("Prijs"),
             },
             Plek: {
               PlekNummer: localStorage.getItem("PlekNr"),
@@ -75,7 +76,6 @@ export default function Reservering2() {
           }),
         });
         if (voornaam && achternaam && telNr && email && plaats) {
-          window.location.href = "https://ideal.nl/";
         }
       } catch (err) {
         console.log(err);
