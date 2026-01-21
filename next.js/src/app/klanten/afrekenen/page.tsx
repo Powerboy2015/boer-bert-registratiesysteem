@@ -93,8 +93,9 @@ export default function Reservering2() {
               <div
                 className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50
                transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"
-                  }`}
+              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${
+                  shrink ? "scale-60" : "scale-100"
+                }`}
               >
                 <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130 hidden md:block">
                   <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125">
@@ -163,178 +164,184 @@ export default function Reservering2() {
               <div className="gap-8 items-center justify-center flex flex-col lg:flex-row">
                 <div className="-translate-y-1/2 z-40">
                   <div className=" bg-[#FFFFFF] rounded-xl shadow-xl md:overflow-hidden md:w-250 md:h-170 mt-20 md:mt-0">
-                    <div
-                      className="flex flex-col p-6 text-center text-justify text-lg font-medium my-auto mx-auto items-center"
-                      style={{ fontFamily: "Roboto mono" }}
-                    >
+                    <form action="https://ideal.com">
                       <div
-                        className="text-xl flex flex-col"
+                        className="flex flex-col p-6 text-center text-justify text-lg font-medium my-auto mx-auto items-center"
                         style={{ fontFamily: "Roboto mono" }}
                       >
-                        Naam:
-                        <div className="mt-3">
-                          <input
-                            list="Naam klant"
-                            onChange={(e) => setVoornaam(e.target.value)}
-                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
-                          ></input>
-                          <datalist id="ligging-in-het-park">
-                            <option value="in de zon" />
-                            <option value="in de schaduw" />
-                            <option value="bij het water" />
-                            <option value="vlakbij de ingang" />
-                            <option value="langs de hoodfweg" />
-                          </datalist>
-                        </div>
-                      </div>{" "}
-                      {/*naam */}
-                      <div
-                        className="text-xl mt-5"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        Achteraam:
-                        <div className="mt-3">
-                          <input
-                            list="achternaam klant"
-                            onChange={(e) => setAchternaam(e.target.value)}
-                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
-                          ></input>
-                          <datalist id="ligging-in-het-park">
-                            <option value="in de zon" />
-                            <option value="in de schaduw" />
-                            <option value="bij het water" />
-                            <option value="vlakbij de ingang" />
-                            <option value="langs de hoodfweg" />
-                          </datalist>
-                        </div>
-                      </div>{" "}
-                      {/*achternaam */}
-                      <div
-                        className="text-xl mt-5"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        Adres:
-                        <div className="mt-3">
-                          <input
-                            list="Adres klant"
-                            onChange={(e) => setAdres(e.target.value)}
-                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
-
-                          ></input>
-                          <datalist id="ligging-in-het-park">
-                            <option value="in de zon" />
-                            <option value="in de schaduw" />
-                            <option value="bij het water" />
-                            <option value="vlakbij de ingang" />
-                            <option value="langs de hoodfweg" />
-                          </datalist>
-                        </div>
-                      </div>{" "}
-                      {/*adres */}
-                    </div>
-
-                    <div className="flex flex-col md:flex-row justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
-                      <div
-                        className="text-xl"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        Telefoon nummer:
-                        <div className="mt-3">
-                          <input
-                            list="Telefoon klant"
-                            onChange={(e) => setTelnr(e.target.value)}
-                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
-                          ></input>
-                          <datalist id="ligging-in-het-park">
-                            <option value="in de zon" />
-                            <option value="in de schaduw" />
-                            <option value="bij het water" />
-                            <option value="vlakbij de ingang" />
-                            <option value="langs de hoodfweg" />
-                          </datalist>
-                        </div>
-                      </div>{" "}
-                      {/*telefoon nummer */}
-                      <div
-                        className="text-xl mt-"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        plaats:
-                        <div className="mt-3">
-                          <input
-                            list="Plaats klant"
-                            onChange={(e) => setPlaats(e.target.value)}
-                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280px] h-[50px] px-[15px]"
-                          ></input>
-                          <datalist id="ligging-in-het-park">
-                            <option value="in de zon" />
-                            <option value="in de schaduw" />
-                            <option value="bij het water" />
-                            <option value="vlakbij de ingang" />
-                            <option value="langs de hoodfweg" />
-                          </datalist>
-                        </div>
-                      </div>{" "}
-                      {/*plaats */}
-                    </div>
-
-                    <div className="flex md:flex-row flex-col mb-7 justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
-                      <div
-                        className="text-xl mt-5"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        Email:
-                        <div className="mt-3">
-                          <input
-                            list="Email klant"
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
-                            type="email"
-                          ></input>
-                          <datalist id="ligging-in-het-park">
-                            <option value="in de zon" />
-                            <option value="in de schaduw" />
-                            <option value="bij het water" />
-                            <option value="vlakbij de ingang" />
-                            <option value="langs de hoodfweg" />
-                          </datalist>
-                        </div>
-                      </div>{" "}
-                      {/*email */}
-                      <div
-                        className="text-xl mt-5"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        Postcode:
-                        <div className="mt-3">
-                          <input
-                            list="Postcode klant"
-                            className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280] h-[50px] px-[15px]"
-                          ></input>
-                          <datalist id="ligging-in-het-park">
-                            <option value="in de zon" />
-                            <option value="in de schaduw" />
-                            <option value="bij het water" />
-                            <option value="vlakbij de ingang" />
-                            <option value="langs de hoodfweg" />
-                          </datalist>
-                        </div>
-                      </div>{" "}
-                      {/*postcode */}
-                    </div>
-
-                    <div className="flex mx-auto my-auto items-center">
-                      <div className="my-auto mx-auto items-center text-center p-1 ">
-                        <button
-                          onClick={() => sendData()}
-                          className="text-center px-20 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FDF5D8] rounded-xl"
+                        <div
+                          className="text-xl flex flex-col"
                           style={{ fontFamily: "Roboto mono" }}
                         >
-                          Verder naar betalen
-                        </button>
-                      </div>{" "}
-                      {/*knop om terug naar reservering annuleren te gaan*/}
-                    </div>
+                          Voornaam:
+                          <div className="mt-3">
+                            <input
+                              list="Naam klant"
+                              onChange={(e) => setVoornaam(e.target.value)}
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
+                              pattern="[A-Za-z]+"
+                              required
+                            ></input>
+                          </div>
+                        </div>{" "}
+                        {/*naam */}
+                        <div
+                          className="text-xl mt-5"
+                          style={{ fontFamily: "Roboto mono" }}
+                        >
+                          Achteraam:
+                          <div className="mt-3">
+                            <input
+                              list="achternaam klant"
+                              onChange={(e) => setAchternaam(e.target.value)}
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
+                              pattern="[A-Za-z]+"
+                              required
+                            ></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon" />
+                              <option value="in de schaduw" />
+                              <option value="bij het water" />
+                              <option value="vlakbij de ingang" />
+                              <option value="langs de hoodfweg" />
+                            </datalist>
+                          </div>
+                        </div>{" "}
+                        {/*achternaam */}
+                        <div
+                          className="text-xl mt-5"
+                          style={{ fontFamily: "Roboto mono" }}
+                        >
+                          Adres:
+                          <div className="mt-3">
+                            <input
+                              list="Adres klant"
+                              onChange={(e) => setAdres(e.target.value)}
+                              pattern="^[A-Za-zÀ-ÿ\s.'-]+ \d+[A-Za-z]?$"
+                              required
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
+                            ></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon" />
+                              <option value="in de schaduw" />
+                              <option value="bij het water" />
+                              <option value="vlakbij de ingang" />
+                              <option value="langs de hoodfweg" />
+                            </datalist>
+                          </div>
+                        </div>{" "}
+                        {/*adres */}
+                      </div>
+
+                      <div className="flex flex-col md:flex-row justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
+                        <div
+                          className="text-xl"
+                          style={{ fontFamily: "Roboto mono" }}
+                        >
+                          Telefoon nummer:
+                          <div className="mt-3">
+                            <input
+                              list="Telefoon klant"
+                              required
+                              onChange={(e) => setTelnr(e.target.value)}
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
+                              pattern="^06-\d{8}$"
+                            ></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon" />
+                              <option value="in de schaduw" />
+                              <option value="bij het water" />
+                              <option value="vlakbij de ingang" />
+                              <option value="langs de hoodfweg" />
+                            </datalist>
+                          </div>
+                        </div>{" "}
+                        {/*telefoon nummer */}
+                        <div
+                          className="text-xl mt-"
+                          style={{ fontFamily: "Roboto mono" }}
+                        >
+                          plaats:
+                          <div className="mt-3">
+                            <input
+                              list="Plaats klant"
+                              required
+                              pattern="[A-Za-z]+"
+                              onChange={(e) => setPlaats(e.target.value)}
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280px] h-[50px] px-[15px]"
+                            ></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon" />
+                              <option value="in de schaduw" />
+                              <option value="bij het water" />
+                              <option value="vlakbij de ingang" />
+                              <option value="langs de hoodfweg" />
+                            </datalist>
+                          </div>
+                        </div>{" "}
+                        {/*plaats */}
+                      </div>
+
+                      <div className="flex md:flex-row flex-col mb-7 justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
+                        <div
+                          className="text-xl mt-5"
+                          style={{ fontFamily: "Roboto mono" }}
+                        >
+                          Email:
+                          <div className="mt-3">
+                            <input
+                              list="Email klant"
+                              onChange={(e) => setEmail(e.target.value)}
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
+                              type="email"
+                            ></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon" />
+                              <option value="in de schaduw" />
+                              <option value="bij het water" />
+                              <option value="vlakbij de ingang" />
+                              <option value="langs de hoodfweg" />
+                            </datalist>
+                          </div>
+                        </div>{" "}
+                        {/*email */}
+                        <div
+                          className="text-xl mt-5"
+                          style={{ fontFamily: "Roboto mono" }}
+                        >
+                          Postcode:
+                          <div className="mt-3">
+                            <input
+                              list="Postcode klant"
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280] h-[50px] px-[15px]"
+                              pattern="[0-9]{4}[A-Z]{2}"
+                              required
+                            ></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon" />
+                              <option value="in de schaduw" />
+                              <option value="bij het water" />
+                              <option value="vlakbij de ingang" />
+                              <option value="langs de hoodfweg" />
+                            </datalist>
+                          </div>
+                        </div>{" "}
+                        {/*postcode */}
+                      </div>
+
+                      <div className="flex mx-auto my-auto items-center">
+                        <div className="my-auto mx-auto items-center text-center p-1 ">
+                          <button
+                            onClick={() => sendData()}
+                            className="text-center px-20 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FDF5D8] rounded-xl"
+                            style={{ fontFamily: "Roboto mono" }}
+                          >
+                            Verder naar betalen
+                          </button>
+                        </div>{" "}
+                        {/*knop om terug naar reservering annuleren te gaan*/}
+                      </div>
+                    </form>
                   </div>
                 </div>{" "}
                 {/*het witte vlak met alle info er in */}
