@@ -16,6 +16,7 @@ const allowedColumnsReservaties = [
     "DatumVertrek",
     "ReserveringsDatum",
     "AantalMensen",
+    "Prijs"
 ];
 const allowedColumnsUserandRes = [
     ...allowedColumnsUserData,
@@ -37,6 +38,7 @@ interface ReservatieBody {
     DatumVertrek: string;
     ReserveringsDatum: string;
     AantalMensen: number;
+    Prijs: string;
 }
 
 interface PlekBody {
@@ -115,6 +117,7 @@ export async function GET(req: NextRequest) {
             PlekNummer: row.PlekNummer,
             PlekGrootte: row.Grootte,
             ReserveringsDatum: row.ReserveringsDatum,
+            Prijs: row.Prijs,
             DatumAankomst: row.DatumAankomst,
             DatumVertrek: row.DatumVertrek,
         }));
@@ -145,7 +148,7 @@ export async function POST(req: NextRequest) {
             { status: 400 }
             );
         }
-        if (!Reservatie.ReseveringsNr ||!Reservatie.DatumAankomst ||!Reservatie.DatumVertrek ||!Reservatie.ReserveringsDatum ||!Reservatie.AantalMensen) {
+        if (!Reservatie.DatumVertrek ||!Reservatie.DatumAankomst ||!Reservatie.AantalMensen ||!Reservatie.Prijs) {
             return NextResponse.json(
             { error: "Je mist een iets in reservatie body" },
             { status: 400 }
@@ -171,6 +174,14 @@ export async function POST(req: NextRequest) {
         if (!regemail.test(UserData.Email)) {
             return NextResponse.json(
                 { error: "Ongeldig email-adres." },
+                { status: 400 }
+            );
+        }
+        //checkt als prijs gegeven is in nummers dan , en dan 2 nummers
+        const regprijs = /^\d+,\d{2}$/;
+        if (!regprijs.test(Reservatie.Prijs)) {
+            return NextResponse.json(
+                { error: "Ongeldig prijs." },
                 { status: 400 }
             );
         }

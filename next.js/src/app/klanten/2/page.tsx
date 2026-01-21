@@ -15,6 +15,8 @@ import mastercard from "@/app/Images/mastercard.png";
 import paypal from "@/app/Images/paypal.png";
 import visa from "@/app/Images/visa.png";
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
+import { Place } from "@mui/icons-material";
+import { send } from "process";
 {
   /*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */
 }
@@ -36,6 +38,29 @@ export default function Reservering2() {
   const [PlekNr, setPlekNr] = useState<string>("");
   const [jaarAankomst, maandAankomst, dagAankomst] = DatumAankomst.split("-");
   const [jaarVertrek, maandVertrek, dagVertrek] = DatumVertrek.split("-");
+
+  let date1 = new Date(DatumAankomst);
+  let date2 = new Date(DatumVertrek);
+
+  // Convert dates to UTC timestamps
+  let utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+  let utc2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+
+  // Calculate the time difference in milliseconds
+  let timeDiff = Math.abs(utc2 - utc1);
+
+  // Convert milliseconds to days
+  let daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+  function sendPrice() {
+    if (Plaats === "Groot") {
+      let price = 30 * daysDiff;
+      localStorage.setItem("Prijs", `${price.toString()},00`);
+    } else {
+      let price = 20 * daysDiff;
+      localStorage.setItem("Prijs", `${price.toString()},00`);
+    }
+  }
 
   useEffect(() => {
     let ticking = false;
@@ -71,18 +96,9 @@ export default function Reservering2() {
     fetchAPI();
   }, []);
 
-  let date1 = new Date(DatumAankomst);
-  let date2 = new Date(DatumVertrek);
-
-  // Convert dates to UTC timestamps
-  let utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
-  let utc2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
-
-  // Calculate the time difference in milliseconds
-  let timeDiff = Math.abs(utc2 - utc1);
-
-  // Convert milliseconds to days
-  let daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+  if (DatumAankomst && DatumVertrek) {
+    sendPrice();
+  }
 
   return (
     <>

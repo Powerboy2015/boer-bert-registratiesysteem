@@ -16,6 +16,7 @@ const allowedColumnsReservaties = [
     "DatumVertrek",
     "ReserveringsDatum",
     "AantalMensen",
+    "Prijs",
 ];
 
 interface UserDataBody {
@@ -32,6 +33,7 @@ interface ReservatieBody {
     DatumVertrek: string;
     ReserveringsDatum: string;
     AantalMensen: number;
+    Prijs: string;
 }
 
 interface PlekBody {
@@ -59,7 +61,7 @@ export async function POST(req: NextRequest) {
             { status: 400 }
             );
         }
-        if (!Reservatie.DatumAankomst ||!Reservatie.DatumVertrek ||!Reservatie.AantalMensen) {
+        if (!Reservatie.DatumAankomst ||!Reservatie.DatumVertrek ||!Reservatie.AantalMensen ||!Reservatie.Prijs) {
             return NextResponse.json(
             { error: "Je mist een iets in reservatie body" },
             { status: 400 }
@@ -88,7 +90,14 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             );
         }
-
+        //checkt als prijs gegeven is in nummers dan , en dan 2 nummers
+        const regprijs = /^\d+,\d{2}$/;
+        if (!regprijs.test(Reservatie.Prijs)) {
+            return NextResponse.json(
+                { error: "Ongeldig prijs." },
+                { status: 400 }
+            );
+        }
         
 
         const aankomst = new Date(Reservatie.DatumAankomst);
