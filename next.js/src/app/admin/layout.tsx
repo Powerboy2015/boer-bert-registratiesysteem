@@ -1,7 +1,6 @@
 import "./whatthefuck.css";
 import NavBar from "./components/NavBar";
 import { Roboto } from "next/font/google";
-import ViewDesktopReservation from "./components/ViewDesktopReservation";
 import { ReservationOverlayProvider } from "./context/OverlayContext";
 
 const RobotoFont = Roboto({
