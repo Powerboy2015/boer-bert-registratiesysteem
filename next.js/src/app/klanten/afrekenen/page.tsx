@@ -93,8 +93,9 @@ export default function Reservering2() {
               <div
                 className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50
                transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"
-                  }`}
+              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${
+                  shrink ? "scale-60" : "scale-100"
+                }`}
               >
                 <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130 hidden md:block">
                   <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125">
@@ -179,6 +180,7 @@ export default function Reservering2() {
                               onChange={(e) => setVoornaam(e.target.value)}
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
                               pattern="[A-Za-z]+"
+                              required
                             ></input>
                           </div>
                         </div>{" "}
@@ -194,6 +196,7 @@ export default function Reservering2() {
                               onChange={(e) => setAchternaam(e.target.value)}
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
                               pattern="[A-Za-z]+"
+                              required
                             ></input>
                             <datalist id="ligging-in-het-park">
                               <option value="in de zon" />
@@ -214,8 +217,9 @@ export default function Reservering2() {
                             <input
                               list="Adres klant"
                               onChange={(e) => setAdres(e.target.value)}
+                              pattern="^[A-Za-zÀ-ÿ\s.'-]+ \d+[A-Za-z]?$"
+                              required
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
-
                             ></input>
                             <datalist id="ligging-in-het-park">
                               <option value="in de zon" />
@@ -238,6 +242,7 @@ export default function Reservering2() {
                           <div className="mt-3">
                             <input
                               list="Telefoon klant"
+                              required
                               onChange={(e) => setTelnr(e.target.value)}
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
                               pattern="^06-\d{8}$"
@@ -260,6 +265,8 @@ export default function Reservering2() {
                           <div className="mt-3">
                             <input
                               list="Plaats klant"
+                              required
+                              pattern="[A-Za-z]+"
                               onChange={(e) => setPlaats(e.target.value)}
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280px] h-[50px] px-[15px]"
                             ></input>
@@ -308,6 +315,7 @@ export default function Reservering2() {
                               list="Postcode klant"
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280] h-[50px] px-[15px]"
                               pattern="[0-9]{4}[A-Z]{2}"
+                              required
                             ></input>
                             <datalist id="ligging-in-het-park">
                               <option value="in de zon" />
@@ -330,8 +338,6 @@ export default function Reservering2() {
                           >
                             Verder naar betalen
                           </button>
-
-
                         </div>{" "}
                         {/*knop om terug naar reservering annuleren te gaan*/}
                       </div>
