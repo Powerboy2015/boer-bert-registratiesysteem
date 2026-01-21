@@ -1,5 +1,11 @@
 import "./whatthefuck.css";
 import NavBar from "./components/NavBar";
+import { Roboto } from "next/font/google";
+
+const RobotoFont = Roboto({
+    variable: "--Roboto-font",
+    subsets: ["latin"],
+});
 
 export default function RootLayout({
     children,
@@ -10,7 +16,7 @@ export default function RootLayout({
         <>
             <div id="content" className="bg-[#EDEBDE] w-full h-full flex flex-col md:flex-row">
                 <NavBar />
-                <main className="text-black py-4">{children}</main>
+                <main className={` ${RobotoFont.className} text-black w-full h-full`}>{children}</main>
             </div>
         </>
     );
