@@ -30,7 +30,7 @@ export function ReservationSearch({ searchFunction }: ReservationSearchProps) {
         <div
             id="SearchReservations"
             className="flex flex-row h-12 w-full items-center rounded-2xl bg-white px-3 relative border border-[#B3B3B3]"
-            style={{ boxShadow: StylingProps.BoxShadow }}
+            style={{ boxShadow: StylingProps.BoxShadowSearch }}
         >
             <input
                 type="text"

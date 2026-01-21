@@ -5,9 +5,9 @@ import { CalendarMonth, Logout } from "@mui/icons-material";
 
 export default function NavBar() {
     return (
-        <div id="navbar" className="w-full md:w-20 md:h-full h-16 bg-[#262626] p-4 md:p-2">
+        <div id="navbar" className="w-full lg:w-20 lg:h-full h-16 bg-[#262626] p-4 lg:p-2">
             {/* Mobile banner */}
-            <div id="mobile-banner" className="md:hidden w-full h-full flex justify-between items-center">
+            <div id="mobile-banner" className="lg:hidden w-full h-full flex justify-between items-center">
                 <span id="randicon" className="h-12 w-9 bg-[#007248]"></span>
                 <p id="page-title" className="text-2xl">
                     Reserveringen
@@ -18,7 +18,7 @@ export default function NavBar() {
             {/* Desktop sidebar */}
             <div
                 id="desktop-sidebar"
-                className="hidden md:flex flex-col gap-4 items-center justify-start w-full h-full"
+                className="hidden lg:flex flex-col gap-4 items-center justify-start w-full h-full"
             >
                 <span id="icon" className="w-12 h-12 bg-[#007248]"></span>
                 <Separator />
