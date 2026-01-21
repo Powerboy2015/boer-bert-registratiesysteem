@@ -1,6 +1,7 @@
 import getDB from "@/app/api/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader, Connection, RowDataPacket } from "mysql2/promise";
+import { sendReservationEmail } from "@/app/api/lib/mailer";
 
 const allowedColumnsUserData = [
     "Woonplaats",
@@ -15,6 +16,7 @@ const allowedColumnsReservaties = [
     "DatumVertrek",
     "ReserveringsDatum",
     "AantalMensen",
+    "Prijs",
 ];
 
 interface UserDataBody {
@@ -26,12 +28,12 @@ interface UserDataBody {
 }
 
 interface ReservatieBody {
-    UserData_ID: number;
     ReseveringsNr: string;
     DatumAankomst: string;
     DatumVertrek: string;
     ReserveringsDatum: string;
     AantalMensen: number;
+    Prijs: string;
 }
 
 interface PlekBody {
@@ -51,8 +53,98 @@ export async function POST(req: NextRequest) {
         const body: UserAndReservatieBody = await req.json();
         const { UserData, Reservatie, Plek } = body;
 
+
+        //fuck it ik kan typescript niet goed laten werken met for loops (checkt als alle velden er zijn)
+        if (!UserData.Voornaam ||!UserData.Achternaam ||!UserData.Email ||!UserData.Telefoonnummer ||!UserData.Woonplaats) {
+            return NextResponse.json(
+            { error: "Je mist een iets in userdata body" },
+            { status: 400 }
+            );
+        }
+        if (!Reservatie.DatumAankomst ||!Reservatie.DatumVertrek ||!Reservatie.AantalMensen ||!Reservatie.Prijs) {
+            return NextResponse.json(
+            { error: "Je mist een iets in reservatie body" },
+            { status: 400 }
+            );
+        }
+        if (!Plek.PlekNummer) {
+            return NextResponse.json(
+            { error: "Je mist een iets in plek body" },
+            { status: 400 }
+            );
+        }
+
+        //checkt als datums in correcte formaat zijn
+        const regdatum = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regdatum.test(Reservatie.DatumAankomst) || !regdatum.test(Reservatie.DatumVertrek)) {
+            return NextResponse.json(
+                { error: "Datums moeten in formaat YYYY-MM-DD zijn." },
+                { status: 400 }
+            );
+        }
+        //checkt als email @ bevat en een .
+        const regemail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regemail.test(UserData.Email)) {
+            return NextResponse.json(
+                { error: "Ongeldig email-adres." },
+                { status: 400 }
+            );
+        }
+        //checkt als prijs gegeven is in nummers dan , en dan 2 nummers
+        const regprijs = /^\d+,\d{2}$/;
+        if (!regprijs.test(Reservatie.Prijs)) {
+            return NextResponse.json(
+                { error: "Ongeldig prijs." },
+                { status: 400 }
+            );
+        }
+        
+
+        const aankomst = new Date(Reservatie.DatumAankomst);
+        const vertrek = new Date(Reservatie.DatumVertrek);
+        const vandaag = new Date();
+        vandaag.setHours(0, 0, 0, 0);
+        //checkt als aankomst groter is dan vertrek en als aankomst datum niet eerder is dan vandaag.
+        if (aankomst >= vertrek) {
+            return NextResponse.json(
+                { error: "Aankomst datum moet voor vertrek datum zijn. Mag ook niet op zelfde dag." },
+                { status: 400 }
+            );
+        }
+        if (vandaag >= aankomst) {
+            return NextResponse.json(
+                { error: "Aankomst datum kan niet eerder zijn dan vandaag en mag niet vandaag zijn" },
+                { status: 400 }
+            );
+        }
+
+        //checkt als aantalmensen niet negatief is
+        if (Reservatie.AantalMensen < 1) {
+            return NextResponse.json(
+                { error: "AantalMensen moet een positief getal zijn." },
+                { status: 400 }
+            );
+        }
+        
+        const [plaatsbezetcheck] = await db.execute<RowDataPacket[]>(
+            `
+            SELECT Plekken.PlekNummer, Reservaties.DatumAankomst, Reservaties.DatumVertrek 
+            FROM Reservaties 
+            INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID 
+            WHERE Reservaties.DatumAankomst <= ? 
+            AND Reservaties.DatumVertrek >= ?
+            AND Plekken.PlekNummer = ?
+            `, [vertrek, aankomst, Plek.PlekNummer]);
+            
+        if (plaatsbezetcheck.length != 0) {
+            return NextResponse.json(
+                { error: `Plaats is al bezet tijdens dit moment.`},
+                { status: 400 }
+            );
+        }
+
         Reservatie.ReseveringsNr = await getReservationNr(db);
-        Reservatie.ReserveringsDatum = new Date().toJSON().split("T")[0];
+        Reservatie.ReserveringsDatum = new Date().toISOString().slice(0, 19).replace("T", " ");
 
         //gets the keys and values from the body
         const userKeys = Object.keys(UserData);
@@ -91,7 +183,7 @@ export async function POST(req: NextRequest) {
         }
 
         const plekNummer = Plek.PlekNummer;
-        const [plek] = await db.execute(
+        const [plek] = await db.execute<RowDataPacket[]>(
             `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
             [plekNummer]
         );
@@ -104,7 +196,6 @@ export async function POST(req: NextRequest) {
         }
 
         const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
-        console.log(plekkenId);
 
         await db.beginTransaction();
 
@@ -143,6 +234,31 @@ export async function POST(req: NextRequest) {
 
         //commit database changes if both executed correctly
         await db.commit();
+
+        try {
+            await sendReservationEmail({
+                to: UserData.Email,
+                name: `${UserData.Voornaam} ${UserData.Achternaam}`,
+                spot: plekNummer,
+                peopleCount: Reservatie.AantalMensen,
+                arrivalDate: Reservatie.DatumAankomst,
+                departureDate: Reservatie.DatumVertrek,
+                reservationNumber: Reservatie.ReseveringsNr,
+                reservationToken: Reservatie.ReseveringsNr,
+            });
+        } catch (emailError) {
+            console.error("Failed to send confirmation email:", emailError);
+            return NextResponse.json(
+                {
+                    success: true,
+                    message:
+                        "Reservering opgeslagen, maar het versturen van de bevestigingsmail is mislukt.",
+                    UserDataID: userId,
+                    ReservatieID: resultReservaties.insertId,
+                },
+                { status: 500 }
+            );
+        }
 
         return NextResponse.json({
             success: true,
