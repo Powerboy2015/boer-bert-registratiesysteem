@@ -309,8 +309,8 @@ export default function Reservering2() {
                               </p>
                               <p className="text-[18px] text-right ml-auto font-bold">
                                 {Plaats === "Groot"
-                                  ? "€30 per dag"
-                                  : "€20 per dag"}
+                                  ? "€30 per nacht"
+                                  : "€20 per nacht"}
                               </p>
                             </div>
                           </div>
