@@ -55,10 +55,10 @@ export default function Reservering2() {
   function sendPrice() {
     if (Plaats === "Groot") {
       let price = 30 * daysDiff;
-      localStorage.setItem("Prijs", price.toString());
+      localStorage.setItem("Prijs", `${price.toString()},00`);
     } else {
       let price = 20 * daysDiff;
-      localStorage.setItem("Prijs", price.toString());
+      localStorage.setItem("Prijs", `${price.toString()},00`);
     }
   }
 
