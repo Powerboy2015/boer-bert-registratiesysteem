@@ -14,7 +14,8 @@ export default function RootLayout({
 }>) {
     return (
         <>
-            <div id="content" className="bg-[#EDEBDE] w-full h-full flex flex-col md:flex-row">
+            <div id="overlays" className="fixed w-full h-full bg-black opacity-60 z-10 hidden"></div>
+            <div id="content" className="bg-[#EDEBDE] w-full flex flex-col md:flex-row">
                 <NavBar />
                 <main className={` ${RobotoFont.className} text-black w-full h-full`}>{children}</main>
             </div>
