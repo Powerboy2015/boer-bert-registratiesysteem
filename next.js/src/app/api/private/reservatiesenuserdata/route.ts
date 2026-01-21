@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
             { status: 400 }
             );
         }
-        if (!Reservatie.DatumVertrek ||!Reservatie.ReserveringsDatum ||!Reservatie.AantalMensen ||!Reservatie.Prijs) {
+        if (!Reservatie.DatumVertrek ||!Reservatie.DatumAankomst ||!Reservatie.AantalMensen ||!Reservatie.Prijs) {
             return NextResponse.json(
             { error: "Je mist een iets in reservatie body" },
             { status: 400 }
@@ -181,7 +181,7 @@ export async function POST(req: NextRequest) {
         const regprijs = /^\d+,\d{2}$/;
         if (!regprijs.test(Reservatie.Prijs)) {
             return NextResponse.json(
-                { error: "Ongeldig email-adres." },
+                { error: "Ongeldig prijs." },
                 { status: 400 }
             );
         }
