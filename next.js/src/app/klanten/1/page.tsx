@@ -198,7 +198,7 @@ export default function Reservering1() {
                         </button>
                       </a>
                     ) : (
-                      <button onClick={() => toast.error(!alleVelden ? "Vul alle velden in!" : !vertrekNaAankomst ? "De vertrekdatum moet vóór de aankomstdatum liggen!" : !aankomstNaNu ? "De aankomstdatum moet in de toekomst liggen!" : "")} className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#8c8c8c] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
+                      <button onClick={() => toast.error(!alleVelden ? "Vul alle velden in!" : !vertrekNaAankomst ? "De vertrekdatum moet vóór de aankomstdatum liggen!" : !aankomstNaNu ? "De aankomstdatum moet in de toekomst liggen!" : "")} className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
                         Boeken
                       </button>
 
