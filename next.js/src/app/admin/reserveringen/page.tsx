@@ -1,9 +1,17 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ReservationSearch } from "../components/ReserveringSearch";
 import { StylingProps } from "../stylingprops/props";
-import { ArrowRightAlt, Create, PlusOne, Schedule, SentimentSatisfied } from "@mui/icons-material";
+import {
+    ArrowRightAlt,
+    Inbox,
+    KeyboardArrowLeft,
+    KeyboardArrowRight,
+    Schedule,
+    SentimentSatisfied,
+} from "@mui/icons-material";
 import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
+import { OverlayContext } from "../context/OverlayContext";
 
 type inOutFilterType = "incoming" | "outgoing";
 type timeFilterType = "today" | "week" | "month";
@@ -122,21 +130,24 @@ export default function AdminReserveringen() {
                 </section>
                 <section id="reservations" className="w-full h-full pt-4">
                     {resevationList.map((reservering) => (
-                        <Reservation key={reservering.reserveringsNr} res={reservering} />
+                        <MobileReservation key={reservering.reserveringsNr} res={reservering} />
                     ))}
                 </section>
             </div>
 
             {/* Desktop version of the dashboard */}
-            <div id="desktop-reservations" className="hidden lg:flex py-4 w-full">
+            <div
+                id="desktop-reservations"
+                className="hidden lg:flex py-4 w-full flex-col gap-4 h-full overflow-y-scroll"
+            >
                 <div id="desktop-filtering" className="flex flex-col gap-4 px-4 w-full">
                     <div className="flex flex-row justify-between items-center">
                         <h1 className="text-5xl">Reserveringen</h1>
-                        <button className="py-2 px-4 rounded-2xl bg-[#00B874] text-[#EDEBDE]">
-                            + Nieuwe Reservering
-                        </button>
                     </div>
-                    <section id="desktop-filters" className="flex flex-row items-center gap-4 py-4">
+                    <section
+                        id="desktop-filters"
+                        className="flex flex-row items-center gap-2 py-4 flex-wrap justify-center"
+                    >
                         <ReservationSearch
                             searchFunction={(query) => {
                                 console.log(query);
@@ -171,14 +182,63 @@ export default function AdminReserveringen() {
                                 <option value="3">Niet aangekomen</option>
                             </select>
                         </div>
-                        {/* <div id="new-reservation" className="flex flex-row items-center gap-4 px-4 px-2">
-                            <Create />
-                            <p>Nieuw</p>
-                        </div> */}
+                        <button className="py-2 px-4 rounded-2xl bg-[#00B874] text-[#EDEBDE] text-nowrap">
+                            + Nieuwe Reservering
+                        </button>
                     </section>
-                    <section id="desktop-in-out-filters"></section>
+                    <section id="desktop-in-out-filters" className="flex flex-row gap-8">
+                        <div
+                            id="desktop-filter-all"
+                            className="flex flex-row gap-2 text-[#808080] text-3xl items-center"
+                        >
+                            <Inbox />
+                            <p>All</p>
+                            <p className="text-[#666666]">60</p>
+                            <span className="weird-ass-bar"></span>
+                        </div>
+                        <div
+                            id="desktop-filter-incoming"
+                            className="flex flex-row gap-2 text-[#808080] text-3xl items-center"
+                        >
+                            <KeyboardArrowRight />
+                            <p>Incoming</p>
+                            <p className="text-[#666666]">60</p>
+                            <span className="weird-ass-bar"></span>
+                        </div>
+                        <div
+                            id="desktop-filter-outgoing"
+                            className="flex flex-row gap-2 text-[#808080] text-3xl items-center"
+                        >
+                            <KeyboardArrowLeft />
+                            <p>outgoing</p>
+                            <p className="text-[#666666]">60</p>
+                            <span className="weird-ass-bar"></span>
+                        </div>
+                    </section>
+                    <section>
+                        <p className="text-[20px] text-[#808080]">Showing all rows</p>
+                    </section>
                 </div>
-                <div id="desktop-reservations"></div>
+                <div id="desktop-reservations">
+                    <table className="w-full">
+                        <thead className="bg-[#E1DFD3] h-16 text-2xl border-y border-[#B3B3B3] border-collapse">
+                            <tr className="px-2 *:px-2 text-[#808080]">
+                                <td className="pl-2">Res.Nr</td>
+                                <td>Plaats</td>
+                                <td>Reserveerder</td>
+                                <td>Aanmaakdatum</td>
+                                <td>Reserveringstijd</td>
+                                <td>personen</td>
+                                <td className="pr-2">status</td>
+                            </tr>
+                        </thead>
+                        <tbody className="text-2xl">
+                            {resevationList.map((reservering) => (
+                                <DesktopReservation key={reservering.reserveringsNr} res={reservering} />
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </>
     );
@@ -188,7 +248,7 @@ interface ReservationProps {
     res: Reservering;
     key: string;
 }
-function Reservation({ res, key }: ReservationProps) {
+function MobileReservation({ res, key }: ReservationProps) {
     return (
         <div
             key={key}
@@ -222,5 +282,35 @@ function Reservation({ res, key }: ReservationProps) {
                 </p>
             </div>
         </div>
+    );
+}
+
+function DesktopReservation({ res, key }: ReservationProps) {
+    const context = useContext(OverlayContext);
+    if (!context) return;
+
+    const openModal = () => {
+        console.log("Clicked: ", res.ReseveringsNr);
+        context.setActiveReservation(res);
+    };
+
+    return (
+        <tr
+            key={key}
+            className="h-24 py-4 hover:bg-[#D6D4C8] *:border-y *:border-[#B3B3B3] *:border-collapse *:px-2"
+            onClick={openModal}
+        >
+            <td className="pl-2">{res.ReseveringsNr}</td>
+            <td className=" text-[#808080]">{res.PlekNummer}</td>
+            <td className=" text-[#808080]">
+                {res.Voornaam} {res.Achternaam}
+            </td>
+            <td className=" text-[#808080]">{res.ReserveringsDatum.split("T")[0]}</td>
+            <td className=" text-[#808080]">
+                {res.DatumAankomst.split("T")[0]} tot {res.DatumVertrek.split("T")[0]}
+            </td>
+            <td className=" text-[#808080]">{res.AantalMensen}</td>
+            <td className="pr-2 text-[#808080]">Onderweg</td>
+        </tr>
     );
 }

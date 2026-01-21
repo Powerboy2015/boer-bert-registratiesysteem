@@ -29,7 +29,7 @@ export function ReservationSearch({ searchFunction }: ReservationSearchProps) {
     return (
         <div
             id="SearchReservations"
-            className="flex flex-row h-12 w-full items-center rounded-2xl bg-white px-3 relative border border-[#B3B3B3]"
+            className="flex flex-row h-12 w-full lg:w-fit items-center rounded-2xl bg-white px-3 relative border border-[#B3B3B3]"
             style={{ boxShadow: StylingProps.BoxShadowSearch }}
         >
             <input
@@ -37,7 +37,7 @@ export function ReservationSearch({ searchFunction }: ReservationSearchProps) {
                 name="searchReservation"
                 id="input-reservation-search"
                 placeholder="Zoek een reservering...."
-                className={`flex-1 h-full ${RobotoFont.className}`}
+                className={`flex-1 h-full ${RobotoFont.className} focus:outline-0`}
                 onChange={(e) => setSearchQuery(e.currentTarget.value)}
                 onKeyUp={handleKeyPress}
             />
