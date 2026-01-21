@@ -8,6 +8,7 @@ import nl from "@/app/Images/nl.jpg";
 import w3c from "@/app/Images/w3c.jpg";
 import home from "@/app/Images/house-door-fill.svg";
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
+import toast from "react-hot-toast";
 
 {
   /*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */
@@ -18,6 +19,7 @@ export default function Reservering1() {
   const [DatumVertrek, setDatumVertrek] = useState<string>("");
   const [Plaats, setPlaats] = useState<string>("");
   const [Personen, setPersonen] = useState<string>("");
+  const [ErrorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     let ticking = false;
@@ -40,6 +42,13 @@ export default function Reservering1() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const alleVelden = Boolean(Plaats && Personen && DatumAankomst && DatumVertrek);
+
+  const vertrekNaAankomst = DatumAankomst && DatumVertrek && new Date(DatumVertrek) > new Date(DatumAankomst);
+  const aankomstNaNu = DatumAankomst && new Date(DatumAankomst) > new Date();
+
+
+
   return (
     <>
       <div className="min-h-screen w-full text-[#2c2c2c] font-sans bg-[#FDF5D8]">
@@ -49,9 +58,8 @@ export default function Reservering1() {
               <div
                 className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50 md:block hidden
                transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${
-                  shrink ? "scale-60" : "scale-100"
-                }`}
+              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"
+                  }`}
               >
                 <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130">
                   <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125">
@@ -176,28 +184,32 @@ export default function Reservering1() {
                     ></input>
                   </div>
 
-                  {Plaats &&
-                  Personen &&
-                  DatumAankomst &&
-                  DatumVertrek &&
-                  DatumVertrek > DatumAankomst &&
-                  new Date(DatumAankomst) > new Date() ? (
-                    <a
-                      title="klik her om datum en dagen te wijzigen"
-                      rel="noopener noreferer"
-                      href="/klanten/2"
-                    >
-                      <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
+
+
+                  {alleVelden && vertrekNaAankomst && aankomstNaNu ?
+                    (
+                      <a
+                        title="klik her om datum en dagen te wijzigen"
+                        rel="noopener noreferer"
+                        href="/klanten/2"
+                      >
+                        <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
+                          Boeken
+                        </button>
+                      </a>
+                    ) : (
+                      <button onClick={() => toast.error(!alleVelden ? "Vul alle velden in!" : !vertrekNaAankomst ? "De vertrekdatum moet vóór de aankomstdatum liggen!" : !aankomstNaNu ? "De aankomstdatum moet in de toekomst liggen!" : "")} className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#8c8c8c] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
                         Boeken
                       </button>
-                    </a>
-                  ) : (
-                    <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
-                      Boeken
-                    </button>
-                  )}
+
+                    )}
+
 
                   {/*knoppen om je voorkeuren te aan te passen. ze doen nog niks. moet nog zorgen dat je een list krijgt waar je uit kunt kiezen van aantal personen en plekken. ook een kalender die je kan kiezen voor aankomst en vertrek*/}
+                </div>
+
+                <div className="text-red-600 text-2xl w-full flex justify-center">
+                  {ErrorMessage}
                 </div>
               </div>
             </section>
