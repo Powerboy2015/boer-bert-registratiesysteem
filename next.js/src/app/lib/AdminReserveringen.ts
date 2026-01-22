@@ -2,6 +2,11 @@ import { ReservatieAndPlekBody } from "../api/private/reservaties/route";
 import { UserAndReservatieBody } from "../api/private/reservatiesenuserdata/route";
 import { Reservering } from "../reserveringen/Widgets/Reserveringen";
 
+interface response {
+    ok: boolean;
+    message: string;
+}
+
 export default class AdminReserveringen {
     static resUsrEndpoint: string = "/api/private/reservatiesenuserdata";
     static resEndpoint: string = "/api/private/reservaties";
@@ -13,7 +18,7 @@ export default class AdminReserveringen {
         Pragma: "no-cache",
     };
 
-    static async UpdateReservation(res: Reservering) {
+    static async UpdateReservation(res: Reservering): Promise<response> {
         // sets up the correct URL.
         const url = new URL(window.location.origin);
         url.pathname = this.resEndpoint;
@@ -50,7 +55,7 @@ export default class AdminReserveringen {
         };
     }
 
-    static async createReservation(res: Reservering) {
+    static async createReservation(res: Reservering): Promise<response> {
         const requestBody: UserAndReservatieBody = {
             Reservatie: {
                 ReseveringsNr: res.ReseveringsNr,
@@ -78,9 +83,10 @@ export default class AdminReserveringen {
         });
 
         if (response.ok) return { ok: true, message: "Nieuwe reservering aangemaakt." };
+        return { ok: false, message: "reservering aanmaken mislukt." };
     }
 
-    static async DeleteReservation(resNr: string) {
+    static async DeleteReservation(resNr: string): Promise<response> {
         const url = new URL(window.location.origin);
         url.pathname = this.resEndpoint;
         url.searchParams.set("id", resNr);

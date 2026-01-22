@@ -6,6 +6,7 @@ import DesktopReservationModal from "../components/DesktopReservationModal";
 interface OverlayContext {
     setActiveReservation: (res: Reservering | null) => void;
     reloadReservations: (() => void) | null;
+    setReloadReservations: (res: (() => void) | null) => void;
 }
 
 // This lets us call the context to easily set a variable later on in top level components.
@@ -17,7 +18,7 @@ export function ReservationOverlayProvider({ children }: { children: React.React
 
     return (
         // Here we tell what the context should hold and by wrapping everything around it, it allows us to use it.
-        <OverlayContext.Provider value={{ setActiveReservation, reloadReservations }}>
+        <OverlayContext.Provider value={{ setActiveReservation, reloadReservations, setReloadReservations }}>
             {children}
 
             {activeReservation && (

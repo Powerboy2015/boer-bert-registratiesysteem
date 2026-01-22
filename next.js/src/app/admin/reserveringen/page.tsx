@@ -12,6 +12,7 @@ import {
 } from "@mui/icons-material";
 import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
 import { OverlayContext } from "../context/OverlayContext";
+import { useApi } from "@/app/lib/hooks/useApi";
 
 type inOutFilterType = "incoming" | "outgoing";
 type timeFilterType = "today" | "week" | "month";
@@ -19,9 +20,18 @@ type timeFilterType = "today" | "week" | "month";
 export default function AdminReserveringen() {
     const [timeFilter, setTimeFilter] = useState<timeFilterType>("today");
     const [inOutFilter, setInOutFilter] = useState<inOutFilterType>("incoming");
-    const [resevationList, setReservationList] = useState<Reservering[]>([]);
     const [filterResList, setFilterResList] = useState<Reservering[]>([]);
     const context = useContext(OverlayContext);
+
+    const [resevationList, loading, error, reload] = useApi<Reservering[]>(async (signal: AbortSignal) => {
+        const url = new URL(window.location.origin);
+        url.pathname = "/api/private/reservatiesenuserdata";
+        const resp = await fetch(url, { cache: "no-store", signal });
+        if (resp.ok) {
+            const data = await resp.json();
+            return data.Reservation;
+        }
+    });
 
     useEffect(() => {
         const isToday = (date1: string) => {
@@ -37,26 +47,17 @@ export default function AdminReserveringen() {
 
         switch (timeFilter) {
             case "today":
-                const filtered = resevationList.filter((reservering) => isToday(reservering.DatumAankomst));
+                const filtered = resevationList?.filter((reservering) => isToday(reservering.DatumAankomst));
                 console.log(filtered);
             case "week":
             case "month":
         }
     }, [timeFilter, inOutFilter, resevationList]);
 
-    const refreshReservations = useCallback(async () => {
-        const url = new URL(window.location.origin);
-        url.pathname = "/api/private/reservatiesenuserdata";
-        const resp = await fetch(url, { cache: "no-store" });
-        if (resp.ok) {
-            const data = await resp.json();
-            setReservationList(data.Reservation);
-        }
-    }, []);
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        refreshReservations();
-    }, [refreshReservations]);
+        console.log("set reload: ", reload);
+        context?.setReloadReservations(() => reload);
+    }, []);
 
     return (
         <>
@@ -127,7 +128,7 @@ export default function AdminReserveringen() {
                     </div>
                 </section>
                 <section id="reservations" className="w-full h-full pt-4">
-                    {resevationList.map((reservering) => (
+                    {resevationList?.map((reservering) => (
                         <MobileReservation key={reservering.ReseveringsNr} res={reservering} />
                     ))}
                 </section>
@@ -237,12 +238,8 @@ export default function AdminReserveringen() {
                             </tr>
                         </thead>
                         <tbody className="text-2xl">
-                            {resevationList.map((reservering) => (
-                                <DesktopReservation
-                                    key={reservering.ReseveringsNr}
-                                    res={reservering}
-                                    reloadFunc={refreshReservations}
-                                />
+                            {resevationList?.map((reservering) => (
+                                <DesktopReservation key={reservering.ReseveringsNr} res={reservering} />
                             ))}
                         </tbody>
                     </table>

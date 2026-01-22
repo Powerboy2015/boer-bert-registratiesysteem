@@ -1,6 +1,6 @@
 import AdminReserveringen from "@/app/lib/AdminReserveringen";
 import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
-import { Check, Delete, Edit, Undo } from "@mui/icons-material";
+import { Check, Delete, Edit } from "@mui/icons-material";
 import { MouseEvent, useContext, useEffect, useState } from "react";
 import { OverlayContext } from "../context/OverlayContext";
 
@@ -20,26 +20,48 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
         isCreatingNew(res.ReseveringsNr === "Nieuwe Reservering");
     }, [res.ReseveringsNr]);
 
+    const reloadReservations = (resp: { ok: boolean; message: string }) => {
+        console.log(resp);
+
+        // if we have a reload reservation function we call it and it'll reload the dashboard.
+        if (context !== null && context?.reloadReservations !== null) {
+            context.reloadReservations();
+        } else {
+            console.log("could not reload reservations.");
+        }
+    };
+
     const HandleDelete = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.stopPropagation();
         SetDeleteQuestionActive(false);
-        AdminReserveringen.DeleteReservation(res.ReseveringsNr).then((resp) => console.log(resp));
+
+        // console logs our deletion.
+        AdminReserveringen.DeleteReservation(res.ReseveringsNr).then(reloadReservations);
+
+        // if we have given the reload function correctly, fire it
+
+        //Clears out the current reservation we are viewing. Thus closing the modal
         context?.setActiveReservation(null);
     };
 
     const handleSave = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.stopPropagation();
+
+        //depending on if we're creating a new one, create a new one or update an existing one.
         if (createNew) {
-            AdminReserveringen.createReservation(editableReservation).then((resp) => console.log(resp));
+            AdminReserveringen.createReservation(editableReservation).then(reloadReservations);
         } else {
-            AdminReserveringen.UpdateReservation(editableReservation).then((resp) => console.log(resp));
+            AdminReserveringen.UpdateReservation(editableReservation).then(reloadReservations);
         }
         console.log(editableReservation);
         canEdit(false);
         isCreatingNew(false);
+
+        //Clears out the current reservation we are viewing. Thus closing the modal
         context?.setActiveReservation(null);
     };
 
+    // updates the field for the selected reservation.
     const updateField = (field: string, value: string | number) => {
         setEditableReservation((prev) => {
             return { ...prev, [field]: value };
