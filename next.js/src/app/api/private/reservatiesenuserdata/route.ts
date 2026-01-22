@@ -3,13 +3,7 @@ import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
 import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
-const allowedColumnsUserData = [
-    "Woonplaats",
-    "Voornaam",
-    "Achternaam",
-    "Telefoonnummer",
-    "Email",
-];
+const allowedColumnsUserData = ["Woonplaats", "Voornaam", "Achternaam", "Telefoonnummer", "Email"];
 const allowedColumnsReservaties = [
     "ReseveringsNr",
     "DatumAankomst",
@@ -17,10 +11,7 @@ const allowedColumnsReservaties = [
     "ReserveringsDatum",
     "AantalMensen",
 ];
-const allowedColumnsUserandRes = [
-    ...allowedColumnsUserData,
-    ...allowedColumnsReservaties,
-];
+const allowedColumnsUserandRes = [...allowedColumnsUserData, ...allowedColumnsReservaties];
 
 interface UserDataBody {
     Voornaam: string;
@@ -31,7 +22,7 @@ interface UserDataBody {
 }
 
 interface ReservatieBody {
-    UserData_ID: number;
+    UserData_ID?: number;
     ReseveringsNr: string;
     DatumAankomst: string;
     DatumVertrek: string;
@@ -57,7 +48,7 @@ export async function GET(req: NextRequest) {
 
         //limits the amount of reservation being displayed at once, also the page select thing
         const page: number = Number(searchParam.get("page") || 1); //the page uhh that you're seeing
-        const limit: number = Number(searchParam.get("limit") || 20); // max users that get loaded at once (20 is default)
+        const limit: number = Number(searchParam.get("limit") || 900); // max users that get loaded at once (900 is default)
         const pagestart: number = (page - 1) * limit; // calculates what user it should start from
 
         //search options
@@ -70,16 +61,10 @@ export async function GET(req: NextRequest) {
 
         //checks if column and search prompt are valid
         if (!allowedColumnsUserandRes.includes(sort)) {
-            return NextResponse.json(
-                { error: `Foute kolkom: ${sort}` },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: `Foute kolkom: ${sort}` }, { status: 400 });
         }
         if (searchColumn && !allowedColumnsUserandRes.includes(searchColumn)) {
-            return NextResponse.json(
-                { error: `Foute kolkom: ${searchColumn}` },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: `Foute kolkom: ${searchColumn}` }, { status: 400 });
         }
 
         const db = await getDB();
@@ -101,7 +86,7 @@ export async function GET(req: NextRequest) {
             INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID 
             ${whereSQLquery} AND isArchived = false 
             ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
-            [...likeInput, limit, pagestart]
+            [...likeInput, limit, pagestart],
         );
 
         const reservaties = rows.map((row) => ({
@@ -125,7 +110,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(
             //gives error 500 if something went wrong
             { error: "Interne serverfout", details: `${err}` },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
@@ -148,45 +133,31 @@ export async function POST(req: NextRequest) {
         const reservatieValues = Object.values(Reservatie);
 
         //checks if the body key items are in the vaild columns list
-        const invalidUserColumns = userKeys.filter(
-            (key) => !allowedColumnsUserData.includes(key)
-        );
+        const invalidUserColumns = userKeys.filter((key) => !allowedColumnsUserData.includes(key));
         if (invalidUserColumns.length) {
             return NextResponse.json(
                 {
-                    error:
-                        "Ongeldige UserData kolomm(en): " +
-                        invalidUserColumns.join(", "),
+                    error: "Ongeldige UserData kolomm(en): " + invalidUserColumns.join(", "),
                 },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
-        const invalidReservatieColumns = reservatieKeys.filter(
-            (key) => !allowedColumnsReservaties.includes(key)
-        );
+        const invalidReservatieColumns = reservatieKeys.filter((key) => !allowedColumnsReservaties.includes(key));
         if (invalidReservatieColumns.length) {
             return NextResponse.json(
                 {
-                    error:
-                        "Invalid Reservatie columns: " +
-                        invalidReservatieColumns.join(", "),
+                    error: "Invalid Reservatie columns: " + invalidReservatieColumns.join(", "),
                 },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
         const plekNummer = Plek.PlekNummer;
-        const [plek] = await db.execute(
-            `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
-            [plekNummer]
-        );
+        const [plek] = await db.execute(`SELECT ID FROM Plekken WHERE PlekNummer = ?`, [plekNummer]);
 
         if (!Array.isArray(plek) || plek.length === 0) {
-            return NextResponse.json(
-                { error: "Ongeldig PlekNummer" },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: "Ongeldig PlekNummer" }, { status: 400 });
         }
 
         const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
@@ -198,34 +169,20 @@ export async function POST(req: NextRequest) {
         const sqlUserData = `INSERT INTO UserData (${userKeys.join(", ")}) 
             VALUES (${userKeys.map(() => "?").join(", ")})`;
 
-        const [resultUserData] = await db.execute<ResultSetHeader>(
-            sqlUserData,
-            userValues
-        );
+        const [resultUserData] = await db.execute<ResultSetHeader>(sqlUserData, userValues);
 
         //takes UserData.ID of the previous execute and makes it a variable
         const userId = resultUserData.insertId;
 
-        const reservatieKeysWUserDataID = [
-            "UserData_ID",
-            ...reservatieKeys,
-            "Plekken_ID",
-        ];
-        const reservatieValuesWUserDataID = [
-            userId,
-            ...reservatieValues,
-            plekkenId,
-        ];
+        const reservatieKeysWUserDataID = ["UserData_ID", ...reservatieKeys, "Plekken_ID"];
+        const reservatieValuesWUserDataID = [userId, ...reservatieValues, plekkenId];
 
         //Sql again 👍
         const sqlReservaties = `INSERT INTO Reservaties (${reservatieKeysWUserDataID.join(
-            ", "
+            ", ",
         )}) VALUES (${reservatieKeysWUserDataID.map(() => "?").join(", ")})`;
 
-        const [resultReservaties] = await db.execute<ResultSetHeader>(
-            sqlReservaties,
-            reservatieValuesWUserDataID
-        );
+        const [resultReservaties] = await db.execute<ResultSetHeader>(sqlReservaties, reservatieValuesWUserDataID);
 
         //commit database changes if both executed correctly
         await db.commit();
@@ -234,9 +191,7 @@ export async function POST(req: NextRequest) {
             await sendMail({
                 //type script but we remove type. It will be -script.
                 to: (UserData as any).Email,
-                name: `${(UserData as any).Voornaam} ${
-                    (UserData as any).Achternaam
-                }`.trim(),
+                name: `${(UserData as any).Voornaam} ${(UserData as any).Achternaam}`.trim(),
                 spot: (Reservatie as any).PlekNummer,
                 peopleCount: (Reservatie as any).AantalMensen,
                 arrivalDate: (Reservatie as any).DatumAankomst,
@@ -256,10 +211,7 @@ export async function POST(req: NextRequest) {
     } catch (err) {
         //gives error 500 if something went wrong
         await db.rollback();
-        return NextResponse.json(
-            { error: "Interne serverfout", details: String(err) },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: "Interne serverfout", details: String(err) }, { status: 500 });
     }
 }
 
@@ -280,10 +232,7 @@ async function SelectQuery<T>(db: Connection, query: string): Promise<T[]> {
  */
 async function getReservationNr(db: Connection): Promise<string> {
     // TODO fix a less lazy way to calculate a reservationID. Currently using ids.
-    const reservationID = await SelectQuery<IreservationNr>(
-        db,
-        "SELECT MAX(ID) as ID FROM Reservaties"
-    );
+    const reservationID = await SelectQuery<IreservationNr>(db, "SELECT MAX(ID) as ID FROM Reservaties");
 
     console.log(reservationID);
 

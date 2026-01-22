@@ -4,13 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ResultSetHeader } from "mysql2/promise";
 
 //allowed columns that can be given from the front end
-const allowedColumnsUserData = [
-    "Woonplaats",
-    "Voornaam",
-    "Achternaam",
-    "Telefoonnummer",
-    "Email",
-];
+const allowedColumnsUserData = ["Woonplaats", "Voornaam", "Achternaam", "Telefoonnummer", "Email"];
 const allowedColumnsReservaties = [
     "ReseveringsNr",
     "DatumAankomst",
@@ -19,10 +13,7 @@ const allowedColumnsReservaties = [
     "PlekNummer",
     "AantalMensen",
 ];
-const allowedColumnsUserandRes = [
-    ...allowedColumnsUserData,
-    ...allowedColumnsReservaties,
-];
+const allowedColumnsUserandRes = [...allowedColumnsUserData, ...allowedColumnsReservaties];
 
 interface ReservatieBody {
     UserData_ID: number;
@@ -38,8 +29,8 @@ interface PlekBody {
 }
 
 export interface ReservatieAndPlekBody {
-    Reservatie: ReservatieBody;
-    Plek: PlekBody;
+    Reservatie: Partial<ReservatieBody>;
+    Plek: Partial<PlekBody>;
 }
 
 export async function GET(req: NextRequest) {
@@ -63,16 +54,10 @@ export async function GET(req: NextRequest) {
 
         //checks if column and search prompt are valid
         if (!allowedColumnsUserandRes.includes(sort)) {
-            return NextResponse.json(
-                { error: `Foute kolkom: ${sort}` },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: `Foute kolkom: ${sort}` }, { status: 400 });
         }
         if (searchColumn && !allowedColumnsUserandRes.includes(searchColumn)) {
-            return NextResponse.json(
-                { error: `Foute kolkom: ${searchColumn}` },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: `Foute kolkom: ${searchColumn}` }, { status: 400 });
         }
 
         const db = await getDB();
@@ -90,7 +75,7 @@ export async function GET(req: NextRequest) {
         //Sql query database execute
         const [rows] = await db.execute(
             `select * from Reservaties INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
-            [...likeInput, limit, pagestart]
+            [...likeInput, limit, pagestart],
         );
         const reservaties = rows.map((row) => ({
             ReseveringsNr: row.ReseveringsNr,
@@ -108,7 +93,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json(
             //gives error 500 if something went wrong
             { error: "Interne serverfout", details: `${err}` },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
@@ -207,15 +192,12 @@ export async function DELETE(req: NextRequest) {
         //proper types
         const [result] = await db.execute<ResultSetHeader>(
             "UPDATE Reservaties SET isArchived = true WHERE ReseveringsNr = ?",
-            [id]
+            [id],
         );
 
         //if the db.execute didn't make any changes it will respond with a not found error
         if (result.affectedRows === 0) {
-            return NextResponse.json(
-                { error: "Reservatie niet gevonden" },
-                { status: 404 }
-            );
+            return NextResponse.json({ error: "Reservatie niet gevonden" }, { status: 404 });
         }
 
         return NextResponse.json({
@@ -226,7 +208,7 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json(
             //gives error 500 if something went wrong
             { error: "Interne serverfout", details: `${err}` },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }
@@ -251,30 +233,22 @@ export async function PUT(req: NextRequest) {
         const values = Object.values(Reservatie);
 
         //checks if the body key items are in the vaild columns list
-        const invalidColumns = keys.filter(
-            (key) => !allowedColumnsReservaties.includes(key)
-        );
+        const invalidColumns = keys.filter((key) => !allowedColumnsReservaties.includes(key));
 
         if (invalidColumns.length) {
             return NextResponse.json(
                 { error: "Ongeldige kolomm(en): " + invalidColumns.join(", ") },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
         const db = await getDB();
 
         const plekNummer = Plek.PlekNummer;
-        const [plek] = await db.execute(
-            `SELECT ID FROM Plekken WHERE PlekNummer = ?`,
-            [plekNummer]
-        );
+        const [plek] = await db.execute(`SELECT ID FROM Plekken WHERE PlekNummer = ?`, [plekNummer]);
 
         if (!Array.isArray(plek) || plek.length === 0) {
-            return NextResponse.json(
-                { error: "Ongeldig PlekNummer" },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: "Ongeldig PlekNummer" }, { status: 400 });
         }
 
         const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
@@ -285,14 +259,11 @@ export async function PUT(req: NextRequest) {
         //sql execute 👍👍👍👍👍👍👍👍👍👍👍👍👍
         const [result] = await db.execute<ResultSetHeader>(
             `UPDATE Reservaties SET ${setInput}, Plekken_ID = ? WHERE ReseveringsNr = ?`,
-            [...values, plekkenId, id]
+            [...values, plekkenId, id],
         );
         //if the db.execute didn't make any changes it will respond with a not found error
         if (result.affectedRows === 0) {
-            return NextResponse.json(
-                { error: "Reservatie niet gevonden" },
-                { status: 404 }
-            );
+            return NextResponse.json({ error: "Reservatie niet gevonden" }, { status: 404 });
         }
 
         return NextResponse.json({
@@ -303,7 +274,7 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json(
             //gives error 500 if something went wrong
             { error: "Interne serverfout", details: `${err}` },
-            { status: 500 }
+            { status: 500 },
         );
     }
 }

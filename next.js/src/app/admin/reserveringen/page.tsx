@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { ReservationSearch } from "../components/ReserveringSearch";
 import { StylingProps } from "../stylingprops/props";
 import {
@@ -44,22 +44,19 @@ export default function AdminReserveringen() {
         }
     }, [timeFilter, inOutFilter, resevationList]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const url = new URL(window.location.origin);
-            url.pathname = "/api/private/reservatiesenuserdata";
-
-            const resp = await fetch(url);
-            if (resp.ok) {
-                const reserveringen = await resp.json();
-                setReservationList(reserveringen.Reservation);
-            }
-        };
-
-        fetchData();
+    const refreshReservations = useCallback(async () => {
+        const url = new URL(window.location.origin);
+        url.pathname = "/api/private/reservatiesenuserdata";
+        const resp = await fetch(url, { cache: "no-store" });
+        if (resp.ok) {
+            const data = await resp.json();
+            setReservationList(data.Reservation);
+        }
     }, []);
-
-    // TODO add useEffect that fires when any of these usestates change.
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        refreshReservations();
+    }, [refreshReservations]);
 
     return (
         <>
@@ -183,11 +180,13 @@ export default function AdminReserveringen() {
                                 <option value="3">Niet aangekomen</option>
                             </select>
                         </div>
-                        <button onClick={() => {
-                            const res: Reservering = {ReseveringsNr: "Nieuwe Reservering"} as Reservering;
-                            context?.setActiveReservation(res);
-                        }} 
-                        className="py-2 px-4 rounded-2xl bg-[#00B874] text-[#EDEBDE] text-nowrap">
+                        <button
+                            onClick={() => {
+                                const res: Reservering = { ReseveringsNr: "Nieuwe Reservering" } as Reservering;
+                                context?.setActiveReservation(res);
+                            }}
+                            className="py-2 px-4 rounded-2xl bg-[#00B874] text-[#EDEBDE] text-nowrap"
+                        >
                             + Nieuwe Reservering
                         </button>
                     </section>
@@ -239,7 +238,11 @@ export default function AdminReserveringen() {
                         </thead>
                         <tbody className="text-2xl">
                             {resevationList.map((reservering) => (
-                                <DesktopReservation key={reservering.ReseveringsNr} res={reservering} />
+                                <DesktopReservation
+                                    key={reservering.ReseveringsNr}
+                                    res={reservering}
+                                    reloadFunc={refreshReservations}
+                                />
                             ))}
                         </tbody>
                     </table>
@@ -319,4 +322,3 @@ function DesktopReservation({ res, key }: ReservationProps) {
         </tr>
     );
 }
-    

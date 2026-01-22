@@ -1,32 +1,43 @@
+import AdminReserveringen from "@/app/lib/AdminReserveringen";
 import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
 import { Check, Delete, Edit, Undo } from "@mui/icons-material";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useContext, useEffect, useState } from "react";
+import { OverlayContext } from "../context/OverlayContext";
 
 interface DesktopReservationModalProps {
     res: Reservering;
 }
 export default function DesktopReservationModal({ res }: DesktopReservationModalProps) {
     const [edit, canEdit] = useState<boolean>(false);
+    const [createNew, isCreatingNew] = useState<boolean>(false);
     const [deleteQuestionActive, SetDeleteQuestionActive] = useState<boolean>(false);
     const [editableReservation, setEditableReservation] = useState<Reservering>(res);
+    const context = useContext(OverlayContext);
 
-
-    useEffect(() =>{
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            canEdit(res.ReseveringsNr === "Nieuwe Reservering");
-    },[res.ReseveringsNr])
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        canEdit(res.ReseveringsNr === "Nieuwe Reservering");
+        isCreatingNew(res.ReseveringsNr === "Nieuwe Reservering");
+    }, [res.ReseveringsNr]);
 
     const HandleDelete = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.stopPropagation();
         SetDeleteQuestionActive(false);
-        // TODO backend logic
+        AdminReserveringen.DeleteReservation(res.ReseveringsNr).then((resp) => console.log(resp));
+        context?.setActiveReservation(null);
     };
 
     const handleSave = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.stopPropagation();
-        canEdit(false);
+        if (createNew) {
+            AdminReserveringen.createReservation(editableReservation).then((resp) => console.log(resp));
+        } else {
+            AdminReserveringen.UpdateReservation(editableReservation).then((resp) => console.log(resp));
+        }
         console.log(editableReservation);
-        // TODO backend logic
+        canEdit(false);
+        isCreatingNew(false);
+        context?.setActiveReservation(null);
     };
 
     const updateField = (field: string, value: string | number) => {
@@ -35,8 +46,6 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
         });
     };
 
-
-
     return (
         <div
             id="desktopDetails"
@@ -44,39 +53,74 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
         >
             <section id="view-general-info" className="flex flex-col py-4 gap-1 border-b-2 border-[#999999]">
                 <p className="text-2xl">{res.ReseveringsNr}</p>
-                {edit ?(<div className={`flex flex-row ${edit ? "text-green-700 bg-white": ""}`}>
-                            <input className="text-3xl w-full" onChange={(e) => {
-                                updateField("Voornaam",e.currentTarget.value);
-                            }} type="text" placeholder="voornaam..." defaultValue={res.Voornaam} name="" id="" />
-                            <input className="text-3xl w-full" onChange={(e) => {
-                                updateField("Achternaam",e.currentTarget.value);
-                            }} type="text" placeholder="achternaam..." defaultValue={res.Achternaam} name="" id="" />
-                        </div>) 
-                        :
-                        (<p className="text-5xl text-black">
-                    {res.Voornaam} {res.Achternaam}
-                </p>)}
+                {edit ? (
+                    <div className={`flex flex-row ${edit ? "text-green-700 bg-white" : ""}`}>
+                        <input
+                            className="text-3xl w-full"
+                            onChange={(e) => {
+                                updateField("Voornaam", e.currentTarget.value);
+                            }}
+                            type="text"
+                            placeholder="voornaam..."
+                            defaultValue={res.Voornaam}
+                            name=""
+                            id=""
+                        />
+                        <input
+                            className="text-3xl w-full"
+                            onChange={(e) => {
+                                updateField("Achternaam", e.currentTarget.value);
+                            }}
+                            type="text"
+                            placeholder="achternaam..."
+                            defaultValue={res.Achternaam}
+                            name=""
+                            id=""
+                        />
+                    </div>
+                ) : (
+                    <p className="text-5xl text-black">
+                        {res.Voornaam} {res.Achternaam}
+                    </p>
+                )}
             </section>
             <section
                 id="view-reservation-info"
                 className="flex flex-col gap-4 pb-4 text-3xl justify-center border-b-2 border-[#999999]"
             >
-                {edit ? (<div className={`flex flex-row justify-between gap-4 ${edit ? "text-green-700 bg-white": ""}`}>
-                    <input type="date" name="" id="" defaultValue={res.DatumAankomst?.split("T")[0] || undefined} onChange={(e) => {
-                        updateField("DatumAankomst",e.currentTarget.value)
-                    }} />
-                    <p>Tot</p>
-                    <input type="date" name="" id="" defaultValue={res.DatumVertrek?.split("T")[0] || undefined} onChange={(e) => {
-                        updateField("DatumVertrek",e.currentTarget.value)
-                    }} />
-                </div>) : (
-                <p className="text-center">
-                    {res.DatumAankomst?.split("T")[0] || ""} tot {res.DatumVertrek?.split("T")[0] || ""}
-                </p>)}
+                {edit ? (
+                    <div
+                        className={`flex flex-row justify-between gap-4 ${edit ? "text-green-700 bg-white" : ""}`}
+                    >
+                        <input
+                            type="date"
+                            name=""
+                            id=""
+                            defaultValue={res.DatumAankomst?.split("T")[0] || undefined}
+                            onChange={(e) => {
+                                updateField("DatumAankomst", e.currentTarget.value);
+                            }}
+                        />
+                        <p>Tot</p>
+                        <input
+                            type="date"
+                            name=""
+                            id=""
+                            defaultValue={res.DatumVertrek?.split("T")[0] || undefined}
+                            onChange={(e) => {
+                                updateField("DatumVertrek", e.currentTarget.value);
+                            }}
+                        />
+                    </div>
+                ) : (
+                    <p className="text-center">
+                        {res.DatumAankomst?.split("T")[0] || ""} tot {res.DatumVertrek?.split("T")[0] || ""}
+                    </p>
+                )}
                 <DataField
                     canEdit={edit}
                     editValue={(val) => {
-                        updateField("PlekGrootte", val);
+                        updateField("PlekNummer", val);
                     }}
                     name="Plaatsnummer"
                     value={`${res.PlekNummer} (${res.PlekGrootte == "G" ? "Groot" : "Klein"})`}
@@ -89,9 +133,15 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     name="Aantal personen"
                     value={res.AantalMensen}
                 />
-                <input type="date" name="" id="" defaultValue={res.ReserveringsDatum?.split("T")[0] || undefined} onChange={(e) => {
-                        updateField("ReserveringsDatum",e.currentTarget.value)
-                }} />
+                <input
+                    type="date"
+                    name=""
+                    id=""
+                    defaultValue={res.ReserveringsDatum?.split("T")[0] || undefined}
+                    onChange={(e) => {
+                        updateField("ReserveringsDatum", e.currentTarget.value);
+                    }}
+                />
                 <DataField canEdit={edit} name="Status" value={"afwachtend"} />
             </section>
             <section
@@ -146,36 +196,38 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     </button>
                 )}
 
-                <div
-                    id="delete-reservation"
-                    className="flex flex-row text-[32px] items-center py-2 px-1 gap-4 bg-[#FF8080] rounded text-[#852221] relative"
-                    onClick={() => {
-                        SetDeleteQuestionActive(true);
-                    }}
-                >
-                    {deleteQuestionActive && (
-                        <div className="bg-gray-100 rounded-2xl p-4 absolute -top-20 text-base w-[175px]">
-                            <p>Weet je het zeker?</p>
-                            <div className="options flex flex-row justify-between">
-                                <button className="px-4 bg-green-400 rounded" onClick={HandleDelete}>
-                                    ja
-                                </button>
-                                <button
-                                    className="px-4 bg-red-400 rounded"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        SetDeleteQuestionActive(false);
-                                    }}
-                                >
-                                    nee
-                                </button>
+                {!createNew && (
+                    <div
+                        id="delete-reservation"
+                        className="flex flex-row text-[32px] items-center py-2 px-1 gap-4 bg-[#FF8080] rounded text-[#852221] relative"
+                        onClick={() => {
+                            SetDeleteQuestionActive(true);
+                        }}
+                    >
+                        {deleteQuestionActive && (
+                            <div className="bg-gray-100 rounded-2xl p-4 absolute -top-20 text-base w-[175px]">
+                                <p>Weet je het zeker?</p>
+                                <div className="options flex flex-row justify-between">
+                                    <button className="px-4 bg-green-400 rounded" onClick={HandleDelete}>
+                                        ja
+                                    </button>
+                                    <button
+                                        className="px-4 bg-red-400 rounded"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            SetDeleteQuestionActive(false);
+                                        }}
+                                    >
+                                        nee
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    <Delete style={{ width: 32, height: 32 }} />
-                    <p className="text-black">Verwijderen</p>
-                </div>
+                        <Delete style={{ width: 32, height: 32 }} />
+                        <p className="text-black">Verwijderen</p>
+                    </div>
+                )}
             </section>
         </div>
     );
