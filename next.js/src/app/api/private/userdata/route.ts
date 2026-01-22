@@ -1,6 +1,6 @@
 import getDB from "@/app/api/lib/db"
 import { NextRequest, NextResponse } from "next/server";
-import { ResultSetHeader } from "mysql2/promise";
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 const allowedColumnsUserData = ["ID", "Created_at", "Woonplaats", "Voornaam", "Achternaam", "Telefoonnummer", "Email"];
 //ID later weg halen voor veiligheid, sorteer later op created at
@@ -44,7 +44,10 @@ export async function GET(req: NextRequest) {
     // const [rows] = await db.execute(`select * from UserData ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`, [...likeInput, limit, pagestart]);
     // return NextResponse.json({data: rows});
 
-    const [rows] = await db.execute(`select * from UserData ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`, [...likeInput, limit, pagestart]);
+    const [rows] = await db.execute<RowDataPacket[]>(
+        `select * from UserData ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`, 
+        [...likeInput, limit, pagestart]
+    );
     const UserData = (rows.map((row) => ({
         Voornaam: row.Voornaam,
         Achternaam: row.Achternaam,

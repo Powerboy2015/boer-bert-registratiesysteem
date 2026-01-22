@@ -72,6 +72,7 @@ export default function Reservering2() {
             },
             Plek: {
               PlekNummer: localStorage.getItem("PlekNr"),
+              Grootte: localStorage.getItem("Plaats")
             },
           }),
         });

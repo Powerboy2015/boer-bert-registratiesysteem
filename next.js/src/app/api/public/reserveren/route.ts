@@ -36,8 +36,10 @@ interface ReservatieBody {
     Prijs: string;
 }
 
+
 interface PlekBody {
     PlekNummer: number;
+    Grootte: string;
 }
 
 export interface UserAndReservatieBody {
@@ -57,19 +59,19 @@ export async function POST(req: NextRequest) {
         //fuck it ik kan typescript niet goed laten werken met for loops (checkt als alle velden er zijn)
         if (!UserData.Voornaam ||!UserData.Achternaam ||!UserData.Email ||!UserData.Telefoonnummer ||!UserData.Woonplaats) {
             return NextResponse.json(
-            { error: "Je mist een iets in userdata body" },
+            { error: "Je mist een iets in userdata body of er is een fout in userdata body" },
             { status: 400 }
             );
         }
         if (!Reservatie.DatumAankomst ||!Reservatie.DatumVertrek ||!Reservatie.AantalMensen ||!Reservatie.Prijs) {
             return NextResponse.json(
-            { error: "Je mist een iets in reservatie body" },
+            { error: "Je mist een iets in reservatie body of er is iets fout in reservatie body" },
             { status: 400 }
             );
         }
-        if (!Plek.PlekNummer) {
+        if (!Plek.PlekNummer ||!Plek.Grootte) {
             return NextResponse.json(
-            { error: "Je mist een iets in plek body" },
+            { error: "Je mist een iets in plek body of er is iets fout in plek body" },
             { status: 400 }
             );
         }
@@ -91,6 +93,7 @@ export async function POST(req: NextRequest) {
             );
         }
         //checkt als prijs gegeven is in nummers dan , en dan 2 nummers
+        //deze shit hoeft nu eigenlijk niet meer, maar omdat je toch nog een prijs moet geven in de body is dit wel veiliger
         const regprijs = /^\d+,\d{2}$/;
         if (!regprijs.test(Reservatie.Prijs)) {
             return NextResponse.json(
@@ -98,8 +101,22 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             );
         }
-        
 
+        if (Plek.Grootte == "K" || Plek.Grootte == "G") { //checkt als in body K, G, Klein of Groot is meegegeven
+        }
+        else if (Plek.Grootte == "Klein" ) {
+            Plek.Grootte = "K";
+        }
+        else if (Plek.Grootte == "Groot") {
+            Plek.Grootte = "G";
+        }
+        else { //checkt als groottes K of G zijn (klein of groot)
+            return NextResponse.json(
+                { error: "Ongeldig plek grootte" },
+                { status: 400 }
+            );
+        }
+        
         const aankomst = new Date(Reservatie.DatumAankomst);
         const vertrek = new Date(Reservatie.DatumVertrek);
         const vandaag = new Date();
@@ -125,7 +142,11 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             );
         }
-        
+
+        const prijs = priceCalc(aankomst, vertrek, Plek.Grootte)
+        Reservatie.Prijs = prijs; //idk als dit good practice is lol
+        console.log(Reservatie.Prijs)
+
         const [plaatsbezetcheck] = await db.execute<RowDataPacket[]>(
             `
             SELECT Plekken.PlekNummer, Reservaties.DatumAankomst, Reservaties.DatumVertrek 
@@ -195,7 +216,7 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
+        const plekkenId = plek[0].ID;
 
         await db.beginTransaction();
 
@@ -306,3 +327,14 @@ async function getReservationNr(db: Connection): Promise<string> {
 
     return currentYear + "-" + nextID;
 }
+
+function priceCalc(aankomst: Date, vertrek: Date, size: string) { //btw calc is slang for calculator
+    const timeDifInDays = (vertrek.getTime() - aankomst.getTime()) / (1000 * 60 * 60 * 24);
+    console.log(timeDifInDays)
+    if (size == "G") {
+        return `${timeDifInDays * 30},00`
+    }
+    else {
+        return `${timeDifInDays * 20},00`
+    }
+} 
