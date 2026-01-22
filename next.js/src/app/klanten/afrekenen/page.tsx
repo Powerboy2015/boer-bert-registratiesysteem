@@ -206,6 +206,53 @@ export default function Reservering2() {
                           </div>
                         </div>{" "}
                         {/*achternaam */}
+                        <div className="flex md:flex-row flex-col mb-7 justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
+                          <div
+                            className="text-xl mt-5"
+                            style={{ fontFamily: "Roboto mono" }}
+                          >
+                            Email:
+                            <div className="mt-3">
+                              <input
+                                list="Email klant"
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
+                                type="email"
+                              ></input>
+                              <datalist id="ligging-in-het-park">
+                                <option value="in de zon" />
+                                <option value="in de schaduw" />
+                                <option value="bij het water" />
+                                <option value="vlakbij de ingang" />
+                                <option value="langs de hoodfweg" />
+                              </datalist>
+                            </div>
+                          </div>{" "}
+                          {/*email */}
+                          <div
+                            className="text-xl mt-5"
+                            style={{ fontFamily: "Roboto mono" }}
+                          >
+                            Telefoon nummer:
+                            <div className="mt-3">
+                              <input
+                                list="Telefoon klant"
+                                required
+                                onChange={(e) => setTelnr(e.target.value)}
+                                className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
+                                pattern="^06-\d{8}$"
+                              ></input>
+                              <datalist id="ligging-in-het-park">
+                                <option value="in de zon" />
+                                <option value="in de schaduw" />
+                                <option value="bij het water" />
+                                <option value="vlakbij de ingang" />
+                                <option value="langs de hoodfweg" />
+                              </datalist>
+                            </div>
+                          </div>{" "}
+                          {/*telefoon nummer */}
+                        </div>
                         <div
                           className="text-xl mt-5"
                           style={{ fontFamily: "Roboto mono" }}
@@ -236,10 +283,12 @@ export default function Reservering2() {
                           className="text-xl"
                           style={{ fontFamily: "Roboto mono" }}
                         >
-                          Telefoon nummer:
+                          Postcode:
                           <div className="mt-3">
                             <input
-                              list="Telefoon klant"
+                              list="Postcode klant"
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280] h-[50px] px-[15px]"
+                              pattern="[0-9]{4}[A-Z]{2}"
                               required
                               onChange={(e) => setTelnr(e.target.value)}
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
@@ -255,7 +304,7 @@ export default function Reservering2() {
                             </datalist>
                           </div>
                         </div>{" "}
-                        {/*telefoon nummer */}
+                        {/*postcode */}
                         <div
                           className="text-xl mt-"
                           style={{ fontFamily: "Roboto mono" }}

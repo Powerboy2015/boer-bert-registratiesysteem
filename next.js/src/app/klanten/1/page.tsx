@@ -185,7 +185,6 @@ export default function Reservering1() {
                   </div>
 
 
-
                   {alleVelden && vertrekNaAankomst && aankomstNaNu ?
                     (
                       <a
@@ -226,13 +225,11 @@ export default function Reservering1() {
                       <p className="text-3xl mt-5">Accomodaties</p>
                     </div>
                     <div className="p-6">
-                      <p
-                        className="text-2xl text-justify m-12 mt-6"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        Op de camping boer Bert zijn alleen tent plekken te
-                        boeken.
-                      </p>
+                      <div className="p-1">
+                        <p className="text-2xl m-12 mt-" style={{ fontFamily: 'Roboto mono' }}>Op de camping boer Bert zijn alleen tent plekken te boeken.</p>
+                        <p className="text-2xl mx-12 mt-" style={{ fontFamily: 'Roboto mono' }}>Grote plek: <b>125m2</b></p>
+                        <p className="text-2xl mx-12 mt-" style={{ fontFamily: 'Roboto mono' }}>Kleine plek: <b>60m2</b></p>
+                      </div>
                     </div>
                   </div>
                 </div>{" "}
@@ -244,7 +241,7 @@ export default function Reservering1() {
                     </div>
                     <div className="p-6">
                       <p
-                        className="text-2xl text-justify m-12 mt-6"
+                        className="text-2xl m-12 mt-6"
                         style={{ fontFamily: "Roboto mono" }}
                       >
                         Er worden verschillende evenementen zoals boogschieten
@@ -261,7 +258,7 @@ export default function Reservering1() {
                     </div>
                     <div className="p-6">
                       <p
-                        className="text-2xl text-justify m-12 mt-6"
+                        className="text-2xl m-12 mt-6"
                         style={{ fontFamily: "Roboto mono" }}
                       >
                         Op de camping zijn er toiletten en douches. Daarnaast is
@@ -277,6 +274,7 @@ export default function Reservering1() {
             {/*geen idee meer waarvoor de div. heb een copypasta van de home pagina gebruikt :p */}
           </section>
         </div>{" "}
+
         {/*section met random info*/}
         <footer
           className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between flex-row items-center md:flex hidden"
