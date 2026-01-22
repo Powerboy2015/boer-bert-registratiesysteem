@@ -49,9 +49,8 @@ export default function Reservering1() {
               <div
                 className={`absolute top-full -translate-x-1/4 -translate-y-2/5 z-50 md:block hidden
                transition-transform transition-opacity duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${
-                  shrink ? "scale-60" : "scale-100"
-                }`}
+              ${shrink ? "-translate-y-[60%]" : "-translate-y-1/4"} ${shrink ? "scale-60" : "scale-100"
+                  }`}
               >
                 <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] shadow-xl/20 bg-[#007248] max-width-[300px] rounded-[50%] h-75 w-130">
                   <div className="hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] pl-40 pt-10 bg-[#FDF5D8] max-width-[200px] rounded-[50%] h-67 w-125">
@@ -177,11 +176,11 @@ export default function Reservering1() {
                   </div>
 
                   {Plaats &&
-                  Personen &&
-                  DatumAankomst &&
-                  DatumVertrek &&
-                  DatumVertrek > DatumAankomst &&
-                  new Date(DatumAankomst) > new Date() ? (
+                    Personen &&
+                    DatumAankomst &&
+                    DatumVertrek &&
+                    DatumVertrek > DatumAankomst &&
+                    new Date(DatumAankomst) > new Date() ? (
                     <a
                       title="klik her om datum en dagen te wijzigen"
                       rel="noopener noreferer"
@@ -214,13 +213,11 @@ export default function Reservering1() {
                       <p className="text-3xl mt-5">Accomodaties</p>
                     </div>
                     <div className="p-6">
-                      <p
-                        className="text-2xl text-justify m-12 mt-6"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        Op de camping boer Bert zijn alleen tent plekken te
-                        boeken.
-                      </p>
+                      <div className="p-1">
+                        <p className="text-2xl m-12 mt-" style={{ fontFamily: 'Roboto mono' }}>Op de camping boer Bert zijn alleen tent plekken te boeken.</p>
+                        <p className="text-2xl mx-12 mt-" style={{ fontFamily: 'Roboto mono' }}>Grote plek: <b>125m2</b></p>
+                        <p className="text-2xl mx-12 mt-" style={{ fontFamily: 'Roboto mono' }}>Kleine plek: <b>60m2</b></p>
+                      </div>
                     </div>
                   </div>
                 </div>{" "}
@@ -232,7 +229,7 @@ export default function Reservering1() {
                     </div>
                     <div className="p-6">
                       <p
-                        className="text-2xl text-justify m-12 mt-6"
+                        className="text-2xl m-12 mt-6"
                         style={{ fontFamily: "Roboto mono" }}
                       >
                         Er worden verschillende evenementen zoals boogschieten
@@ -249,7 +246,7 @@ export default function Reservering1() {
                     </div>
                     <div className="p-6">
                       <p
-                        className="text-2xl text-justify m-12 mt-6"
+                        className="text-2xl m-12 mt-6"
                         style={{ fontFamily: "Roboto mono" }}
                       >
                         Op de camping zijn er toiletten en douches. Daarnaast is
@@ -265,6 +262,7 @@ export default function Reservering1() {
             {/*geen idee meer waarvoor de div. heb een copypasta van de home pagina gebruikt :p */}
           </section>
         </div>{" "}
+
         {/*section met random info*/}
         <footer
           className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between flex-row items-center md:flex hidden"
