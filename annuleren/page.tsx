@@ -144,9 +144,10 @@ export default function Reservering2() {
                                     />
                                     <label htmlFor="voorwaarden" className="text-lg font-medium" style={{ fontFamily: "Roboto mono" }}>
                                     Ik ga akkoord met de{" "}
-                                        <a href="/voorwaarden"
+                                        <a href="https://www.juridische-supermarkt.nl/algemene-voorwaarden-en-annuleringskosten/"
                                             className="underline text-[#007248] hover:opacity-80"
-                                            rel="noopener noreferrer">
+                                            rel="noopener noreferrer"
+                                            target="_blank">
                                             voorwaarden
                                         </a>
                                         .
