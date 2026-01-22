@@ -14,12 +14,14 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
     const [editableReservation, setEditableReservation] = useState<Reservering>(res);
     const context = useContext(OverlayContext);
 
+    // if we are trying to create a new reservation, it will go into create+ edit mode.
     useEffect(() => {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         canEdit(res.ReseveringsNr === "Nieuwe Reservering");
         isCreatingNew(res.ReseveringsNr === "Nieuwe Reservering");
     }, [res.ReseveringsNr]);
 
+    // reusable reloadReservations for the other handlers.
     const reloadReservations = (resp: { ok: boolean; message: string }) => {
         console.log(resp);
 
@@ -44,6 +46,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
         context?.setActiveReservation(null);
     };
 
+    //Handles saving by either updating or creating a new resevation. It then closes the modal and reloads all reservations.
     const handleSave = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.stopPropagation();
 
@@ -75,10 +78,10 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
         >
             <section id="view-general-info" className="flex flex-col py-4 gap-1 border-b-2 border-[#999999]">
                 <p className="text-2xl">{res.ReseveringsNr}</p>
-                {edit ? (
-                    <div className={`flex flex-row ${edit ? "text-green-700 bg-white" : ""}`}>
+                {createNew ? (
+                    <div className="flex flex-ro">
                         <input
-                            className="text-3xl w-full"
+                            className={`text-3xl w-full ${createNew ? "text-green-700 bg-white" : ""}`}
                             onChange={(e) => {
                                 updateField("Voornaam", e.currentTarget.value);
                             }}
@@ -89,7 +92,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                             id=""
                         />
                         <input
-                            className="text-3xl w-full"
+                            className={`text-3xl w-full ${createNew ? "text-green-700 bg-white" : ""}`}
                             onChange={(e) => {
                                 updateField("Achternaam", e.currentTarget.value);
                             }}
@@ -111,9 +114,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                 className="flex flex-col gap-4 pb-4 text-3xl justify-center border-b-2 border-[#999999]"
             >
                 {edit ? (
-                    <div
-                        className={`flex flex-row justify-between gap-4 ${edit ? "text-green-700 bg-white" : ""}`}
-                    >
+                    <div className="flex flex-row justify-between gap-4">
                         <input
                             type="date"
                             name=""
@@ -122,6 +123,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                             onChange={(e) => {
                                 updateField("DatumAankomst", e.currentTarget.value);
                             }}
+                            className={`${edit ? "text-green-700 bg-white" : ""}`}
                         />
                         <p>Tot</p>
                         <input
@@ -132,6 +134,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                             onChange={(e) => {
                                 updateField("DatumVertrek", e.currentTarget.value);
                             }}
+                            className={`${edit ? "text-green-700 bg-white" : ""}`}
                         />
                     </div>
                 ) : (
@@ -155,23 +158,24 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     name="Aantal personen"
                     value={res.AantalMensen}
                 />
-                <input
-                    type="date"
-                    name=""
-                    id=""
-                    defaultValue={res.ReserveringsDatum?.split("T")[0] || undefined}
-                    onChange={(e) => {
-                        updateField("ReserveringsDatum", e.currentTarget.value);
-                    }}
-                />
-                <DataField canEdit={edit} name="Status" value={"afwachtend"} />
+                <div className="flex flex-row items-center justify-between text-3xl">
+                    <p className="Name text-nowrap">Reserveringsdatum</p>
+                    <p className="Value text-black">
+                        {res.ReserveringsDatum?.split("T")[0] ||
+                            new Date().toLocaleDateString("nl-NL", {
+                                year: "numeric",
+                                month: "2-digit",
+                                day: "2-digit",
+                            })}
+                    </p>
+                </div>
             </section>
             <section
                 id="view-user-info"
                 className="flex flex-col gap-4 pb-4 text-3xl justify-center border-b-2 border-[#999999]"
             >
                 <DataField
-                    canEdit={edit}
+                    canEdit={createNew}
                     editValue={(val) => {
                         updateField("Email", val);
                     }}
@@ -179,7 +183,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     value={res.Email}
                 />
                 <DataField
-                    canEdit={edit}
+                    canEdit={createNew}
                     editValue={(val) => {
                         updateField("Woonplaats", val);
                     }}
@@ -187,7 +191,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     value={res.Woonplaats}
                 />
                 <DataField
-                    canEdit={edit}
+                    canEdit={createNew}
                     editValue={(val) => {
                         updateField("Telefoonnummer", val);
                     }}

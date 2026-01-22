@@ -251,15 +251,10 @@ export default function AdminReserveringen() {
 
 interface ReservationProps {
     res: Reservering;
-    key: string;
 }
-function MobileReservation({ res, key }: ReservationProps) {
+function MobileReservation({ res }: ReservationProps) {
     return (
-        <div
-            key={key}
-            id="reservation"
-            className="flex flex-col gap-2 py-2 border border-l-0 border-r-0 border-[#CCCCCC]"
-        >
+        <div id="reservation" className="flex flex-col gap-2 py-2 border border-l-0 border-r-0 border-[#CCCCCC]">
             <div id="col1" className="flex flex-row justify-between items-center">
                 <div className="flex flex-row items-center gap-2">
                     <span className="w-2 h-2 bg-red-500 rounded-4xl"></span>
@@ -290,7 +285,7 @@ function MobileReservation({ res, key }: ReservationProps) {
     );
 }
 
-function DesktopReservation({ res, key }: ReservationProps) {
+function DesktopReservation({ res }: ReservationProps) {
     const context = useContext(OverlayContext);
     if (!context) return;
 
@@ -301,7 +296,6 @@ function DesktopReservation({ res, key }: ReservationProps) {
 
     return (
         <tr
-            key={key}
             className="h-24 py-4 hover:bg-[#D6D4C8] *:border-y *:border-[#B3B3B3] *:border-collapse *:px-2 cursor-pointer"
             onClick={openModal}
         >
