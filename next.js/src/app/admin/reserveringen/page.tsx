@@ -231,7 +231,14 @@ export default function AdminReserveringen() {
                     <table className="w-full">
                         <thead className="bg-[#E1DFD3] h-16 text-2xl border-y border-[#B3B3B3] border-collapse">
                             <tr className="px-2 *:px-2 text-[#808080]">
-                                <td className="pl-2">Res.Nr</td>
+                                <td
+                                    className="pl-2"
+                                    onClick={() => {
+                                        doSort("resNr");
+                                    }}
+                                >
+                                    Res.Nr
+                                </td>
                                 <td
                                     onClick={() => {
                                         doSort("plaats");

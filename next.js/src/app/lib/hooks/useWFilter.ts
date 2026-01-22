@@ -63,7 +63,7 @@ const DateMap: Record<string, number> = {
     december: 12,
 };
 
-type SortKey = "naam" | "startDatum" | "eindDatum" | "plaats" | "gereserveerdOp" | "personen" | null;
+type SortKey = "naam" | "startDatum" | "eindDatum" | "plaats" | "gereserveerdOp" | "personen" | "resNr" | null;
 
 export default function useWFilter(
     res: Reservering[],
@@ -176,6 +176,11 @@ export default function useWFilter(
                 case "personen":
                     value1 = val1.AantalMensen;
                     value2 = val2.AantalMensen;
+                    break;
+
+                case "resNr":
+                    value1 = val1.ReseveringsNr;
+                    value2 = val2.ReseveringsNr;
                     break;
 
                 default:
