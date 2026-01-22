@@ -21,6 +21,7 @@ export default function AdminReserveringen() {
     const [inOutFilter, setInOutFilter] = useState<inOutFilterType>("incoming");
     const [resevationList, setReservationList] = useState<Reservering[]>([]);
     const [filterResList, setFilterResList] = useState<Reservering[]>([]);
+    const context = useContext(OverlayContext);
 
     useEffect(() => {
         const isToday = (date1: string) => {
@@ -182,7 +183,11 @@ export default function AdminReserveringen() {
                                 <option value="3">Niet aangekomen</option>
                             </select>
                         </div>
-                        <button className="py-2 px-4 rounded-2xl bg-[#00B874] text-[#EDEBDE] text-nowrap">
+                        <button onClick={() => {
+                            const res: Reservering = {ReseveringsNr: "Nieuwe Reservering"} as Reservering;
+                            context?.setActiveReservation(res);
+                        }} 
+                        className="py-2 px-4 rounded-2xl bg-[#00B874] text-[#EDEBDE] text-nowrap">
                             + Nieuwe Reservering
                         </button>
                     </section>
@@ -297,7 +302,7 @@ function DesktopReservation({ res, key }: ReservationProps) {
     return (
         <tr
             key={key}
-            className="h-24 py-4 hover:bg-[#D6D4C8] *:border-y *:border-[#B3B3B3] *:border-collapse *:px-2"
+            className="h-24 py-4 hover:bg-[#D6D4C8] *:border-y *:border-[#B3B3B3] *:border-collapse *:px-2 cursor-pointer"
             onClick={openModal}
         >
             <td className="pl-2">{res.ReseveringsNr}</td>
@@ -314,3 +319,4 @@ function DesktopReservation({ res, key }: ReservationProps) {
         </tr>
     );
 }
+    
