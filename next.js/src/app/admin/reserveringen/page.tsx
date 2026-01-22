@@ -166,7 +166,7 @@ export default function AdminReserveringen() {
                             <Schedule />
                             <input type="date" name="desktop-filter-einddatum" id="" />
                         </div>
-                        <div
+                        {/* <div
                             id="desktop-filter-status"
                             className="flex flex-row items-center px-4 py-2 gap-4 bg-[#F6F5EE] rounded-2xl outline outline-[#B3B3B3] text-[#808080] text-[16px]"
                         >
@@ -180,7 +180,7 @@ export default function AdminReserveringen() {
                                 <option value="2">Onderweg</option>
                                 <option value="3">Niet aangekomen</option>
                             </select>
-                        </div>
+                        </div> */}
                         <button
                             onClick={() => {
                                 const res: Reservering = { ReseveringsNr: "Nieuwe Reservering" } as Reservering;
@@ -234,7 +234,6 @@ export default function AdminReserveringen() {
                                 <td>Aanmaakdatum</td>
                                 <td>Reserveringstijd</td>
                                 <td>personen</td>
-                                <td className="pr-2">status</td>
                             </tr>
                         </thead>
                         <tbody className="text-2xl">
@@ -309,7 +308,6 @@ function DesktopReservation({ res }: ReservationProps) {
                 {res.DatumAankomst.split("T")[0]} tot {res.DatumVertrek.split("T")[0]}
             </td>
             <td className=" text-[#808080]">{res.AantalMensen}</td>
-            <td className="pr-2 text-[#808080]">Onderweg</td>
         </tr>
     );
 }

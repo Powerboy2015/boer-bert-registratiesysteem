@@ -3,6 +3,7 @@ import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
 import { Check, Delete, Edit } from "@mui/icons-material";
 import { MouseEvent, useContext, useEffect, useState } from "react";
 import { OverlayContext } from "../context/OverlayContext";
+import toast from "react-hot-toast";
 
 interface DesktopReservationModalProps {
     res: Reservering;
@@ -23,7 +24,11 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
 
     // reusable reloadReservations for the other handlers.
     const reloadReservations = (resp: { ok: boolean; message: string }) => {
-        console.log(resp);
+        if (!resp.ok) {
+            return toast.error(`Error: ${resp.message}`);
+        }
+        toast.success(resp.message);
+        // console.log(resp);
 
         // if we have a reload reservation function we call it and it'll reload the dashboard.
         if (context !== null && context?.reloadReservations !== null) {
