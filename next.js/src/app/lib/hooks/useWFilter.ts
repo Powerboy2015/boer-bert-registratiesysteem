@@ -175,7 +175,8 @@ export default function useWFilter(
 
                 case "personen":
                     value1 = val1.AantalMensen;
-                    value2 = val2.AantalMensen; //TODO bug, only go ascending.
+                    value2 = val2.AantalMensen;
+                    break;
 
                 default:
                     return 0;
