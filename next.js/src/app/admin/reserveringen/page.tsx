@@ -13,6 +13,7 @@ import {
 import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
 import { OverlayContext } from "../context/OverlayContext";
 import { useApi } from "@/app/lib/hooks/useApi";
+import useWFilter from "@/app/lib/hooks/useWFilter";
 
 type inOutFilterType = "incoming" | "outgoing";
 type timeFilterType = "today" | "week" | "month";
@@ -32,6 +33,8 @@ export default function AdminReserveringen() {
             return data.Reservation;
         }
     });
+
+    const [filteredRes, doSort, setQuery] = useWFilter(resevationList || []);
 
     useEffect(() => {
         const isToday = (date1: string) => {
@@ -63,7 +66,7 @@ export default function AdminReserveringen() {
         <>
             <div id="mobile-reservations" className="lg:hidden py-8 px-4 w-full h-full">
                 <section id="filters" className="flex flex-col gap-4">
-                    <ReservationSearch />
+                    <ReservationSearch searchFunction={setQuery} />
                     <div
                         id="time-filters"
                         className="flex flex-row gap-2 text-[14px] justify-between w-full h-12 items-center py-2"
@@ -128,7 +131,7 @@ export default function AdminReserveringen() {
                     </div>
                 </section>
                 <section id="reservations" className="w-full h-full pt-4">
-                    {resevationList?.map((reservering) => (
+                    {filteredRes?.map((reservering) => (
                         <MobileReservation key={reservering.ReseveringsNr} res={reservering} />
                     ))}
                 </section>
@@ -229,15 +232,45 @@ export default function AdminReserveringen() {
                         <thead className="bg-[#E1DFD3] h-16 text-2xl border-y border-[#B3B3B3] border-collapse">
                             <tr className="px-2 *:px-2 text-[#808080]">
                                 <td className="pl-2">Res.Nr</td>
-                                <td>Plaats</td>
-                                <td>Reserveerder</td>
-                                <td>Aanmaakdatum</td>
-                                <td>Reserveringstijd</td>
-                                <td>personen</td>
+                                <td
+                                    onClick={() => {
+                                        doSort("plaats");
+                                    }}
+                                >
+                                    Plaats
+                                </td>
+                                <td
+                                    onClick={() => {
+                                        doSort("naam");
+                                    }}
+                                >
+                                    Reserveerder
+                                </td>
+                                <td
+                                    onClick={() => {
+                                        doSort("gereserveerdOp");
+                                    }}
+                                >
+                                    Aanmaakdatum
+                                </td>
+                                <td
+                                    onClick={() => {
+                                        doSort("startDatum");
+                                    }}
+                                >
+                                    Reserveringstijd
+                                </td>
+                                <td
+                                    onClick={() => {
+                                        doSort("personen");
+                                    }}
+                                >
+                                    personen
+                                </td>
                             </tr>
                         </thead>
                         <tbody className="text-2xl">
-                            {resevationList?.map((reservering) => (
+                            {filteredRes?.map((reservering) => (
                                 <DesktopReservation key={reservering.ReseveringsNr} res={reservering} />
                             ))}
                         </tbody>
