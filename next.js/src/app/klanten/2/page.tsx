@@ -15,11 +15,9 @@ import mastercard from "@/app/Images/mastercard.png";
 import paypal from "@/app/Images/paypal.png";
 import visa from "@/app/Images/visa.png";
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
-import { Place } from "@mui/icons-material";
-import { send } from "process";
-{
-  /*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */
-}
+import toast from "react-hot-toast";
+/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */
+
 export default function Reservering2() {
   type Accomodatie = {
     ID: number;
@@ -311,8 +309,8 @@ export default function Reservering2() {
                               </p>
                               <p className="text-[18px] text-right ml-auto font-bold">
                                 {Plaats === "Groot"
-                                  ? "€30 per dag"
-                                  : "€20 per dag"}
+                                  ? "€30 per nacht"
+                                  : "€20 per nacht"}
                               </p>
                             </div>
                           </div>
@@ -333,24 +331,27 @@ export default function Reservering2() {
                           title="knop om boeking te bevestigen"
                           className="mt-8 text-center"
                         >
-                          <button>
-                            {PlekNr ? (
-                              <a
-                                className="shadow-xl px-10 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
-                                href="/klanten/afrekenen"
-                                rel="noopener noreferer"
-                              >
+
+                          {PlekNr ? (
+                            <a
+                              className="shadow-xl px-10 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
+                              href="/klanten/afrekenen"
+                              rel="noopener noreferer"
+                            >
+                              <button>
                                 Boeken
-                              </a>
-                            ) : (
-                              <a
-                                className="shadow-xl px-10 py-3 bg-[#747474] hover:bg-[#747474] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
-                                rel="noopener noreferer"
-                              >
-                                Boeken
-                              </a>
-                            )}
-                          </button>
+                              </button>
+                            </a>
+                          ) : (
+                            <button
+                              onClick={() => toast.error("selecteer een plek")}
+                              className="shadow-xl px-10 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-[18px] font-bold text-[#FDF5D8] rounded-md"
+                              rel="noopener noreferer"
+                            >
+                              Boeken
+                            </button>
+                          )}
+
                         </div>
 
                         <div title="box met info metaalmethodes">
@@ -406,7 +407,7 @@ export default function Reservering2() {
               </div>
             </div>
           </section>
-        </div>{" "}
+        </div > {" "}
         {/*section met random info*/}
         <footer
           className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between md:flex flex-row items-center hidden"
@@ -468,7 +469,7 @@ export default function Reservering2() {
           {/*foto waar je op kan klikken om naar w3c te gaan */}
         </footer>{" "}
         {/*dikke footer met links voor contact. zei iemand voeten??? :p */}
-      </div>
+      </div >
 
       {/*idk wat hier gebeurd maar het is niet wat ik wil en ik weet niet waarom count: 9 */}
     </>

@@ -177,7 +177,7 @@ export default function Reservering2() {
                               list="Naam klant"
                               onChange={(e) => setVoornaam(e.target.value)}
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
-                              pattern="[A-Za-z]+"
+                              pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+"
                               required
                             ></input>
                           </div>
@@ -193,7 +193,7 @@ export default function Reservering2() {
                               list="achternaam klant"
                               onChange={(e) => setAchternaam(e.target.value)}
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
-                              pattern="[A-Za-z]+"
+                              pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+"
                               required
                             ></input>
                             <datalist id="ligging-in-het-park">
@@ -290,6 +290,10 @@ export default function Reservering2() {
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280] h-[50px] px-[15px]"
                               pattern="[0-9]{4}[A-Z]{2}"
                               required
+                              onChange={(e) => setTelnr(e.target.value)}
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
+                              pattern="^06-\d{8}$"
+                              title="Gebruik het formaat 06- gevolgd door 8 nummers"
                             ></input>
                             <datalist id="ligging-in-het-park">
                               <option value="in de zon" />
@@ -326,6 +330,54 @@ export default function Reservering2() {
                         {/*plaats */}
                       </div>
 
+                      <div className="flex md:flex-row flex-col mb-7 justify-center text-justify gap-5 text-lg font-medium my-auto mx-auto items-center">
+                        <div
+                          className="text-xl mt-5"
+                          style={{ fontFamily: "Roboto mono" }}
+                        >
+                          Email:
+                          <div className="mt-3">
+                            <input
+                              list="Email klant"
+                              onChange={(e) => setEmail(e.target.value)}
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
+                              type="email"
+                            ></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon" />
+                              <option value="in de schaduw" />
+                              <option value="bij het water" />
+                              <option value="vlakbij de ingang" />
+                              <option value="langs de hoodfweg" />
+                            </datalist>
+                          </div>
+                        </div>{" "}
+                        {/*email */}
+                        <div
+                          className="text-xl mt-5"
+                          style={{ fontFamily: "Roboto mono" }}
+                        >
+                          Postcode:
+                          <div className="mt-3">
+                            <input
+                              list="Postcode klant"
+                              className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] w-[280] h-[50px] px-[15px]"
+                              pattern="[0-9]{4}[A-Z]{2}"
+                              required
+                              title="Gebruik het formaat 4 cijfers gevolgd door 2 hoofdletters (bijv. 3456SM)"
+
+                            ></input>
+                            <datalist id="ligging-in-het-park">
+                              <option value="in de zon" />
+                              <option value="in de schaduw" />
+                              <option value="bij het water" />
+                              <option value="vlakbij de ingang" />
+                              <option value="langs de hoodfweg" />
+                            </datalist>
+                          </div>
+                        </div>{" "}
+                        {/*postcode */}
+                      </div>
 
                       <div className="flex mx-auto my-auto items-center">
                         <div className="my-auto mx-auto items-center text-center p-1 ">

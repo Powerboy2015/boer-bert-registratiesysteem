@@ -8,6 +8,7 @@ import nl from "@/app/Images/nl.jpg";
 import w3c from "@/app/Images/w3c.jpg";
 import home from "@/app/Images/house-door-fill.svg";
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
+import toast from "react-hot-toast";
 
 {
   /*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */
@@ -18,6 +19,7 @@ export default function Reservering1() {
   const [DatumVertrek, setDatumVertrek] = useState<string>("");
   const [Plaats, setPlaats] = useState<string>("");
   const [Personen, setPersonen] = useState<string>("");
+  const [ErrorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     let ticking = false;
@@ -39,6 +41,13 @@ export default function Reservering1() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const alleVelden = Boolean(Plaats && Personen && DatumAankomst && DatumVertrek);
+
+  const vertrekNaAankomst = DatumAankomst && DatumVertrek && new Date(DatumVertrek) > new Date(DatumAankomst);
+  const aankomstNaNu = DatumAankomst && new Date(DatumAankomst) > new Date();
+
+
 
   return (
     <>
@@ -175,28 +184,31 @@ export default function Reservering1() {
                     ></input>
                   </div>
 
-                  {Plaats &&
-                    Personen &&
-                    DatumAankomst &&
-                    DatumVertrek &&
-                    DatumVertrek > DatumAankomst &&
-                    new Date(DatumAankomst) > new Date() ? (
-                    <a
-                      title="klik her om datum en dagen te wijzigen"
-                      rel="noopener noreferer"
-                      href="/klanten/2"
-                    >
-                      <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
+
+                  {alleVelden && vertrekNaAankomst && aankomstNaNu ?
+                    (
+                      <a
+                        title="klik her om datum en dagen te wijzigen"
+                        rel="noopener noreferer"
+                        href="/klanten/2"
+                      >
+                        <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
+                          Boeken
+                        </button>
+                      </a>
+                    ) : (
+                      <button onClick={() => toast.error(!alleVelden ? "Vul alle velden in!" : !vertrekNaAankomst ? "De vertrekdatum moet na de aankomstdatum liggen!" : !aankomstNaNu ? "De aankomstdatum moet in de toekomst liggen!" : "")} className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
                         Boeken
                       </button>
-                    </a>
-                  ) : (
-                    <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
-                      Boeken
-                    </button>
-                  )}
+
+                    )}
+
 
                   {/*knoppen om je voorkeuren te aan te passen. ze doen nog niks. moet nog zorgen dat je een list krijgt waar je uit kunt kiezen van aantal personen en plekken. ook een kalender die je kan kiezen voor aankomst en vertrek*/}
+                </div>
+
+                <div className="text-red-600 text-2xl w-full flex justify-center">
+                  {ErrorMessage}
                 </div>
               </div>
             </section>
