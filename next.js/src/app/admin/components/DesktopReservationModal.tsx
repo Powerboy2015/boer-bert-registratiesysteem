@@ -1,18 +1,40 @@
 import AdminReserveringen from "@/app/lib/AdminReserveringen";
 import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
 import { Check, Delete, Edit } from "@mui/icons-material";
-import { MouseEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, FocusEvent, MouseEvent, useContext, useEffect, useState } from "react";
 import { OverlayContext } from "../context/OverlayContext";
 import toast from "react-hot-toast";
+import { start } from "repl";
 
 interface DesktopReservationModalProps {
     res: Reservering;
 }
+const REQUIRED_FIELDS: string[] = [
+    "ReseveringsNr",
+    "Voornaam",
+    "Achternaam",
+    "DatumAankomst",
+    "DatumVertrek",
+    "PlekNummer",
+    "AantalMensen",
+    "Email",
+    "Woonplaats",
+    "Telefoonnummer",
+] as const;
+
+function isReservationComplete(r: Partial<Reservering>): r is Reservering {
+    return (REQUIRED_FIELDS as readonly (keyof Reservering)[]).every((key) => {
+        const v = r[key]; // now TS knows key is keyof Reservering
+        return v !== undefined && v !== null && (typeof v !== "string" || v.trim() !== "");
+    });
+}
+
 export default function DesktopReservationModal({ res }: DesktopReservationModalProps) {
     const [edit, canEdit] = useState<boolean>(false);
     const [createNew, isCreatingNew] = useState<boolean>(false);
     const [deleteQuestionActive, SetDeleteQuestionActive] = useState<boolean>(false);
     const [editableReservation, setEditableReservation] = useState<Reservering>(res);
+    const [dateMismatch, setDateMismatch] = useState<boolean>(false);
     const context = useContext(OverlayContext);
 
     // if we are trying to create a new reservation, it will go into create+ edit mode.
@@ -55,8 +77,14 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
     const handleSave = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
         e.stopPropagation();
 
-        //depending on if we're creating a new one, create a new one or update an existing one.
+        const isFilled = isReservationComplete(editableReservation);
+        console.log(isFilled);
+        if (isFilled == false) {
+            return toast.success("test");
+        }
+
         if (createNew) {
+            //depending on if we're creating a new one, create a new one or update an existing one.
             AdminReserveringen.createReservation(editableReservation).then(reloadReservations);
         } else {
             AdminReserveringen.UpdateReservation(editableReservation).then(reloadReservations);
@@ -76,6 +104,15 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
         });
     };
 
+    const compareStartEndDates = (_field: string, _value: string) => {
+        updateField(_field, _value);
+
+        const start = _field === "DatumAankomst" ? new Date(_value) : new Date(editableReservation.DatumAankomst);
+        const end = _field === "DatumVertrek" ? new Date(_value) : new Date(editableReservation.DatumVertrek);
+
+        setDateMismatch(start >= end);
+    };
+
     return (
         <div
             id="desktopDetails"
@@ -86,7 +123,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                 {createNew ? (
                     <div className="flex flex-ro">
                         <input
-                            className={`text-3xl w-full ${createNew ? "text-green-700 bg-white" : ""}`}
+                            className={`text-3xl w-full ${createNew ? "text-green-700 bg-white" : ""} `}
                             onChange={(e) => {
                                 updateField("Voornaam", e.currentTarget.value);
                             }}
@@ -126,9 +163,9 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                             id=""
                             defaultValue={res.DatumAankomst?.split("T")[0] || undefined}
                             onChange={(e) => {
-                                updateField("DatumAankomst", e.currentTarget.value);
+                                compareStartEndDates("DatumAankomst", e.currentTarget.value);
                             }}
-                            className={`${edit ? "text-green-700 bg-white" : ""}`}
+                            className={`${edit ? "text-green-700 bg-white" : ""} ${dateMismatch ? "border border-red-500" : ""}`}
                         />
                         <p>Tot</p>
                         <input
@@ -137,9 +174,9 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                             id=""
                             defaultValue={res.DatumVertrek?.split("T")[0] || undefined}
                             onChange={(e) => {
-                                updateField("DatumVertrek", e.currentTarget.value);
+                                compareStartEndDates("DatumVertrek", e.currentTarget.value);
                             }}
-                            className={`${edit ? "text-green-700 bg-white" : ""}`}
+                            className={`${edit ? "text-green-700 bg-white" : ""} ${dateMismatch ? "border border-red-500" : ""}`}
                         />
                     </div>
                 ) : (
@@ -154,6 +191,10 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     }}
                     name="Plaatsnummer"
                     value={`${res.PlekNummer} (${res.PlekGrootte == "G" ? "Groot" : "Klein"})`}
+                    type="number"
+                    min={1}
+                    max={60}
+                    regex="^(?:[0-9]|[1-5][0-9]|60)$"
                 />
                 <DataField
                     canEdit={edit}
@@ -162,6 +203,10 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     }}
                     name="Aantal personen"
                     value={res.AantalMensen}
+                    type="number"
+                    min={1}
+                    max={8}
+                    regex="^[1-8]$"
                 />
                 <div className="flex flex-row items-center justify-between text-3xl">
                     <p className="Name text-nowrap">Reserveringsdatum</p>
@@ -186,6 +231,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     }}
                     name="Email"
                     value={res.Email}
+                    regex="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
                 />
                 <DataField
                     canEdit={createNew}
@@ -194,6 +240,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     }}
                     name="Adres"
                     value={res.Woonplaats}
+                    regex="^[A-Za-zÀ-ÿ.'\- ]+\s\d+(?:\s?[A-Za-z0-9\-\/]{1,4})?$"
                 />
                 <DataField
                     canEdit={createNew}
@@ -202,6 +249,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     }}
                     name="Mobiel"
                     value={res.Telefoonnummer}
+                    regex="^(?:\+31|0)[1-9]\d{8}$"
                 />
             </section>
             <section id="action-buttons" className="flex flex-row justify-between ">
@@ -264,27 +312,43 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
     );
 }
 
-interface DataFieldProp {
+interface DataFieldProp extends React.ComponentProps<"input"> {
     name: string;
     value: string | number | undefined;
     editValue?: (val: string | number) => void;
     canEdit?: boolean;
+    regex?: string;
 }
-function DataField({ name, value, editValue, canEdit = false }: DataFieldProp) {
+function DataField({ name, value, editValue, canEdit = false, regex, ...props }: DataFieldProp) {
+    const [valid, isValid] = useState<boolean>(true);
+
+    const validateValue = (e: FocusEvent<HTMLInputElement, Element>) => {
+        const value = e.currentTarget.value;
+        if (!editValue) return;
+        if (!regex) return editValue(value);
+
+        const validateRegex = new RegExp(regex);
+
+        if (validateRegex.test(value)) {
+            isValid(true);
+            return editValue(value);
+        }
+        isValid(false);
+        return toast.error("You have filled in a field incorrectly....");
+    };
+
     return (
         <div className="flex flex-row items-center justify-between text-3xl">
             <p className="Name text-nowrap">{name}</p>
 
             {canEdit ? (
                 <input
-                    onChange={(e) => {
-                        if (!editValue) return console.log(e.currentTarget.value);
-                        editValue(e.currentTarget.value);
-                    }}
+                    onBlur={validateValue}
                     type={typeof value == "number" ? "number" : "text"}
                     key={name}
-                    className={`Value text-black text-end w-full h-full ${canEdit ? "text-green-700 bg-white rounded-2xl py-1 px-2" : ""}`}
+                    className={`Value text-black text-end w-full h-full ${canEdit ? "text-green-700 bg-white rounded-2xl py-1 px-2" : ""} ${!valid ? "border border-red-500" : ""}`}
                     defaultValue={value}
+                    {...props}
                 />
             ) : (
                 <p className="Value text-black">{value}</p>
