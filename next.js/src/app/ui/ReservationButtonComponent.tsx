@@ -1,7 +1,10 @@
 "use client";
 
+import { Roboto } from "next/font/google";
+
 const roboto = Roboto({
     weight: "400",
+    subsets: ["latin"],
 });
 interface ReservationButtonComponentProps {
     text?: string;
