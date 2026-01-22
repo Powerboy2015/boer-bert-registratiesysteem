@@ -195,6 +195,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     min={1}
                     max={60}
                     regex="^(?:[0-9]|[1-5][0-9]|60)$"
+                    placeholder="minimum 1 maximum 60"
                 />
                 <DataField
                     canEdit={edit}
@@ -207,6 +208,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     min={1}
                     max={8}
                     regex="^[1-8]$"
+                    placeholder="minimum 1 maximum 8"
                 />
                 <div className="flex flex-row items-center justify-between text-3xl">
                     <p className="Name text-nowrap">Reserveringsdatum</p>
@@ -232,6 +234,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     name="Email"
                     value={res.Email}
                     regex="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+                    placeholder="emailnaam@email.domein"
                 />
                 <DataField
                     canEdit={createNew}
@@ -241,6 +244,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     name="Adres"
                     value={res.Woonplaats}
                     regex="^[A-Za-zÀ-ÿ.'\- ]+\s\d+(?:\s?[A-Za-z0-9\-\/]{1,4})?$"
+                    placeholder="straatnaam 1234"
                 />
                 <DataField
                     canEdit={createNew}
@@ -250,6 +254,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     name="Mobiel"
                     value={res.Telefoonnummer}
                     regex="^(?:\+31|0)[1-9]\d{8}$"
+                    placeholder="0612345678"
                 />
             </section>
             <section id="action-buttons" className="flex flex-row justify-between ">
