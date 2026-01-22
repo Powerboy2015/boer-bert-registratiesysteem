@@ -1,0 +1,19 @@
+import React from "react";
+
+export default function Footer() {
+    return (
+        <footer className="bg-[#93DAB8] py-8 px-6">
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-6 justify-between text-lg">
+                <a href="tel:+31642741016">📞 +31 123456789</a>
+                <a href="mailto:info@campingboerbert.nl">📧 info@campingboerbert.nl</a>
+                <a
+                    href="https://www.google.com/maps/place/Hogeschool+Utrecht,+Heidelberglaan+15,+3584+CS+Utrecht/@52.0841048,5.1733026,17z/data=!3m1!4b1!4m6!3m5!1s0x47c6693e9a2d0c9f:0xa9867c6558813da4!8m2!3d52.0841048!4d5.1758829!16s%2Fg%2F11gjp5bt_0?entry=ttu&g_ep=EgoyMDI2MDExOS4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    📍 Heidelberglaan 15
+                </a>
+            </div>
+        </footer>
+    )
+}
