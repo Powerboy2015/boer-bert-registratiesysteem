@@ -1,10 +1,9 @@
 import AdminReserveringen from "@/app/lib/AdminReserveringen";
 import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
 import { Check, Delete, Edit } from "@mui/icons-material";
-import { ChangeEvent, FocusEvent, MouseEvent, useContext, useEffect, useState } from "react";
+import { FocusEvent, MouseEvent, useContext, useEffect, useState } from "react";
 import { OverlayContext } from "../context/OverlayContext";
 import toast from "react-hot-toast";
-import { start } from "repl";
 
 interface DesktopReservationModalProps {
     res: Reservering;
@@ -220,6 +219,10 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                                 day: "2-digit",
                             })}
                     </p>
+                </div>
+                <div className="flex flex-row items-center justify-between text-3xl">
+                    <p className="Name text-nowrap">Prijs</p>
+                    <p className="Value text-black">{res.Prijs}</p>
                 </div>
             </section>
             <section

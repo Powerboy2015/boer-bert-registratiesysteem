@@ -205,6 +205,7 @@ export async function POST(req: NextRequest) {
             WHERE Reservaties.DatumAankomst <= ? 
             AND Reservaties.DatumVertrek >= ?
             AND Plekken.PlekNummer = ?
+            AND Reservaties.isArchived = 0
             `,
             [vertrek, aankomst, Plek.PlekNummer],
         );

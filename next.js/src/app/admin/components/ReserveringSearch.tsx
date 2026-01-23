@@ -16,7 +16,7 @@ export function ReservationSearch({ searchFunction }: ReservationSearchProps) {
     const [searchQuery, setSearchQuery] = useState<string>("");
 
     const handleReservationSearch = () => {
-        if (searchFunction) searchFunction(searchQuery);
+        if (searchFunction) return searchFunction(searchQuery);
         return console.log("TODO", `Searchquery: ${searchQuery}`);
     };
 

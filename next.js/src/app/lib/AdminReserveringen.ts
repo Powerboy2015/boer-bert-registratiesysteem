@@ -63,6 +63,7 @@ export default class AdminReserveringen {
                 DatumVertrek: res.DatumVertrek,
                 ReserveringsDatum: new Date().toString(),
                 AantalMensen: res.AantalMensen,
+                Prijs: "20,00", //random ass hardcode that gets fixed on backend.
             },
             UserData: {
                 Voornaam: res.Voornaam,

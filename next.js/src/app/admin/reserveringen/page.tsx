@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ReservationSearch } from "../components/ReserveringSearch";
 import { StylingProps } from "../stylingprops/props";
 import {
@@ -14,6 +14,7 @@ import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
 import { OverlayContext } from "../context/OverlayContext";
 import { useApi } from "@/app/lib/hooks/useApi";
 import useWFilter from "@/app/lib/hooks/useWFilter";
+import useTimeSort from "@/app/lib/hooks/useTimeSort";
 
 type inOutFilterType = "incoming" | "outgoing";
 type timeFilterType = "today" | "week" | "month";
@@ -21,7 +22,6 @@ type timeFilterType = "today" | "week" | "month";
 export default function AdminReserveringen() {
     const [timeFilter, setTimeFilter] = useState<timeFilterType>("today");
     const [inOutFilter, setInOutFilter] = useState<inOutFilterType>("incoming");
-    const [filterResList, setFilterResList] = useState<Reservering[]>([]);
     const context = useContext(OverlayContext);
 
     const [resevationList, loading, error, reload] = useApi<Reservering[]>(async (signal: AbortSignal) => {
@@ -34,7 +34,8 @@ export default function AdminReserveringen() {
         }
     });
 
-    const [filteredRes, doSort, setQuery] = useWFilter(resevationList || []);
+    const [timeFiltered, setMinDate, setMaxDate] = useTimeSort(resevationList || []);
+    const [sortedRes, doSort, setQuery] = useWFilter(timeFiltered);
 
     useEffect(() => {
         const isToday = (date1: string) => {
@@ -131,7 +132,7 @@ export default function AdminReserveringen() {
                     </div>
                 </section>
                 <section id="reservations" className="w-full h-full pt-4">
-                    {filteredRes?.map((reservering) => (
+                    {sortedRes?.map((reservering) => (
                         <MobileReservation key={reservering.ReseveringsNr} res={reservering} />
                     ))}
                 </section>
@@ -150,24 +151,34 @@ export default function AdminReserveringen() {
                         id="desktop-filters"
                         className="flex flex-row items-center gap-2 py-4 flex-wrap justify-center"
                     >
-                        <ReservationSearch
-                            searchFunction={(query) => {
-                                console.log(query);
-                            }}
-                        />
+                        <ReservationSearch searchFunction={setQuery} />
                         <div
                             id="desktop-filter-startdatum"
                             className="flex flex-row items-center px-4 py-2 gap-4 bg-[#F6F5EE] rounded-2xl outline outline-[#B3B3B3] text-[#808080] text-[16px]"
                         >
                             <Schedule />
-                            <input type="date" name="desktop-filter-startdatum" id="" />
+                            <input
+                                type="date"
+                                name="desktop-filter-startdatum"
+                                id=""
+                                onChange={(e) => {
+                                    setMinDate(e.currentTarget.value);
+                                }}
+                            />
                         </div>
                         <div
                             id="desktop-filter-einddatum"
                             className="flex flex-row items-center px-4 py-2 gap-4 bg-[#F6F5EE] rounded-2xl outline outline-[#B3B3B3] text-[#808080] text-[16px]"
                         >
                             <Schedule />
-                            <input type="date" name="desktop-filter-einddatum" id="" />
+                            <input
+                                type="date"
+                                name="desktop-filter-einddatum"
+                                id=""
+                                onChange={(e) => {
+                                    setMaxDate(e.currentTarget.value);
+                                }}
+                            />
                         </div>
                         {/* <div
                             id="desktop-filter-status"
@@ -194,7 +205,7 @@ export default function AdminReserveringen() {
                             + Nieuwe Reservering
                         </button>
                     </section>
-                    <section id="desktop-in-out-filters" className="flex flex-row gap-8">
+                    <section id="desktop-in-out-filters" className="flex flex-row gap-8 opacity-0">
                         <div
                             id="desktop-filter-all"
                             className="flex flex-row gap-2 text-[#808080] text-3xl items-center"
@@ -232,7 +243,7 @@ export default function AdminReserveringen() {
                         <thead className="bg-[#E1DFD3] h-16 text-2xl border-y border-[#B3B3B3] border-collapse">
                             <tr className="px-2 *:px-2 text-[#808080]">
                                 <td
-                                    className="pl-2"
+                                    className="pl-2 cursor-pointer"
                                     onClick={() => {
                                         doSort("resNr");
                                     }}
@@ -240,6 +251,7 @@ export default function AdminReserveringen() {
                                     Res.Nr
                                 </td>
                                 <td
+                                    className="cursor-pointer"
                                     onClick={() => {
                                         doSort("plaats");
                                     }}
@@ -247,6 +259,7 @@ export default function AdminReserveringen() {
                                     Plaats
                                 </td>
                                 <td
+                                    className="cursor-pointer"
                                     onClick={() => {
                                         doSort("naam");
                                     }}
@@ -254,6 +267,7 @@ export default function AdminReserveringen() {
                                     Reserveerder
                                 </td>
                                 <td
+                                    className="cursor-pointer"
                                     onClick={() => {
                                         doSort("gereserveerdOp");
                                     }}
@@ -261,6 +275,7 @@ export default function AdminReserveringen() {
                                     Aanmaakdatum
                                 </td>
                                 <td
+                                    className="cursor-pointer"
                                     onClick={() => {
                                         doSort("startDatum");
                                     }}
@@ -268,6 +283,7 @@ export default function AdminReserveringen() {
                                     Reserveringstijd
                                 </td>
                                 <td
+                                    className="cursor-pointer"
                                     onClick={() => {
                                         doSort("personen");
                                     }}
@@ -277,7 +293,7 @@ export default function AdminReserveringen() {
                             </tr>
                         </thead>
                         <tbody className="text-2xl">
-                            {filteredRes?.map((reservering) => (
+                            {sortedRes?.map((reservering) => (
                                 <DesktopReservation key={reservering.ReseveringsNr} res={reservering} />
                             ))}
                         </tbody>

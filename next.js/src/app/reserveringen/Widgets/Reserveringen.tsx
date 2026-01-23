@@ -23,6 +23,7 @@ export interface Reservering {
     Telefoonnummer: string;
     Woonplaats: string;
     PlekGrootte: string;
+    Prijs: string;
 }
 
 type SortKey = "naam" | "startDatum" | "eindDatum" | "plaats" | "gereserveerdOp" | null;
