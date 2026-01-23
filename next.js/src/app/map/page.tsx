@@ -132,3 +132,4 @@ The test will begin on the word start. On your mark. Get ready!â€¦ Start. dingï»
 {/*aantal keren gescholden naar de code: 25 */ }
 {/*aantal keren opgegeven: 8 */ }
 {/*aantal stenen geteld in de tuin: 50~ */ }
+
