@@ -22,6 +22,7 @@ export default function ReserveringOverlay({
     const [gereserveerdDatum, setGereserveerdDatum] = useState("");
     const [errorMessage, setErrorMessage] = useState(false);
     const [prijs, setPrijs] = useState("");
+    const [grootte, setGrootte] = useState("");
 
     let date1 = new Date(DatumAankomst);
     let date2 = new Date(DatumVertrek);
@@ -45,10 +46,12 @@ export default function ReserveringOverlay({
             plaats === 34;
 
         if (Groot) {
+            setGrootte("G")
             let price = 30 * daysDiff;
             setPrijs(`${price},00`);
             console.log(price)
         } else {
+            setGrootte("K")
             let price = 20 * daysDiff;
             setPrijs(`${price},00`);
             console.log(price)
@@ -67,6 +70,7 @@ export default function ReserveringOverlay({
             DatumVertrek &&
             plaats &&
             aantalPers &&
+            grootte &&
             new Date(DatumAankomst) < new Date(DatumVertrek)
         ) {
             setErrorMessage(false);
@@ -90,6 +94,7 @@ export default function ReserveringOverlay({
                     },
                     Plek: {
                         PlekNummer: plaats,
+                        Grootte: grootte
                     },
                 }),
                 headers: {
@@ -111,6 +116,7 @@ export default function ReserveringOverlay({
                     setPlaats(0);
                     setGereserveerdDatum("");
                     setAantalPers(0)
+                    setGrootte("")
                 })
                 .then(() => {
                     toggle();
