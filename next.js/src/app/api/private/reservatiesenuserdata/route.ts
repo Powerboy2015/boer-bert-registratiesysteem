@@ -1,5 +1,5 @@
 import getDB from "@/app/api/lib/db";
-import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
+import { sendReservationEmail } from "@/app/api/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
 import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
@@ -341,6 +341,32 @@ export async function POST(req: NextRequest) {
         //commit database changes if both executed correctly
         await db.commit();
 
+        try {
+            await sendReservationEmail({
+                to: UserData.Email,
+                name: `${UserData.Voornaam} ${UserData.Achternaam}`,
+                spot: plekNummer,
+                peopleCount: Reservatie.AantalMensen,
+                arrivalDate: Reservatie.DatumAankomst,
+                departureDate: Reservatie.DatumVertrek,
+                reservationNumber: Reservatie.ReseveringsNr,
+                reservationToken: Reservatie.ReseveringsNr,
+            });
+        } catch (emailError) {
+            console.error("Failed to send confirmation email:", emailError);
+            return NextResponse.json(
+                {
+                    success: true,
+                    message:
+                        "Reservering opgeslagen, maar het versturen van de bevestigingsmail is mislukt.",
+                    UserDataID: userId,
+                    ReservatieID: resultReservaties.insertId,
+                },
+                { status: 500 }
+            );
+        }
+
+        
         return NextResponse.json({
             success: true,
             message: "User en Reservatie aangemaakt",
