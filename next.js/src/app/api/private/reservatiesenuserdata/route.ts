@@ -1,5 +1,5 @@
 import getDB from "@/app/api/lib/db";
-import { sendReservationEmail as sendMail } from "@/app/api/lib/mailer";
+import { sendReservationEmail } from "@/app/api/lib/mailer";
 import { NextRequest, NextResponse } from "next/server";
 import { Connection, ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
@@ -281,20 +281,31 @@ export async function POST(req: NextRequest) {
         await db.commit();
 
         try {
-            await sendMail({
-                //type script but we remove type. It will be -script.
-                to: (UserData as any).Email,
-                name: `${(UserData as any).Voornaam} ${(UserData as any).Achternaam}`.trim(),
-                spot: (Reservatie as any).PlekNummer,
-                peopleCount: (Reservatie as any).AantalMensen,
-                arrivalDate: (Reservatie as any).DatumAankomst,
-                departureDate: (Reservatie as any).DatumVertrek,
-                reservationNumber: (Reservatie as any).ReseveringsNr,
+            await sendReservationEmail({
+                to: UserData.Email,
+                name: `${UserData.Voornaam} ${UserData.Achternaam}`,
+                spot: plekNummer,
+                peopleCount: Reservatie.AantalMensen,
+                arrivalDate: Reservatie.DatumAankomst,
+                departureDate: Reservatie.DatumVertrek,
+                reservationNumber: Reservatie.ReseveringsNr,
+                reservationToken: Reservatie.ReseveringsNr,
             });
-        } catch (e) {
-            console.error("Failed to send reservation email:", e);
+        } catch (emailError) {
+            console.error("Failed to send confirmation email:", emailError);
+            return NextResponse.json(
+                {
+                    success: true,
+                    message:
+                        "Reservering opgeslagen, maar het versturen van de bevestigingsmail is mislukt.",
+                    UserDataID: userId,
+                    ReservatieID: resultReservaties.insertId,
+                },
+                { status: 500 }
+            );
         }
 
+        
         return NextResponse.json({
             success: true,
             message: "User en Reservatie aangemaakt",

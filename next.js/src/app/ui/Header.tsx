@@ -48,10 +48,10 @@ export default function Header() {
             </div>
 
             <div className="flex gap-3 sm:gap-6 pl-16 sm:pl-26 md:pl-32">
-                <a href="homepage.tsx">
+                <a href="../">
                     <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">Home</button>
                 </a>
-                <a href="reservering1.tsx">
+                <a href="../klanten/1">
                     <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">Reserveren</button>
                 </a>
             </div>
