@@ -6,8 +6,9 @@ import de from "@/app/Images/de.jpg";
 import eng from "@/app/Images/eng.jpg";
 import nl from "@/app/Images/nl.jpg";
 import w3c from "@/app/Images/w3c.jpg";
-import home from "@/app/Images/house-door-fill.svg"
+import home from "@/app/Images/house-door-fill.svg";
 import campinggestolen from "@/app/Images/campinggestolen.jpg";
+import toast from "react-hot-toast";
 
 {
   /*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */
@@ -18,6 +19,7 @@ export default function Reservering1() {
   const [DatumVertrek, setDatumVertrek] = useState<string>("");
   const [Plaats, setPlaats] = useState<string>("");
   const [Personen, setPersonen] = useState<string>("");
+  const [ErrorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     let ticking = false;
@@ -31,10 +33,21 @@ export default function Reservering1() {
         ticking = true;
       }
     };
+    setPlaats(localStorage.getItem("Plaats") ?? "");
+    setPersonen(localStorage.getItem("Personen") ?? "");
+    setDatumAankomst(localStorage.getItem("DatumAankomst") ?? "");
+    setDatumVertrek(localStorage.getItem("DatumVertrek") ?? "");
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const alleVelden = Boolean(Plaats && Personen && DatumAankomst && DatumVertrek);
+
+  const vertrekNaAankomst = DatumAankomst && DatumVertrek && new Date(DatumVertrek) > new Date(DatumAankomst);
+  const aankomstNaNu = DatumAankomst && new Date(DatumAankomst) > new Date();
+
+
 
   return (
     <>
@@ -65,8 +78,9 @@ export default function Reservering1() {
           </div>
           <div className="flex items-center pr-8 gap-6">
             <a className="md:hidden" href="/">
-              <button><Image width={65}
-                height={65} src={home} alt="home" /></button>
+              <button>
+                <Image width={65} height={65} src={home} alt="home" />
+              </button>
             </a>
             <button>
               <Image
@@ -113,6 +127,7 @@ export default function Reservering1() {
               <div>
                 <div className="md:mt-50 flex md:flex-row flex-col justify-center ">
                   <select
+                    value={Plaats}
                     onChange={(e) => {
                       localStorage.setItem("Plaats", e.target.value),
                         setPlaats(e.currentTarget.value);
@@ -125,6 +140,7 @@ export default function Reservering1() {
                   </select>
 
                   <select
+                    value={Personen}
                     onChange={(e) => {
                       localStorage.setItem("Personen", e.target.value),
                         setPersonen(e.currentTarget.value);
@@ -144,6 +160,7 @@ export default function Reservering1() {
 
                   <div className="md:flex md:flex-row text-center px-10 py-7 bg-[#FFFFFF] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#007248] border my-auto">
                     <input
+                      value={DatumAankomst}
                       onChange={(e) => {
                         localStorage.setItem(
                           "DatumAankomst",
@@ -155,6 +172,7 @@ export default function Reservering1() {
                     ></input>
                     <p className="mx-7 font-bold">tot</p>
                     <input
+                      value={DatumVertrek}
                       onChange={(e) => {
                         localStorage.setItem(
                           "DatumVertrek",
@@ -166,23 +184,31 @@ export default function Reservering1() {
                     ></input>
                   </div>
 
-                  {Plaats && Personen && DatumAankomst && DatumVertrek ? (
-                    <a
-                      title="klik her om datum en dagen te wijzigen"
-                      rel="noopener noreferer"
-                      href="/klanten/2"
-                    >
-                      <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
+
+                  {alleVelden && vertrekNaAankomst && aankomstNaNu ?
+                    (
+                      <a
+                        title="klik her om datum en dagen te wijzigen"
+                        rel="noopener noreferer"
+                        href="/klanten/2"
+                      >
+                        <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
+                          Boeken
+                        </button>
+                      </a>
+                    ) : (
+                      <button onClick={() => toast.error(!alleVelden ? "Vul alle velden in!" : !vertrekNaAankomst ? "De vertrekdatum moet na de aankomstdatum liggen!" : !aankomstNaNu ? "De aankomstdatum moet in de toekomst liggen!" : "")} className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
                         Boeken
                       </button>
-                    </a>
-                  ) : (
-                    <button className="text-center px-15 mt-5 md:mt-auto py-[30px] my-auto bg-[#007248] hover:bg-[#a4debc] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FFFFFF] md:rounded-r-[50]">
-                      Boeken
-                    </button>
-                  )}
+
+                    )}
+
 
                   {/*knoppen om je voorkeuren te aan te passen. ze doen nog niks. moet nog zorgen dat je een list krijgt waar je uit kunt kiezen van aantal personen en plekken. ook een kalender die je kan kiezen voor aankomst en vertrek*/}
+                </div>
+
+                <div className="text-red-600 text-2xl w-full flex justify-center">
+                  {ErrorMessage}
                 </div>
               </div>
             </section>
@@ -199,13 +225,11 @@ export default function Reservering1() {
                       <p className="text-3xl mt-5">Accomodaties</p>
                     </div>
                     <div className="p-6">
-                      <p
-                        className="text-2xl text-justify m-12 mt-6"
-                        style={{ fontFamily: "Roboto mono" }}
-                      >
-                        Op de camping boer Bert zijn alleen tent plekken te
-                        boeken.
-                      </p>
+                      <div className="p-1">
+                        <p className="text-2xl m-12 mt-" style={{ fontFamily: 'Roboto mono' }}>Op de camping boer Bert zijn alleen tent plekken te boeken.</p>
+                        <p className="text-2xl mx-12 mt-" style={{ fontFamily: 'Roboto mono' }}>Grote plek: <b>125m2</b></p>
+                        <p className="text-2xl mx-12 mt-" style={{ fontFamily: 'Roboto mono' }}>Kleine plek: <b>60m2</b></p>
+                      </div>
                     </div>
                   </div>
                 </div>{" "}
@@ -217,7 +241,7 @@ export default function Reservering1() {
                     </div>
                     <div className="p-6">
                       <p
-                        className="text-2xl text-justify m-12 mt-6"
+                        className="text-2xl m-12 mt-6"
                         style={{ fontFamily: "Roboto mono" }}
                       >
                         Er worden verschillende evenementen zoals boogschieten
@@ -234,7 +258,7 @@ export default function Reservering1() {
                     </div>
                     <div className="p-6">
                       <p
-                        className="text-2xl text-justify m-12 mt-6"
+                        className="text-2xl m-12 mt-6"
                         style={{ fontFamily: "Roboto mono" }}
                       >
                         Op de camping zijn er toiletten en douches. Daarnaast is
@@ -250,6 +274,7 @@ export default function Reservering1() {
             {/*geen idee meer waarvoor de div. heb een copypasta van de home pagina gebruikt :p */}
           </section>
         </div>{" "}
+
         {/*section met random info*/}
         <footer
           className="p-4 px-10 bg-[#93DAB8] font-bold text-[25px] justify-between flex-row items-center md:flex hidden"
@@ -322,7 +347,7 @@ The 20 meter pacer test will begin in 30 seconds. Line up at the start.
 The running speed starts slowly but gets faster each minute after you hear this signal bodeboop.
 A sing lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible.
 The second time you fail to complete a lap before the sound, your test is over.
-The test will begin on the word start. On your mark. Get ready!… Start. ding﻿*/
+The test will begin on the word start. On your mark. Get ready!… Start. ding�*/
 }
 
 {

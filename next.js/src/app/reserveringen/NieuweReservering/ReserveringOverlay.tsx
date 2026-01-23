@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Cossette_Texte } from "next/font/google";
+import { useState, useEffect } from "react";
 
 export default function ReserveringOverlay({
     toggle,
@@ -13,13 +14,46 @@ export default function ReserveringOverlay({
     const [telNr, setTelnr] = useState("");
     const [adres, setAdres] = useState("");
     const [email, setEmail] = useState("");
-    const [aantalPers,setAantalPers] = useState(0);
+    const [aantalPers, setAantalPers] = useState(0);
 
     const [DatumVertrek, setDatumVertrek] = useState("");
     const [DatumAankomst, setDatumAankomst] = useState("");
     const [plaats, setPlaats] = useState(0);
     const [gereserveerdDatum, setGereserveerdDatum] = useState("");
     const [errorMessage, setErrorMessage] = useState(false);
+    const [prijs, setPrijs] = useState("");
+
+    let date1 = new Date(DatumAankomst);
+    let date2 = new Date(DatumVertrek);
+
+    // Convert dates to UTC timestamps
+    let utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+    let utc2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+
+    // Calculate the time difference in milliseconds
+    let timeDiff = Math.abs(utc2 - utc1);
+
+    // Convert milliseconds to days
+    let daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+    function sendPrice() {
+        const Groot =
+            (plaats >= 1 && plaats <= 19) ||
+            (plaats >= 21 && plaats <= 23) ||
+            (plaats >= 25 && plaats <= 30) ||
+            plaats === 32 ||
+            plaats === 34;
+
+        if (Groot) {
+            let price = 30 * daysDiff;
+            setPrijs(`${price},00`);
+            console.log(price)
+        } else {
+            let price = 20 * daysDiff;
+            setPrijs(`${price},00`);
+            console.log(price)
+        }
+    }
 
     function sendReservering() {
         const url = "http://localhost/api/private/reservatiesenuserdata";
@@ -47,11 +81,12 @@ export default function ReserveringOverlay({
                         Woonplaats: adres,
                     },
                     Reservatie: {
-                        ReseveringsNr: "2025-1", //FIXME dynamic reserverings nummer
+                        ReseveringsNr: "2025-1",
                         DatumAankomst: DatumAankomst,
                         DatumVertrek: DatumVertrek,
                         ReserveringsDatum: "2025-12-14",
                         AantalMensen: aantalPers,
+                        Prijs: prijs
                     },
                     Plek: {
                         PlekNummer: plaats,
@@ -85,6 +120,13 @@ export default function ReserveringOverlay({
                 });
         } else setErrorMessage(true);
     }
+
+    useEffect(() => {
+        if (DatumAankomst && DatumVertrek && plaats) {
+            sendPrice();
+        }
+    }, [DatumAankomst, DatumVertrek, plaats]);
+
 
     return (
         <>
@@ -141,6 +183,15 @@ export default function ReserveringOverlay({
                                 type="date"
                                 className="bg-[#556483] text-2xl"
                             />
+                        </div>
+                        <div className="flex flex-col m-2 ">
+                            <label
+                                className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[16px]"
+                                htmlFor="prijs"
+                            >
+                                Prijs
+                            </label>
+                            <div>{prijs}</div>
                         </div>
                     </div>
                     <div className="grid justify-center grid-cols-2 text-white">
@@ -210,7 +261,7 @@ export default function ReserveringOverlay({
                                 className="bg-[#556483] text-2xl"
                             />
                         </div>
-                                                <div className="flex flex-col m-2 ">
+                        <div className="flex flex-col m-2 ">
                             <label
                                 className="bg-[#1F1F21] p-1 w-fit mx-2 -my-1 z-1 text-[10px]"
                                 htmlFor="Naam"
