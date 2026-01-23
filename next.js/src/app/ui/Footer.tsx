@@ -7,7 +7,7 @@ export default function Footer() {
                 <a href="tel:+31642741016">📞 +31 123456789</a>
                 <a href="mailto:info@campingboerbert.nl">📧 info@campingboerbert.nl</a>
                 <a
-                    href="https://maps.google.com"
+                    href="https://www.google.com/maps/place/Hogeschool+Utrecht,+Heidelberglaan+15,+3584+CS+Utrecht/@52.0841048,5.1733026,17z/data=!3m1!4b1!4m6!3m5!1s0x47c6693e9a2d0c9f:0xa9867c6558813da4!8m2!3d52.0841048!4d5.1758829!16s%2Fg%2F11gjp5bt_0?entry=ttu&g_ep=EgoyMDI2MDExOS4wIKXMDSoKLDEwMDc5MjA3M0gBUAM%3D"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
