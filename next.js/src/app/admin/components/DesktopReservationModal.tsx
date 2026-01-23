@@ -79,7 +79,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
         const isFilled = isReservationComplete(editableReservation);
         console.log(isFilled);
         if (isFilled == false) {
-            return toast.success("test");
+            return toast.error("Je hebt niet alle velden ingevuld.");
         }
 
         if (createNew) {
