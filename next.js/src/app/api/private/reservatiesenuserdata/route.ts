@@ -34,6 +34,7 @@ interface ReservatieBody {
 
 interface PlekBody {
     PlekNummer: number;
+    Grootte: string;
 }
 
 export interface UserAndReservatieBody {
@@ -82,7 +83,7 @@ export async function GET(req: NextRequest) {
         //ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen
 
         //Sql query database execute
-        const [rows] = await db.execute(
+        const [rows] = await db.execute<RowDataPacket[]>(
             `select * from Reservaties 
             INNER JOIN UserData ON Reservaties.UserData_ID = UserData.ID
             INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID 
@@ -133,7 +134,10 @@ export async function POST(req: NextRequest) {
             !UserData.Telefoonnummer ||
             !UserData.Woonplaats
         ) {
-            return NextResponse.json({ error: "Je mist een iets in userdata body" }, { status: 400 });
+            return NextResponse.json(
+                { error: "Je mist een iets in userdata body of er is een fout in userdata body" },
+                { status: 400 },
+            );
         }
         if (
             !Reservatie.DatumVertrek ||
@@ -141,7 +145,10 @@ export async function POST(req: NextRequest) {
             !Reservatie.AantalMensen ||
             !Reservatie.Prijs
         ) {
-            return NextResponse.json({ error: "Je mist een iets in reservatie body" }, { status: 400 });
+            return NextResponse.json(
+                { error: "Je mist een iets in reservatie body of er is iets fout in reservatie body" },
+                { status: 400 },
+            );
         }
         if (!Plek.PlekNummer) {
             return NextResponse.json({ error: "Je mist een iets in plek body" }, { status: 400 });
@@ -185,6 +192,10 @@ export async function POST(req: NextRequest) {
         if (Reservatie.AantalMensen < 1) {
             return NextResponse.json({ error: "AantalMensen moet een positief getal zijn." }, { status: 400 });
         }
+
+        const prijs = priceCalc(aankomst, vertrek, Plek.Grootte);
+        Reservatie.Prijs = prijs;
+        console.log(Reservatie.Prijs); //idk als dit good practice is
 
         const [plaatsbezetcheck] = await db.execute<RowDataPacket[]>(
             `
@@ -242,7 +253,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Ongeldig PlekNummer" }, { status: 400 });
         }
 
-        const plekkenId = plek[0].ID; //ik weet niet hoe ik dit rode underline weg krijg T-T
+        const plekkenId = plek[0].ID;
 
         await db.beginTransaction();
 
@@ -322,4 +333,15 @@ async function getReservationNr(db: Connection): Promise<string> {
     const currentYear: string = new Date().getFullYear().toString();
 
     return currentYear + "-" + nextID;
+}
+
+function priceCalc(aankomst: Date, vertrek: Date, size: string) {
+    //btw calc is slang for calculator
+    const timeDifInDays = (vertrek.getTime() - aankomst.getTime()) / (1000 * 60 * 60 * 24);
+    console.log(timeDifInDays);
+    if (size == "G") {
+        return `${timeDifInDays * 30},00`;
+    } else {
+        return `${timeDifInDays * 20},00`;
+    }
 }

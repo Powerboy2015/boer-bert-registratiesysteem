@@ -26,6 +26,7 @@ interface ReservatieBody {
 
 interface PlekBody {
     PlekNummer: number;
+    Grootte: string;
 }
 
 export interface ReservatieAndPlekBody {
@@ -73,7 +74,7 @@ export async function GET(req: NextRequest) {
         //ReseveringsNr, Voornaam, Achternaam, DatumAankomst, DatumVertrek, PlekNummer, ReserveringsDatum, AantalMensen
 
         //Sql query database execute
-        const [rows] = await db.execute(
+        const [rows] = await db.execute<RowDataPacket[]>(
             `select * from Reservaties INNER JOIN Plekken ON Reservaties.Plekken_ID = Plekken.ID ${whereSQLquery} ORDER BY ${sort} ${order} LIMIT ? OFFSET ?`,
             [...likeInput, limit, pagestart],
         );
@@ -225,12 +226,7 @@ export async function PUT(req: NextRequest) {
             return NextResponse.json({ error: "Reserverings ID ontbreekt" }, { status: 400 });
         }
 
-        if (
-            !Reservatie.ReseveringsNr ||
-            !Reservatie.DatumAankomst ||
-            !Reservatie.DatumVertrek ||
-            !Reservatie.ReserveringsDatum
-        ) {
+        if (!Reservatie.DatumAankomst || !Reservatie.DatumVertrek || !Reservatie.ReserveringsDatum) {
             return NextResponse.json({ error: "Je mist een iets in reservatie body" }, { status: 400 });
         }
 
@@ -267,6 +263,9 @@ export async function PUT(req: NextRequest) {
             );
         }
 
+        const prijs = priceCalc(aankomst, vertrek, Plek.Grootte);
+        console.log(prijs);
+
         const db = await getDB();
 
         const plekNummer = Plek.PlekNummer;
@@ -285,8 +284,8 @@ export async function PUT(req: NextRequest) {
 
         //sql execute 👍👍👍👍👍👍👍👍👍👍👍👍👍
         const [result] = await db.execute<ResultSetHeader>(
-            `UPDATE Reservaties SET ${setInput}, Plekken_ID = ? WHERE ReseveringsNr = ?`,
-            [...values, plekkenId, id],
+            `UPDATE Reservaties SET ${setInput},Prijs = ?, Plekken_ID = ? WHERE ReseveringsNr = ?`,
+            [...values, prijs, plekkenId, id],
         );
         //if the db.execute didn't make any changes it will respond with a not found error
         if (result.affectedRows === 0) {
@@ -303,5 +302,16 @@ export async function PUT(req: NextRequest) {
             { error: "Interne serverfout", details: `${err}` },
             { status: 500 },
         );
+    }
+}
+
+function priceCalc(aankomst: Date, vertrek: Date, size: string) {
+    //btw calc is slang for calculator
+    const timeDifInDays = (vertrek.getTime() - aankomst.getTime()) / (1000 * 60 * 60 * 24);
+    console.log(timeDifInDays);
+    if (size == "G") {
+        return `${timeDifInDays * 30},00`;
+    } else {
+        return `${timeDifInDays * 20},00`;
     }
 }
