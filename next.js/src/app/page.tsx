@@ -132,7 +132,7 @@ export default function Home() {
                         <h2 className="text-[#FDF5D8] text-3xl md:text-4xl font-bold leading-snug">
                             KAMPEER OP JOUW MANIER – ALLEEN <br className="hidden md:block" /> OF SAMEN
                         </h2>
-                        <a href="/klanten1">
+                        <a href="/klanten/1">
                             <button className="px-10 py-5 bg-[#FDF5D8] hover:bg-[#a4debc] transition text-2xl md:text-3xl font-semibold text-[#007248] rounded-xl">
                                 Reserveer nu
                             </button>
