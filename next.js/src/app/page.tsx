@@ -24,7 +24,7 @@ export default function Home() {
                 <h1 className="text-4xl lg:text-6xl font-bold text-[#FDF5D8] mb-6">
                     Boerencamping Boer Bert
                 </h1>
-                <a href="/reservering1">
+                <a href="/klanten/1">
                     <button className="px-8 py-4 text-xl bg-[#FDF5D8] text-[#007248] font-bold rounded-xl hover:bg-[#a4debc] transition">
                         Reserveer nu
                     </button>
@@ -132,7 +132,7 @@ export default function Home() {
                         <h2 className="text-[#FDF5D8] text-3xl md:text-4xl font-bold leading-snug">
                             KAMPEER OP JOUW MANIER – ALLEEN <br className="hidden md:block" /> OF SAMEN
                         </h2>
-                        <a href="/reservering1">
+                        <a href="/klanten/1">
                             <button className="px-10 py-5 bg-[#FDF5D8] hover:bg-[#a4debc] transition text-2xl md:text-3xl font-semibold text-[#007248] rounded-xl">
                                 Reserveer nu
                             </button>
@@ -222,4 +222,3 @@ The test will begin on the word start. On your mark. Get ready!… Start. ding�
 {/*aantal keren gescholden naar de code: 23 */}
 {/*aantal keren opgegeven: 8 */}
 {/*aantal stenen geteld in de tuin: 50~ */}
-
