@@ -40,7 +40,7 @@ interface PlekBody {
 export interface UserAndReservatieBody {
     UserData: UserDataBody;
     Reservatie: ReservatieBody;
-    Plek: PlekBody;
+    Plek: Partial<PlekBody>;
 }
 
 export async function GET(req: NextRequest) {
@@ -296,16 +296,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json(
                 {
                     success: true,
-                    message:
-                        "Reservering opgeslagen, maar het versturen van de bevestigingsmail is mislukt.",
+                    message: "Reservering opgeslagen, maar het versturen van de bevestigingsmail is mislukt.",
                     UserDataID: userId,
                     ReservatieID: resultReservaties.insertId,
                 },
-                { status: 500 }
+                { status: 500 },
             );
         }
 
-        
         return NextResponse.json({
             success: true,
             message: "User en Reservatie aangemaakt",

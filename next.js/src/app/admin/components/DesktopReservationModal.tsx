@@ -1,7 +1,7 @@
 import AdminReserveringen from "@/app/lib/AdminReserveringen";
 import { Reservering } from "@/app/reserveringen/Widgets/Reserveringen";
 import { Check, Delete, Edit } from "@mui/icons-material";
-import { FocusEvent, MouseEvent, useContext, useEffect, useState } from "react";
+import { FocusEvent, FormEvent, FormEventHandler, MouseEvent, useContext, useEffect, useState } from "react";
 import { OverlayContext } from "../context/OverlayContext";
 import toast from "react-hot-toast";
 
@@ -73,8 +73,8 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
     };
 
     //Handles saving by either updating or creating a new resevation. It then closes the modal and reloads all reservations.
-    const handleSave = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-        e.stopPropagation();
+    const handleSave = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
         const isFilled = isReservationComplete(editableReservation);
         console.log(isFilled);
@@ -84,13 +84,26 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
 
         if (createNew) {
             //depending on if we're creating a new one, create a new one or update an existing one.
-            AdminReserveringen.createReservation(editableReservation).then(reloadReservations);
+            const resp = await AdminReserveringen.createReservation(editableReservation);
+            reloadReservations(resp);
+
+            // if there's an error, it doens't close the menu.
+            if (!resp.ok) return;
+
+            console.log(editableReservation);
+            canEdit(false);
+            isCreatingNew(false);
         } else {
-            AdminReserveringen.UpdateReservation(editableReservation).then(reloadReservations);
+            const resp = await AdminReserveringen.UpdateReservation(editableReservation);
+            reloadReservations(resp);
+
+            // if there's an error, it doens't close the menu.
+            if (!resp.ok) return;
+
+            console.log(editableReservation);
+            canEdit(false);
+            isCreatingNew(false);
         }
-        console.log(editableReservation);
-        canEdit(false);
-        isCreatingNew(false);
 
         //Clears out the current reservation we are viewing. Thus closing the modal
         context?.setActiveReservation(null);
@@ -113,7 +126,8 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
     };
 
     return (
-        <div
+        <form
+            onSubmit={handleSave}
             id="desktopDetails"
             className="min-w-[640px] w-1/3 h-full absolute right-0 top-0 bg-[#EDEBDE] flex flex-col gap-8 p-8 text-[#666666] overflow-y-auto"
         >
@@ -129,8 +143,8 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                             type="text"
                             placeholder="voornaam..."
                             defaultValue={res.Voornaam}
-                            name=""
-                            id=""
+                            minLength={1}
+                            required
                         />
                         <input
                             className={`text-3xl w-full ${createNew ? "text-green-700 bg-white" : ""}`}
@@ -140,8 +154,8 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                             type="text"
                             placeholder="achternaam..."
                             defaultValue={res.Achternaam}
-                            name=""
-                            id=""
+                            minLength={1}
+                            required
                         />
                     </div>
                 ) : (
@@ -165,6 +179,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                                 compareStartEndDates("DatumAankomst", e.currentTarget.value);
                             }}
                             className={`${edit ? "text-green-700 bg-white" : ""} ${dateMismatch ? "border border-red-500" : ""}`}
+                            required
                         />
                         <p>Tot</p>
                         <input
@@ -176,6 +191,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                                 compareStartEndDates("DatumVertrek", e.currentTarget.value);
                             }}
                             className={`${edit ? "text-green-700 bg-white" : ""} ${dateMismatch ? "border border-red-500" : ""}`}
+                            required
                         />
                     </div>
                 ) : (
@@ -265,7 +281,8 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     <button
                         id="edit-reservation"
                         className="flex flex-row text-[32px] items-center py-2 px-1 gap-4 bg-[#F6FF80] rounded text-[#666C13]"
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.preventDefault();
                             canEdit(true);
                         }}
                     >
@@ -276,7 +293,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     <button
                         id="save-reservation"
                         className="flex flex-row text-[32px] items-center py-2 px-1 gap-4 bg-[#00A367] rounded text-[#007248]"
-                        onClick={handleSave}
+                        type="submit"
                     >
                         <Check style={{ width: 32, height: 32 }} />
                         <p className="text-black">Opslaan</p>
@@ -316,7 +333,7 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                     </div>
                 )}
             </section>
-        </div>
+        </form>
     );
 }
 
@@ -341,9 +358,16 @@ function DataField({ name, value, editValue, canEdit = false, regex, ...props }:
             isValid(true);
             return editValue(value);
         }
+
+        // Prevents invalid spamming....
+        if (!valid) return;
+
         isValid(false);
         return toast.error("You have filled in a field incorrectly....");
     };
+
+    let defVal = name === "Plaatsnummer" && typeof value === "string" ? Number(value.split(" ")[0]) : value;
+    defVal = typeof defVal === "number" && isNaN(defVal) ? undefined : defVal;
 
     return (
         <div className="flex flex-row items-center justify-between text-3xl">
@@ -351,12 +375,14 @@ function DataField({ name, value, editValue, canEdit = false, regex, ...props }:
 
             {canEdit ? (
                 <input
+                    {...(defVal != null ? { defaultValue: defVal } : {})}
                     onBlur={validateValue}
                     type={typeof value == "number" ? "number" : "text"}
                     key={name}
                     className={`Value text-black text-end w-full h-full ${canEdit ? "text-green-700 bg-white rounded-2xl py-1 px-2" : ""} ${!valid ? "border border-red-500" : ""}`}
-                    defaultValue={value}
                     {...props}
+                    pattern={regex}
+                    required
                 />
             ) : (
                 <p className="Value text-black">{value}</p>
