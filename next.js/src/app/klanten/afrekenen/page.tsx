@@ -130,22 +130,15 @@ export default function Reservering2() {
                           className="text-xl mt-5"
                           style={{ fontFamily: "Roboto mono" }}
                         >
-                          Achteraam:
+                          Achternaam:
                           <div className="mt-3">
                             <input
                               list="achternaam klant"
                               onChange={(e) => setAchternaam(e.target.value)}
                               className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[580px] h-[50px] px-[15px]"
-                              pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+"
+                              pattern="/^[a-z ,.'-]+$/i"
                               required
                             ></input>
-                            <datalist id="ligging-in-het-park">
-                              <option value="in de zon" />
-                              <option value="in de schaduw" />
-                              <option value="bij het water" />
-                              <option value="vlakbij de ingang" />
-                              <option value="langs de hoodfweg" />
-                            </datalist>
                           </div>
                         </div>{" "}
                         {/*achternaam */}
@@ -183,16 +176,10 @@ export default function Reservering2() {
                                 required
                                 onChange={(e) => setTelnr(e.target.value)}
                                 className="bg-[#FFFFFF] text-[#595959ff]-2xl rounded-md border-2 border-[#ccc] md:w-[280px] h-[50px] px-[15px]"
-                                pattern="^06-\d{8}$"
-                                title="Formaat: 06-12345678"
+                                pattern="(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10}$)"
+                                title="Ongeldig telefoonnummer"
                               ></input>
-                              <datalist id="ligging-in-het-park">
-                                <option value="in de zon" />
-                                <option value="in de schaduw" />
-                                <option value="bij het water" />
-                                <option value="vlakbij de ingang" />
-                                <option value="langs de hoodfweg" />
-                              </datalist>
+
                             </div>
                           </div>{" "}
                           {/*telefoon nummer */}
