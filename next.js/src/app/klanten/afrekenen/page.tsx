@@ -13,6 +13,7 @@ import { send } from "process";
 import { error } from "console";
 import Footer from "../../ui/Footer";
 import Header from "../../ui/Header";
+import toast from "react-hot-toast";
 {
     /*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */
 }
@@ -44,42 +45,45 @@ export default function Reservering2() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    function createReservation() {
+        toast.promise(sendData(), {
+            loading: "Saving...",
+            success: <b>Reservering aangemaakt!</b>,
+            error: <b>Er ging iets fout....</b>,
+        });
+    }
+
     async function sendData() {
         const url = "http://localhost/api/public/reserveren";
 
         if (!!voornaam && !!achternaam && !!telNr && !!adres && !!email && !!plaats) {
-            try {
-                const reservationInfo = {
-                    UserData: {
-                        Voornaam: voornaam,
-                        Achternaam: achternaam,
-                        Email: email,
-                        Telefoonnummer: telNr,
-                        Woonplaats: plaats,
-                    },
-                    Reservatie: {
-                        DatumAankomst: localStorage.getItem("DatumAankomst"),
-                        DatumVertrek: localStorage.getItem("DatumVertrek"),
-                        AantalMensen: localStorage.getItem("Personen"),
-                        Prijs: localStorage.getItem("Prijs"),
-                    },
-                    Plek: {
-                        PlekNummer: localStorage.getItem("PlekNr"),
-                        Grootte: localStorage.getItem("Plaats"),
-                    },
-                };
+            const reservationInfo = {
+                UserData: {
+                    Voornaam: voornaam,
+                    Achternaam: achternaam,
+                    Email: email,
+                    Telefoonnummer: telNr,
+                    Woonplaats: plaats,
+                },
+                Reservatie: {
+                    DatumAankomst: localStorage.getItem("DatumAankomst"),
+                    DatumVertrek: localStorage.getItem("DatumVertrek"),
+                    AantalMensen: localStorage.getItem("Personen"),
+                    Prijs: localStorage.getItem("Prijs"),
+                },
+                Plek: {
+                    PlekNummer: localStorage.getItem("PlekNr"),
+                    Grootte: localStorage.getItem("Plaats"),
+                },
+            };
 
-                fetch(url, {
-                    method: "POST",
-                    body: JSON.stringify(reservationInfo),
-                }).then((resp) => {
-                    if (!resp.ok) return;
-                    localStorage.setItem("latestReservation", JSON.stringify(reservationInfo));
-                    router.push("/klanten/thank-you");
-                });
-            } catch (err) {
-                console.log(err);
-            }
+            const resp = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(reservationInfo),
+            });
+            if (!resp.ok) throw new Error();
+            localStorage.setItem("latestReservation", JSON.stringify(reservationInfo));
+            router.push("/klanten/thank-you");
         }
     }
 
@@ -105,6 +109,7 @@ export default function Reservering2() {
                                         <form
                                             onSubmit={(e) => {
                                                 e.preventDefault();
+                                                createReservation();
                                             }}
                                         >
                                             <div
@@ -257,7 +262,7 @@ export default function Reservering2() {
                                             <div className="flex mx-auto my-auto items-center">
                                                 <div className="my-auto mx-auto items-center text-center p-1 ">
                                                     <button
-                                                        onClick={() => sendData()}
+                                                        type="submit"
                                                         className="text-center px-20 py-3 bg-[#007248] hover:bg-[#008f58] hover:shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)] transition-colors duration-100 text-3xl font-semibold text-[#FDF5D8] rounded-xl"
                                                         style={{ fontFamily: "Roboto mono" }}
                                                     >

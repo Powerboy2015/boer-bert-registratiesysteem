@@ -22,21 +22,15 @@ export async function GET(req: NextRequest) {
 
         //checkt als je wel datums hebt ingevoerd
         if (!datumAankomst || !datumVertrek) {
-            return NextResponse.json(
-                { error: "Aankomst datum en vertrek datum zijn verplicht" },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: "Aankomst datum en vertrek datum zijn verplicht" }, { status: 400 });
         }
 
         const regdatum = /^\d{4}-\d{2}-\d{2}$/;
         //checkt als gegeven datum correcte formaat gebruikt
         if (!regdatum.test(datumAankomst) || !regdatum.test(datumVertrek)) {
-            return NextResponse.json(
-                { error: "Ongeldig datum formaat. Gebruik YYYY-MM-DD." },
-                { status: 400 }
-            );
+            return NextResponse.json({ error: "Ongeldig datum formaat. Gebruik YYYY-MM-DD." }, { status: 400 });
         }
-        
+
         //ik zet ze voor de veiligheid om naar datumtijd formaat
         const aankomst = new Date(datumAankomst);
         const vertrek = new Date(datumVertrek);
@@ -45,7 +39,7 @@ export async function GET(req: NextRequest) {
         if (aankomst >= vertrek) {
             return NextResponse.json(
                 { error: "Aankomst datum moet voor vertrek datum zijn. Mag ook niet op zelfde dag." },
-                { status: 400 }
+                { status: 400 },
             );
         }
 
@@ -53,8 +47,10 @@ export async function GET(req: NextRequest) {
         const vandaag = new Date();
         if (aankomst < vandaag) {
             return NextResponse.json(
-                { error: "Je kan niet meer boeken op deze datum (datum is al geweest/ je kan niet nog voor vandaag boeken)" }, //uh idk dit leest raar
-                { status: 400 }
+                {
+                    error: "Je kan niet meer boeken op deze datum (datum is al geweest/ je kan niet nog voor vandaag boeken)",
+                }, //uh idk dit leest raar
+                { status: 400 },
             );
         }
 
@@ -69,10 +65,13 @@ export async function GET(req: NextRequest) {
                 SELECT 1
                 FROM Reservaties
                 WHERE Reservaties.Plekken_ID = Plekken.ID
+                AND Reservaties.isArchived = 0
                 AND Reservaties.DatumAankomst <= ?
                 AND Reservaties.DatumVertrek >= ?)
-            `, [datumVertrek, datumAankomst]);
-        
+            `,
+            [datumVertrek, datumAankomst],
+        );
+
         //Dit is voor typescript, zodat er geen rode underlining is
         const availablePlaces = rows as AvailablePlace[];
         //dit ook
@@ -81,11 +80,7 @@ export async function GET(req: NextRequest) {
         };
 
         return NextResponse.json(response);
-
     } catch (err) {
-        return NextResponse.json(
-            { error: "Interne serverfout", details: String(err) },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: "Interne serverfout", details: String(err) }, { status: 500 });
     }
 }
