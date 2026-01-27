@@ -84,7 +84,9 @@ export default class AdminReserveringen {
         });
 
         if (response.ok) return { ok: true, message: "Nieuwe reservering aangemaakt." };
-        return { ok: false, message: "reservering aanmaken mislukt." };
+
+        const data: { error?: string } = await response.json();
+        return { ok: false, message: data?.error || "Reservering aanmaken mislukt." };
     }
 
     static async DeleteReservation(resNr: string): Promise<response> {
