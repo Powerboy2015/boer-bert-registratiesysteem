@@ -3,13 +3,22 @@ import { UserAndReservatieBody } from "@/app/api/private/reservatiesenuserdata/r
 import Footer from "@/app/ui/Footer";
 import Header from "@/app/ui/Header";
 import { ArrowRightAltSharp } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function thankYouPage() {
-    const latestReservation: UserAndReservatieBody | "" = JSON.parse(
-        localStorage.getItem("latestReservation") || "",
-    );
+let latestReservation: UserAndReservatieBody | null = null;
+if (typeof window !== "undefined") {
+    const raw = localStorage.getItem("latestReservation");
+    if (raw) {
+        const parsed: UserAndReservatieBody = JSON.parse(raw);
+        latestReservation = parsed;
+    }
+}
 
-    if (latestReservation == "") return;
+export default function ThankYouPage() {
+    const router = useRouter();
+
+    if (latestReservation === null) return router.push("/");
 
     return (
         <div className="min-h-screen w-full text-[#2c2c2c] font-sans flex flex-col">
@@ -21,7 +30,7 @@ export default function thankYouPage() {
                         Je hebt een email ontvangen met de informatie hieronder:
                     </h2>
                 </div>
-                <div className="reservation-information bg-white w-full min-h-[50dvh] rounded-2xl flex flex-col justify-between py-8 px-4 text-[#666666] font-medium">
+                <div className="reservation-information bg-white w-full max-w-[333px] min-h-[50dvh] rounded-2xl flex flex-col justify-between py-8 px-4 text-[#666666] font-medium">
                     <div id="user-info">
                         <h3 id="full-name" className="text-2xl font-bold">
                             {latestReservation?.UserData.Voornaam} {latestReservation?.UserData.Achternaam}
