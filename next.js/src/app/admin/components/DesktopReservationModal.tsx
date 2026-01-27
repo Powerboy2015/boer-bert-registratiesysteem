@@ -131,6 +131,8 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                             defaultValue={res.Voornaam}
                             name=""
                             id=""
+                            autoComplete="false"
+                            autoCorrect="false"
                         />
                         <input
                             className={`text-3xl w-full ${createNew ? "text-green-700 bg-white" : ""}`}
@@ -142,6 +144,8 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                             defaultValue={res.Achternaam}
                             name=""
                             id=""
+                            autoComplete="false"
+                            autoCorrect="false"
                         />
                     </div>
                 ) : (
@@ -165,6 +169,8 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                                 compareStartEndDates("DatumAankomst", e.currentTarget.value);
                             }}
                             className={`${edit ? "text-green-700 bg-white" : ""} ${dateMismatch ? "border border-red-500" : ""}`}
+                            autoComplete="false"
+                            autoCorrect="false"
                         />
                         <p>Tot</p>
                         <input
@@ -176,6 +182,8 @@ export default function DesktopReservationModal({ res }: DesktopReservationModal
                                 compareStartEndDates("DatumVertrek", e.currentTarget.value);
                             }}
                             className={`${edit ? "text-green-700 bg-white" : ""} ${dateMismatch ? "border border-red-500" : ""}`}
+                            autoComplete="false"
+                            autoCorrect="false"
                         />
                     </div>
                 ) : (
@@ -357,6 +365,8 @@ function DataField({ name, value, editValue, canEdit = false, regex, ...props }:
                     className={`Value text-black text-end w-full h-full ${canEdit ? "text-green-700 bg-white rounded-2xl py-1 px-2" : ""} ${!valid ? "border border-red-500" : ""}`}
                     defaultValue={value}
                     {...props}
+                    autoComplete="false"
+                    autoCorrect="false"
                 />
             ) : (
                 <p className="Value text-black">{value}</p>
