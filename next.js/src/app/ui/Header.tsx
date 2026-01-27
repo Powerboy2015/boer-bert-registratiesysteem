@@ -1,7 +1,7 @@
+"use client";
 import Image from "next/image";
 import logo from "@/app/Images/logo.jpg";
-import React, {useEffect, useState} from "react";
-
+import React, { useEffect, useState } from "react";
 
 export default function Header() {
     const [shrink, setShrink] = useState(false);
@@ -21,12 +21,10 @@ export default function Header() {
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-        },
-        []);
+    }, []);
 
     return (
-        <header
-            className="sticky top-0 z-50 relative bg-[#93DAB8] shadow-lg justify-start flex items-center sm:px-4 min-h-[70px] sm:min-h-[100px] md:min-h-[130px]">
+        <header className="sticky top-0 z-50 relative bg-[#93DAB8] shadow-lg justify-start flex items-center sm:px-4 min-h-[70px] sm:min-h-[100px] md:min-h-[130px]">
             <div
                 className={`relative transition-all duration-300
                 ${shrink ? "scale-[1.4] sm:scale-[1.7] md:scale-[2.1]" : "scale-[1.6] sm:scale-[2] md:scale-[2.6]"}
@@ -49,12 +47,16 @@ export default function Header() {
 
             <div className="flex gap-3 sm:gap-6 pl-16 sm:pl-26 md:pl-32">
                 <a href="../">
-                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">Home</button>
+                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">
+                        Home
+                    </button>
                 </a>
                 <a href="../klanten/1">
-                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">Reserveren</button>
+                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">
+                        Reserveren
+                    </button>
                 </a>
             </div>
         </header>
-    )
+    );
 }

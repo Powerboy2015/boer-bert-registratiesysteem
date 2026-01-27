@@ -37,29 +37,29 @@ export default function AdminReserveringen() {
     const [timeFiltered, setMinDate, setMaxDate] = useTimeSort(resevationList || []);
     const [sortedRes, doSort, setQuery] = useWFilter(timeFiltered);
 
+    // useEffect(() => {
+    //     const isToday = (date1: string) => {
+    //         const date = Date.parse(date1);
+    //         const today = Date.parse(new Date().toJSON());
+
+    //         // console.log("comparing");
+    //         // console.log(today);
+    //         // console.log(date);
+
+    //         return date === today;
+    //     };
+
+    //     switch (timeFilter) {
+    //         case "today":
+    //             const filtered = resevationList?.filter((reservering) => isToday(reservering.DatumAankomst));
+    //         // console.log(filtered);
+    //         case "week":
+    //         case "month":
+    //     }
+    // }, [timeFilter, inOutFilter, resevationList]);
+
     useEffect(() => {
-        const isToday = (date1: string) => {
-            const date = Date.parse(date1);
-            const today = Date.parse(new Date().toJSON());
-
-            console.log("comparing");
-            console.log(today);
-            console.log(date);
-
-            return date === today;
-        };
-
-        switch (timeFilter) {
-            case "today":
-                const filtered = resevationList?.filter((reservering) => isToday(reservering.DatumAankomst));
-                console.log(filtered);
-            case "week":
-            case "month":
-        }
-    }, [timeFilter, inOutFilter, resevationList]);
-
-    useEffect(() => {
-        console.log("set reload: ", reload);
+        // console.log("set reload: ", reload);
         context?.setReloadReservations(() => reload);
     }, []);
 
