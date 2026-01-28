@@ -15,19 +15,26 @@ export default function Home() {
             <div className="font-sans text-[#2c2c2c]">
                 <Header />
                 <section className="bg-[#007248]">
-                    <div
-                        className="min-h-screen flex flex-col justify-center items-center text-center bg-blend-multiply bg-cover bg-center rounded-bl-[180px] xl:rounded-bl-[240px] 2xl:rounded-bl-[500px] overflow-hidden max-w-full"
-                        style={{ backgroundImage: `url(${campinggestolen.src})` }}
-                    >
-                        <h1 className="text-4xl lg:text-6xl font-bold text-[#FDF5D8] mb-6">
-                            Boerencamping Boer Bert
-                        </h1>
-                        <a href="/klanten/1">
-                            <button className="px-8 py-4 text-xl bg-[#FDF5D8] text-[#007248] font-bold rounded-xl hover:bg-[#a4debc] transition">
-                                Reserveer nu
-                            </button>
-                        </a>
-                        {/*button om naar de pagina reserveringen te gaan */}
+                    <div className="bg-[#000000] rounded-bl-[180px] xl:rounded-bl-[240px] 2xl:rounded-bl-[500px] overflow-hidden">
+
+                        <div className="relative min-h-screen flex flex-col justify-center items-center text-center rounded-bl-[180px] xl:rounded-bl-[240px] 2xl:rounded-bl-[500px] overflow-hidden">
+                            <div
+                                className="absolute inset-0 bg-cover bg-center opacity-40"
+                                style={{ backgroundImage: `url(${campinggestolen.src})` }}
+                            />
+                            <div className="relative z-10">
+                                <h1 className="text-4xl lg:text-6xl font-bold text-[#FDF5D8] mb-6">
+                                    Boerencamping Boer Bert
+                                </h1>
+
+                                <a href="/klanten/1">
+                                    <button className="px-8 py-4 text-xl bg-[#FDF5D8] text-[#007248] font-bold rounded-xl hover:bg-[#a4debc] transition">
+                                        Reserveer nu
+                                    </button>
+                                </a>
+                            </div>
+
+                        </div>
                     </div>
                 </section>
 
