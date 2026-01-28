@@ -1,7 +1,7 @@
 import getDB from "@/app/api/lib/db";
 import { decryptReservationToken } from "@/app/api/lib/encryption";
 import { NextRequest, NextResponse } from "next/server";
-import { ResultSetHeader } from "mysql2/promise";
+import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 
 /**
  * POST endpoint to cancel a reservation using an encrypted token
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
         const db = await getDB();
 
         // Verify the reservation exists and is not already archived
-        const [reservation] = await db.execute(
+        const [reservation] = await db.execute<RowDataPacket[]>(
             `SELECT ID, ReseveringsNr, isArchived FROM Reservaties WHERE ReseveringsNr = ?`,
             [reservationNumber]
         );

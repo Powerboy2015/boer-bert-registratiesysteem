@@ -193,7 +193,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "AantalMensen moet een positief getal zijn." }, { status: 400 });
         }
 
-        const prijs = priceCalc(aankomst, vertrek, Plek.Grootte);
+        const prijs = priceCalc(aankomst, vertrek, Plek.Grootte || "K");
         Reservatie.Prijs = prijs;
         console.log(Reservatie.Prijs); //idk als dit good practice is
 

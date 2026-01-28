@@ -10,9 +10,19 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Footer from "../ui/Footer";
 import Header from "../ui/Header";
+import { Suspense } from "react";
 {/*niet op letten waarom er zo veel imports zijn die niet worden gebruikt dank u */ }
-export default function Reservering2() {
-  const [shrink, setShrink] = useState(false);
+
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+      <Reservering2 />
+    </Suspense>
+  );
+}
+
+function Reservering2() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -27,7 +37,6 @@ export default function Reservering2() {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setShrink(window.scrollY > 20);
           ticking = false;
         });
         ticking = true;

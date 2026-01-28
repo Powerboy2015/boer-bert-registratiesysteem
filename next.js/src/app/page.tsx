@@ -16,9 +16,7 @@ export default function Home() {
                 <Header />
                 <section className="bg-[#007248]">
                     <div
-                        className="min-h-screen flex flex-col justify-center items-center text-center
-             bg-black/60 bg-blend-multiply bg-cover bg-center
-             rounded-bl-[180px] xl:rounded-bl-[240px] 2xl:rounded-bl-[500px] overflow-hidden max-w-full"
+                        className="min-h-screen flex flex-col justify-center items-center text-center bg-blend-multiply bg-cover bg-center rounded-bl-[180px] xl:rounded-bl-[240px] 2xl:rounded-bl-[500px] overflow-hidden max-w-full"
                         style={{ backgroundImage: `url(${campinggestolen.src})` }}
                     >
                         <h1 className="text-4xl lg:text-6xl font-bold text-[#FDF5D8] mb-6">

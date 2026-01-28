@@ -263,7 +263,7 @@ export async function PUT(req: NextRequest) {
             );
         }
 
-        const prijs = priceCalc(aankomst, vertrek, Plek.Grootte);
+        const prijs = priceCalc(aankomst, vertrek, Plek.Grootte || "K");
         console.log(prijs);
 
         const db = await getDB();
