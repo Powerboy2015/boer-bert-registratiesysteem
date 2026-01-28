@@ -47,12 +47,12 @@ export default function Header() {
 
             <div className="flex gap-3 sm:gap-6 pl-16 sm:pl-26 md:pl-32">
                 <a href="../">
-                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">
+                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl text-[11px] sm:text-sm md:text-lg lg:text-2xl md:w-[110px] lg:w-[140px] md:h-[85px] lg:h-[100px] sm:w-20 sm:h-[50px] w-[65px] h-10">
                         Home
                     </button>
                 </a>
                 <a href="../klanten/1">
-                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl md:text-sm text-[11px] md:w-[88px] md:h-[57px] w-[67px] h-[41px]">
+                    <button className="bg-[#FDF5D8] text-[#007248] hover:border-2 hover:border-[#007248] font-bold rounded-xl text-[11px] sm:text-sm md:text-lg lg:text-2xl md:w-[110px] lg:w-[140px] md:h-[85px] lg:h-[100px] sm:w-20 sm:h-[50px] w-[65px] h-10">
                         Reserveren
                     </button>
                 </a>
